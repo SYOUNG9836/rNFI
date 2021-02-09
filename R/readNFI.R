@@ -18,7 +18,7 @@ readNFI <- function(dir){
 
   for(i in 1:length(filenames)){
 
-
+##속성 바꾸기
     General_info <- readxl::read_excel(paste(dir, filenames[i], sep = "/"), sheet=1, col_names=TRUE, col_types = "text")
     Non_forest <-readxl:: read_excel(paste(dir, filenames[i], sep = "/"), sheet=2, col_names=TRUE, col_types = "text")
     Stand_inve <- readxl::read_excel(paste(dir, filenames[i], sep = "/"), sheet=3, col_names=TRUE, col_types = "text")
