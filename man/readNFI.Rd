@@ -10,7 +10,7 @@ readNFI(dir)
 \item{dir}{: dir}
 }
 \description{
-This function read nfi data
+This function read NFI data
 }
 \examples{
 readNFI()
