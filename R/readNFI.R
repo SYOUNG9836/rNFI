@@ -2,6 +2,7 @@
 #'
 #' This function read NFI data
 #' @param dir : dir
+#' @param location : location
 #' @keywords readNFI
 #' @export
 #' @examples
