@@ -6,7 +6,7 @@
 #' @keywords readNFI
 #' @export
 #' @examples
-#' readNFI()
+#' readNFI("C:/SYP/y2021/y202101/rNFI/NFI/NFI6/", location="전라남도 신안군")
 
 
 
@@ -44,7 +44,7 @@ readNFI <- function(dir,location=NULL){
     S_cname <- c("도로로부터의거리", "해발고","경사","방위","중심수관밀도",	"0도수관밀도",	"120도수관밀도",	"240도수관밀도",	
                  "수관밀도평균")
     Stand_inve[ , S_cname ] <- lapply (Stand_inve[ , S_cname ], as.numeric)
-    Stand_inve$조사일자 <- as.Date(Stand_inve$조사일자,format = '%Y%m%d')
+    Stand_inve[ , "조사일자" ] <- as.Date(Stand_inve[ , "조사일자" ],format = '%Y%m%d')
     
     
     

@@ -4,15 +4,17 @@
 \alias{readNFI}
 \title{readNFI() Function}
 \usage{
-readNFI(dir)
+readNFI(dir, location = NULL)
 }
 \arguments{
 \item{dir}{: dir}
+
+\item{location}{: location}
 }
 \description{
 This function read NFI data
 }
 \examples{
-readNFI()
+readNFI("C:/SYP/y2021/y202101/rNFI/NFI/NFI6/", location="攼㹣쟾攼㹢씪攼㹢궓攼㹢룄 攼㹣떊攼㹣븞援戼㸰")
 }
 \keyword{readNFI}
