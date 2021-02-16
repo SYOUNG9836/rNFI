@@ -53,7 +53,7 @@ readNFI <- function(dir,location=NULL){
     T_cname <- c("흉고직경","지하고","수고","거리(m)","방위각(º)","수령",	"수길이",	"생장량",	"수피",	"비율",
                  "표준목간재적",	"추정수고",	"추정간재적")
     Tree_inve[ , T_cname ] <- lapply (Tree_inve[ , T_cname ], as.numeric)
-    Tree_inve$대경목조사원내존재여부 <- lapply (lapply (Tree_inve$대경목조사원내존재여부, as.numeric), as.logical)
+    Tree_inve[ , "대경목조사원내존재여부" ] <- lapply (lapply (Tree_inve[ , "대경목조사원내존재여부" ], as.numeric), as.logical)
     
     
     
@@ -70,11 +70,11 @@ readNFI <- function(dir,location=NULL){
       
       loc_vec <- unlist(strsplit(location, split=" "))
       if(length(loc_vec)==3){
-        data[[i]] <- data[[i]] %>% dplyr::filter(광역시도 ==loc_vec[1] & 시군구 ==loc_vec[2] & 읍면동 ==loc_vec[3])}
+        data[[i]] <- data[[i]] %>% dplyr::filter("광역시도" ==loc_vec[1] & "시군구" ==loc_vec[2] & "읍면동" ==loc_vec[3])}
       else if (length(loc_vec)==2){
-        data[[i]] <- data[[i]] %>% dplyr::filter(광역시도 ==loc_vec[1] & 시군구 ==loc_vec[2])}
+        data[[i]] <- data[[i]] %>% dplyr::filter("광역시도" ==loc_vec[1] & "시군구" ==loc_vec[2])}
       else if (length(loc_vec)==1){
-        data[[i]] <- data[[i]] %>% dplyr::filter(광역시도 ==loc_vec[1])}
+        data[[i]] <- data[[i]] %>% dplyr::filter("광역시도" ==loc_vec[1])}
       
     }
     
