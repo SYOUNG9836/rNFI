@@ -20,4 +20,3 @@ This function read NFI data
 \examples{
 readNFI("C:/SYP/y2021/y202101/rNFI/NFI/NFI6/", location="\uc804\ub77c\ub0a8\ub3c4 \uc2e0\uc548\uad70") #攼㹣쟾攼㹢씪攼㹢궓攼㹢룄 攼㹣떊攼㹣븞援戼㸰
 }
-\keyword{readNFI}
