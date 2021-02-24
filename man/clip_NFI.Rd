@@ -15,7 +15,7 @@ clip_NFI(NFI_point_dir, District_code)
 This function clip_NFI
 }
 \examples{
-clip_NFI
+
 
 
 }

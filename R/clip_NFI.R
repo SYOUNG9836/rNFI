@@ -6,18 +6,11 @@
 #' @keywords clip_NFI
 #' @export
 #' @examples
-#' clip_NFI
+#' 
 #' 
 #'
 
-
-
-clip_NFI <- function(NFI_point_dir, District_code)
-  
-  {
-  
-  plot(do)
-  
+clip_NFI <- function(NFI_point_dir, District_code){
   
   
 }
