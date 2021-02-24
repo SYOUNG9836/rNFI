@@ -13,6 +13,7 @@
 
 clip_NFI <- function(NFI_point_dir, District_code){
   
-  plot(do)
+  a <- plot(do)
+  return(a)
   
 }
