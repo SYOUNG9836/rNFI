@@ -5,8 +5,9 @@
 #' @param location : location
 #' @return merge data nfi
 #' @examples
-#' readNFI("C:/SYP/y2021/y202101/rNFI/NFI/NFI6/")
+#' readNFI("C:/SYP/y2021/y202101/rNFI/NFI/NFI6/", location = "\uc804\ub77c\ub0a8\ub3c4 \uc2e0\uc548\uad70") #전라남도 신안군
 #' @export
+
 
 
 
@@ -114,7 +115,6 @@ readNFI <- function(dir, location=NULL){
   return(NFI)
   
 }
-
 
 
 
