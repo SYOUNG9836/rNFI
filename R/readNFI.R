@@ -13,7 +13,7 @@
 readNFI <- function(dir, location=NULL){
   
   if (stringr::str_sub(dir,-1) != '/') 
-    dir <- paste(dir, '/', sep = "")
+    dir <- paste(dir, '/', sep = "") 
   
   
   filenames <- list.files(path=dir, pattern="xlsx")
