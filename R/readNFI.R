@@ -5,8 +5,9 @@
 #' @param location : location
 #' @return merge data nfi
 #' @examples
-#' readNFI("C:/SYP/y2021/y202101/rNFI/NFI/NFI6/", location="\uc804\ub77c\ub0a8\ub3c4 \uc2e0\uc548\uad70") #전라남도 신안군
+#' readNFI("C:/SYP/y2021/y202101/rNFI/NFI/NFI6/")
 #' @export
+
 
 
 
@@ -113,6 +114,8 @@ readNFI <- function(dir, location=NULL){
   return(NFI)
   
 }
+
+
 
 
 ##시간 오래걸려 필요없는 열 제외 옵션으로 all=t로 하면 모든 열 아니면 기본 열만 read하는 기능 
