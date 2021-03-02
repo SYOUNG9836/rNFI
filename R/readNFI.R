@@ -5,7 +5,7 @@
 #' @param location : location
 #' @return merge data nfi
 #' @examples
-#' readNFI("C:/SYP/y2021/y202101/rNFI/NFI/NFI6/", location = "\uc804\ub77c\ub0a8\ub3c4 \uc2e0\uc548\uad70") #전라남도 신안군
+#' readNFI("C:/SYP/y2021/y202101/rNFI/data/NFI/NFI6/", location = "\uc804\ub77c\ub0a8\ub3c4 \uc2e0\uc548\uad70") #전라남도 신안군
 #' @export
 
 
@@ -93,6 +93,8 @@ readNFI <- function(dir, location=NULL){
     if(!is.null(location)){
       
       loc_vec <- unlist(strsplit(location, split=" "))
+      
+      #code <- read.csv("C:/SYP/y2021/y202101/rNFI/data/법정동코드 전체자료/법정동코드 전체자료.csv")
       
       if(length(loc_vec) == 3){
         data[[i]] <- data[[i]] %>% 
