@@ -4,12 +4,14 @@
 \alias{readNFI}
 \title{readNFI() Function}
 \usage{
-readNFI(dir, location = NULL)
+readNFI(dir, district = NULL, col_all = FALSE)
 }
 \arguments{
 \item{dir}{: dir}
 
-\item{location}{: location}
+\item{district}{: district}
+
+\item{col_all}{: all column read}
 }
 \value{
 merge data nfi
@@ -18,5 +20,5 @@ merge data nfi
 This function read NFI data
 }
 \examples{
-readNFI("C:/SYP/y2021/y202101/rNFI/NFI/NFI6/", location = "\uc804\ub77c\ub0a8\ub3c4 \uc2e0\uc548\uad70") #攼㹣쟾攼㹢씪攼㹢궓攼㹢룄 攼㹣떊攼㹣븞援戼㸰
+readNFI("C:/SYP/y2021/y202101/rNFI/data/NFI/NFI6/", district = "\uc804\ub77c\ub0a8\ub3c4 \uc2e0\uc548\uad70") 
 }
