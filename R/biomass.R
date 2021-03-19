@@ -114,6 +114,51 @@ carbon_stock <- function(data){
     ## 강원지방소나무
     ##--------------------------------------------------------------
     (data$'수종명' =="소나무" && (data$'시군구' == "영주군" || data$'시군구' == "봉화군" || data$'시군구' == "울진군" || data$'시군구' == "영양군" || data$광역시도 == "강원도" )) 
+    ~ (data$'추정간재적')*(coeff[coeff$'수종' == "강원지방소나무",2])*(coeff[coeff$'수종' == "강원지방소나무",4])*(1+coeff[coeff$'수종' == "강원지방소나무",6])*0.51,
+    
+    data$'수종명' =="소나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "중부지방소나무",2])*(coeff[coeff$'수종' == "중부지방소나무",4])*(1+coeff[coeff$'수종' == "중부지방소나무",6])*0.51,
+    data$'수종명' =="낙엽송" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "낙엽송",2])*(coeff[coeff$'수종' == "낙엽송",4])*(1+coeff[coeff$'수종' == "낙엽송",6])*0.51,
+    data$'수종명' =="리기다소나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "리기다소나무",2])*(coeff[coeff$'수종' == "리기다소나무",4])*(1+coeff[coeff$'수종' == "리기다소나무",6])*0.51,
+    data$'수종명' =="곰솔" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "곰솔",2])*(coeff[coeff$'수종' == "곰솔",4])*(1+coeff[coeff$'수종' == "곰솔",6])*0.51,
+    data$'수종명' =="잣나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "잣나무",2])*(coeff[coeff$'수종' == "잣나무",4])*(1+coeff[coeff$'수종' == "잣나무",6])*0.51,
+    data$'수종명' =="삼나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "삼나무",2])*(coeff[coeff$'수종' == "삼나무",4])*(1+coeff[coeff$'수종' == "삼나무",6])*0.51,
+    data$'수종명' =="편백" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "편백",2])*(coeff[coeff$'수종' == "편백",4])*(1+coeff[coeff$'수종' == "편백",6])*0.51*0.51,
+    data$'수종명' =="굴참나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "굴참나무",2])*(coeff[coeff$'수종' == "굴참나무",4])*(1+coeff[coeff$'수종' == "굴참나무",6])*0.48,
+    data$'수종명' =="신갈나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "신갈나무",2])*(coeff[coeff$'수종' == "신갈나무",4])*(1+coeff[coeff$'수종' == "신갈나무",6])*0.48,
+    data$'수종명' =="상수리나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "상수리나무",2])*(coeff[coeff$'수종' == "상수리나무",4])*(1+coeff[coeff$'수종' == "상수리나무",6])*0.48,
+    data$'수종명' =="졸참나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "졸참나무",2])*(coeff[coeff$'수종' == "졸참나무",4])*(1+coeff[coeff$'수종' == "졸참나무",6])*0.48,
+    data$'수종명' =="붉가시나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "붉가시나무",2])*(coeff[coeff$'수종' == "붉가시나무",4])*(1+coeff[coeff$'수종' == "붉가시나무",6])*0.48,
+    
+    
+    ##--------------------------------------------------------------
+    ## 기타 활엽수 및 기타 침엽수
+    ##--------------------------------------------------------------
+    (data$'침활구분' =="활엽수") ~ (data$'추정간재적')*(coeff[coeff$'수종' == "기타 활엽수",2])*(coeff[coeff$'수종' == "기타 활엽수",4])*(1+coeff[coeff$'수종' == "기타 활엽수",6])*0.48,
+    (data$'침활구분' =="침엽수") ~ (data$'추정간재적')*(coeff[coeff$'수종' == "기타 침엽수",2])*(coeff[coeff$'수종' == "기타 침엽수",4])*(1+coeff[coeff$'수종' == "기타 침엽수",6])*0.51,
+    TRUE ~ NA_real_
+    
+  ))
+  
+  
+  
+  
+  return(carbn_s)
+  
+}
+
+##--------------------------------------------------------------
+## 탄소흡수량 구하기 
+## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)(1+뿌리함량비)*(0.51(침) or 0.48(활))*(44/12)
+##--------------------------------------------------------------
+co2_stock <- function(data){
+  
+  co2_s <- data  %>% dplyr::mutate(co2_stock = dplyr::case_when(
+    
+    
+    ##--------------------------------------------------------------
+    ## 강원지방소나무
+    ##--------------------------------------------------------------
+    (data$'수종명' =="소나무" && (data$'시군구' == "영주군" || data$'시군구' == "봉화군" || data$'시군구' == "울진군" || data$'시군구' == "영양군" || data$광역시도 == "강원도" )) 
     ~ (data$'추정간재적')*(coeff[coeff$'수종' == "강원지방소나무",2])*(coeff[coeff$'수종' == "강원지방소나무",4])*(1+coeff[coeff$'수종' == "강원지방소나무",6])*0.51*(44/12),
     
     data$'수종명' =="소나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "중부지방소나무",2])*(coeff[coeff$'수종' == "중부지방소나무",4])*(1+coeff[coeff$'수종' == "중부지방소나무",6])*0.51*(44/12),
@@ -142,10 +187,9 @@ carbon_stock <- function(data){
   
   
   
-  return(carbn_s)
+  return(co2_s)
   
 }
-
 
 #' biomass() Function
 #'
@@ -169,6 +213,7 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
   bm_temp <- T__biomass(data)
   bm_temp <- AG_biomass(bm_temp)
   bm_temp <- carbon_stock(bm_temp)
+  bm_temp <- co2_stock(bm_temp)
   bm <- bm_temp
   
   ##--------------------------------------------------------------
@@ -186,7 +231,8 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
         dplyr::group_by(bm$'표본점번호', bm[,grpby]) %>% 
         dplyr::summarise(biomass_sum = sum(biomass),
                          AG_biomass_sum = sum(AG_biomass),
-                         carbon_stock_sum = sum(carbon_stock), .groups = 'drop')
+                         carbon_stock_sum = sum(carbon_stock),
+                         co2_stock_sum = sum(co2_stock), .groups = 'drop')
     }
     else{
       bm <- bm %>% dplyr::filter(bm$'수목형태구분'=="교목") 
@@ -194,7 +240,8 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
         dplyr::group_by(bm$'표본점번호') %>% 
         dplyr::summarise(biomass_sum = sum(biomass),
                          AG_biomass_sum = sum(AG_biomass),
-                         carbon_stock_sum = sum(carbon_stock), .groups = 'drop')
+                         carbon_stock_sum = sum(carbon_stock),
+                         co2_stock_sum = sum(co2_stock), .groups = 'drop')
     }
     
     
@@ -212,7 +259,8 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
         dplyr::group_by(bm[,grpby]) %>% 
         dplyr::summarise(biomass_sum = sum(biomass),
                          AG_biomass_sum = sum(AG_biomass),
-                         carbon_stock_sum = sum(carbon_stock), .groups = 'drop')
+                         carbon_stock_sum = sum(carbon_stock),
+                         co2_stock_sum = sum(co2_stock), .groups = 'drop')
     }}
   
   return(bm)
