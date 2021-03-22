@@ -116,14 +116,14 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
         
         
         
-        if(n(code_loc) == 10){
+        if(nchar(code_loc) == 10){
           data_merge <- data_merge %>% 
             dplyr::filter(data_merge$'읍면동코드' == substr(code_loc,1,8))}
         
-        else if (n(code_loc) == 5){
+        else if (nchar(code_loc) == 5){
           data_merge <- data_merge %>% dplyr::filter(data_merge$'시군구코드' == code_loc)}
         
-        else if (n(code_loc) == 2){
+        else if (nchar(code_loc) == 2){
           data_merge <- data_merge %>% dplyr::filter(data_merge$'시도코드' == code_loc)}
         
         
