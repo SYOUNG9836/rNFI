@@ -239,24 +239,7 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
   ##--------------------------------------------------------------
   NFI <- do.call(rbind, data)
   
-  log_col <- c("산림여부", "조사가능여부", "대경목조사원내존재여부" )
-  NFI[ , colnames(NFI) %in% log_col ] <- lapply(lapply(NFI[ , colnames(NFI) %in% log_col ], as.numeric), as.logical)
   
-  
-  fac_col <- c("토지이용코드", "토지이용","임상코드","임상")
-  NFI[ , colnames(NFI) %in% fac_col ] <- lapply(NFI[ , colnames(NFI) %in% fac_col ], as.factor)
-  
-  
-  
-  num_col <- c("기본조사원 비산림면적", "대경목조사원 비산림면적","도로로부터의거리", "해발고","경사","방위","중심수관밀도",	"0도수관밀도",
-               "120도수관밀도",	"240도수관밀도", "수관밀도평균","흉고직경", "지하고", "수고", "거리(m)", "방위각(º)", "수령",	"수길이",	"생장량",
-               "수피",	"비율", "표준목간재적",	"추정수고",	"추정간재적")
-  NFI[ , colnames(NFI) %in% num_col ] <- lapply(NFI[ , colnames(NFI) %in% num_col ], as.numeric)
-  
-  
-  
-  date_col <- c("조사일자")
-  NFI[ , colnames(NFI) %in% date_col ] <- as.Date(NFI[ , colnames(NFI) %in% date_col ], format = '%Y%m%d')
   
   
   return(NFI) 
