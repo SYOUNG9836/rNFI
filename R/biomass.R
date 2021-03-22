@@ -229,7 +229,7 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
       bm <- bm %>% dplyr::filter(bm$'수목형태구분'=="교목") 
       bm <- bm %>% 
         dplyr::group_by(bm$'표본점번호', bm[,grpby]) %>% 
-        dplyr::summarise(volume_sum =sum(get(bm$'추정간재적')),
+        dplyr::summarise(volume_sum =sum(get('추정간재적')),
                          biomass_sum = sum(biomass),
                          AG_biomass_sum = sum(AG_biomass),
                          carbon_stock_sum = sum(carbon_stock),
@@ -239,7 +239,7 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
       bm <- bm %>% dplyr::filter(bm$'수목형태구분'=="교목") 
       bm <- bm %>%  
         dplyr::group_by(bm$'표본점번호') %>% 
-        dplyr::summarise(volume_sum =sum(get(bm$'추정간재적')),
+        dplyr::summarise(volume_sum =sum(get('추정간재적')),
                          biomass_sum = sum(biomass),
                          AG_biomass_sum = sum(AG_biomass),
                          carbon_stock_sum = sum(carbon_stock),
@@ -259,7 +259,7 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
       bm <- bm %>% dplyr::filter(bm$'수목형태구분'=="교목") 
       bm <- bm %>%
         dplyr::group_by(bm[,grpby]) %>% 
-        dplyr::summarise(volume_sum =sum(get(bm$'추정간재적')),
+        dplyr::summarise(volume_sum =sum(get('추정간재적')),
                          biomass_sum = sum(biomass),
                          AG_biomass_sum = sum(AG_biomass),
                          carbon_stock_sum = sum(carbon_stock),
