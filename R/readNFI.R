@@ -39,7 +39,7 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
   ## district error message
   ## 행정표준코드관리시스템에서 우리나라 법정동명,코드 변화 파일 다운로드, 이와 비교 시 없는 법정동명일 때 에러 즉 오타
   ##--------------------------------------------------------------
-  if(any(district %in% district_code$'법정동명' == FALSE )) {
+  if(any(district %in% district_code[,2] == FALSE )) {
     
     stop(paste( 'District ', district, ' does not exist.'))
     
@@ -130,7 +130,7 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
       if(!is.null(district)){
         
         
-        code_loc <- (gsub("-", "", district_code[district_code$'법정동명' == district, 1]))
+        code_loc <- (gsub("-", "", district_code[district_code[2] == district, 1]))
         
         
         
@@ -225,7 +225,7 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
       if(!is.null(district)){
         
         
-        code_loc <- (gsub("-", "", district_code[district_code$'법정동명' == district, 1]))
+        code_loc <- (gsub("-", "", district_code[district_code[2] == district, 1]))
         
         
         

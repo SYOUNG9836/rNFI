@@ -23,28 +23,28 @@ T__biomass <- function(data){
     ##--------------------------------------------------------------
     ## 강원지방소나무
     ##--------------------------------------------------------------
-    (data$'수종명' =="소나무" && (data$'시군구' == "영주군" || data$'시군구' == "봉화군" || data$'시군구' == "울진군" || data$'시군구' == "영양군" || data$광역시도 == "강원도" )) 
-    ~ (data$'추정간재적')*(coeff[coeff$'수종' == "강원지방소나무",2])*(coeff[coeff$'수종' == "강원지방소나무",4])*(1+coeff[coeff$'수종' == "강원지방소나무",6]),
+    (data$'수종명' =="소나무" && (data$'시군구' == "영주군" || data$'시군구' == "봉화군" || data$'시군구' == "울진군" || data$'시군구' == "영양군" || data$'광역시도' == "강원도" )) 
+    ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "강원지방소나무",2])*(bio_coeff[bio_coeff[,1] == "강원지방소나무",4])*(1+bio_coeff[bio_coeff[,1] == "강원지방소나무",6]),
     
-    data$'수종명' =="소나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "중부지방소나무",2])*(coeff[coeff$'수종' == "중부지방소나무",4])*(1+coeff[coeff$'수종' == "중부지방소나무",6]),
-    data$'수종명' =="낙엽송" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "낙엽송",2])*(coeff[coeff$'수종' == "낙엽송",4])*(1+coeff[coeff$'수종' == "낙엽송",6]),
-    data$'수종명' =="리기다소나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "리기다소나무",2])*(coeff[coeff$'수종' == "리기다소나무",4])*(1+coeff[coeff$'수종' == "리기다소나무",6]),
-    data$'수종명' =="곰솔" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "곰솔",2])*(coeff[coeff$'수종' == "곰솔",4])*(1+coeff[coeff$'수종' == "곰솔",6]),
-    data$'수종명' =="잣나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "잣나무",2])*(coeff[coeff$'수종' == "잣나무",4])*(1+coeff[coeff$'수종' == "잣나무",6]),
-    data$'수종명' =="삼나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "삼나무",2])*(coeff[coeff$'수종' == "삼나무",4])*(1+coeff[coeff$'수종' == "삼나무",6]),
-    data$'수종명' =="편백" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "편백",2])*(coeff[coeff$'수종' == "편백",4])*(1+coeff[coeff$'수종' == "편백",6]),
-    data$'수종명' =="굴참나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "굴참나무",2])*(coeff[coeff$'수종' == "굴참나무",4])*(1+coeff[coeff$'수종' == "굴참나무",6]),
-    data$'수종명' =="신갈나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "신갈나무",2])*(coeff[coeff$'수종' == "신갈나무",4])*(1+coeff[coeff$'수종' == "신갈나무",6]),
-    data$'수종명' =="상수리나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "상수리나무",2])*(coeff[coeff$'수종' == "상수리나무",4])*(1+coeff[coeff$'수종' == "상수리나무",6]),
-    data$'수종명' =="졸참나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "졸참나무",2])*(coeff[coeff$'수종' == "졸참나무",4])*(1+coeff[coeff$'수종' == "졸참나무",6]),
-    data$'수종명' =="붉가시나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "붉가시나무",2])*(coeff[coeff$'수종' == "붉가시나무",4])*(1+coeff[coeff$'수종' == "붉가시나무",6]),
+    data$'수종명' =="소나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "중부지방소나무",2])*(bio_bio_coeff[bio_coeff[,1] == "중부지방소나무",4])*(1+bio_coeff[bio_coeff[,1] == "중부지방소나무",6]),
+    data$'수종명' =="낙엽송" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "낙엽송",2])*(bio_coeff[bio_coeff[,1] == "낙엽송",4])*(1+bio_coeff[bio_coeff[,1] == "낙엽송",6]),
+    data$'수종명' =="리기다소나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "리기다소나무",2])*(bio_coeff[bio_coeff[,1] == "리기다소나무",4])*(1+bio_coeff[bio_coeff[,1] == "리기다소나무",6]),
+    data$'수종명' =="곰솔" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "곰솔",2])*(bio_coeff[bio_coeff[,1] == "곰솔",4])*(1+bio_coeff[bio_coeff[,1] == "곰솔",6]),
+    data$'수종명' =="잣나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "잣나무",2])*(bio_coeff[bio_coeff[,1] == "잣나무",4])*(1+bio_coeff[bio_coeff[,1] == "잣나무",6]),
+    data$'수종명' =="삼나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "삼나무",2])*(bio_coeff[bio_coeff[,1] == "삼나무",4])*(1+bio_coeff[bio_coeff[,1] == "삼나무",6]),
+    data$'수종명' =="편백" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "편백",2])*(bio_coeff[bio_coeff[,1] == "편백",4])*(1+bio_coeff[bio_coeff[,1] == "편백",6]),
+    data$'수종명' =="굴참나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "굴참나무",2])*(bio_coeff[bio_coeff[,1] == "굴참나무",4])*(1+bio_coeff[bio_coeff[,1] == "굴참나무",6]),
+    data$'수종명' =="신갈나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "신갈나무",2])*(bio_coeff[bio_coeff[,1] == "신갈나무",4])*(1+bio_coeff[bio_coeff[,1] == "신갈나무",6]),
+    data$'수종명' =="상수리나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "상수리나무",2])*(bio_coeff[bio_coeff[,1] == "상수리나무",4])*(1+bio_coeff[bio_coeff[,1] == "상수리나무",6]),
+    data$'수종명' =="졸참나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "졸참나무",2])*(bio_coeff[bio_coeff[,1] == "졸참나무",4])*(1+bio_coeff[bio_coeff[,1] == "졸참나무",6]),
+    data$'수종명' =="붉가시나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "붉가시나무",2])*(bio_coeff[bio_coeff[,1] == "붉가시나무",4])*(1+bio_coeff[bio_coeff[,1] == "붉가시나무",6]),
     
     
     ##--------------------------------------------------------------
     ## 기타 활엽수 및 기타 침엽수
     ##--------------------------------------------------------------
-    (data$'침활구분' =="활엽수") ~ (data$'추정간재적')*(coeff[coeff$'수종' == "기타 활엽수",2])*(coeff[coeff$'수종' == "기타 활엽수",4])*(1+coeff[coeff$'수종' == "기타 활엽수",6]),
-    (data$'침활구분' =="침엽수") ~ (data$'추정간재적')*(coeff[coeff$'수종' == "기타 침엽수",2])*(coeff[coeff$'수종' == "기타 침엽수",4])*(1+coeff[coeff$'수종' == "기타 침엽수",6]),
+    (data$'침활구분' =="활엽수") ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "기타 활엽수",2])*(bio_coeff[bio_coeff[,1] == "기타 활엽수",4])*(1+bio_coeff[bio_coeff[,1] == "기타 활엽수",6]),
+    (data$'침활구분' =="침엽수") ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "기타 침엽수",2])*(bio_coeff[bio_coeff[,1] == "기타 침엽수",4])*(1+bio_coeff[bio_coeff[,1] == "기타 침엽수",6]),
     TRUE ~ NA_real_
     
   ))
@@ -69,28 +69,28 @@ AG_biomass <- function(data){
     ##--------------------------------------------------------------
     ## 강원지방소나무
     ##--------------------------------------------------------------
-    (data$'수종명' =="소나무" && (data$'시군구' == "영주군" || data$'시군구' == "봉화군" || data$'시군구' == "울진군" || data$'시군구' == "영양군" || data$광역시도 == "강원도" )) 
-    ~ (data$'추정간재적')*(coeff[coeff$'수종' == "강원지방소나무",2])*(coeff[coeff$'수종' == "강원지방소나무",4]),
+    (data$'수종명' =="소나무" && (data$'시군구' == "영주군" || data$'시군구' == "봉화군" || data$'시군구' == "울진군" || data$'시군구' == "영양군" || data$'광역시도' == "강원도" )) 
+    ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "강원지방소나무",2])*(bio_coeff[bio_coeff[,1] == "강원지방소나무",4]),
     
-    data$'수종명' =="소나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "중부지방소나무",2])*(coeff[coeff$'수종' == "중부지방소나무",4]),
-    data$'수종명' =="낙엽송" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "낙엽송",2])*(coeff[coeff$'수종' == "낙엽송",4]),
-    data$'수종명' =="리기다소나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "리기다소나무",2])*(coeff[coeff$'수종' == "리기다소나무",4]),
-    data$'수종명' =="곰솔" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "곰솔",2])*(coeff[coeff$'수종' == "곰솔",4]),
-    data$'수종명' =="잣나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "잣나무",2])*(coeff[coeff$'수종' == "잣나무",4]),
-    data$'수종명' =="삼나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "삼나무",2])*(coeff[coeff$'수종' == "삼나무",4]),
-    data$'수종명' =="편백" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "편백",2])*(coeff[coeff$'수종' == "편백",4]),
-    data$'수종명' =="굴참나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "굴참나무",2])*(coeff[coeff$'수종' == "굴참나무",4]),
-    data$'수종명' =="신갈나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "신갈나무",2])*(coeff[coeff$'수종' == "신갈나무",4]),
-    data$'수종명' =="상수리나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "상수리나무",2])*(coeff[coeff$'수종' == "상수리나무",4]),
-    data$'수종명' =="졸참나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "졸참나무",2])*(coeff[coeff$'수종' == "졸참나무",4]),
-    data$'수종명' =="붉가시나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "붉가시나무",2])*(coeff[coeff$'수종' == "붉가시나무",4]),
+    data$'수종명' =="소나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "중부지방소나무",2])*(bio_coeff[bio_coeff[,1] == "중부지방소나무",4]),
+    data$'수종명' =="낙엽송" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "낙엽송",2])*(bio_coeff[bio_coeff[,1] == "낙엽송",4]),
+    data$'수종명' =="리기다소나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "리기다소나무",2])*(bio_coeff[bio_coeff[,1] == "리기다소나무",4]),
+    data$'수종명' =="곰솔" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "곰솔",2])*(bio_coeff[bio_coeff[,1] == "곰솔",4]),
+    data$'수종명' =="잣나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "잣나무",2])*(bio_coeff[bio_coeff[,1] == "잣나무",4]),
+    data$'수종명' =="삼나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "삼나무",2])*(bio_coeff[bio_coeff[,1] == "삼나무",4]),
+    data$'수종명' =="편백" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "편백",2])*(bio_coeff[bio_coeff[,1] == "편백",4]),
+    data$'수종명' =="굴참나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "굴참나무",2])*(bio_coeff[bio_coeff[,1] == "굴참나무",4]),
+    data$'수종명' =="신갈나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "신갈나무",2])*(bio_coeff[bio_coeff[,1] == "신갈나무",4]),
+    data$'수종명' =="상수리나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "상수리나무",2])*(bio_coeff[bio_coeff[,1] == "상수리나무",4]),
+    data$'수종명' =="졸참나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "졸참나무",2])*(bio_coeff[bio_coeff[,1] == "졸참나무",4]),
+    data$'수종명' =="붉가시나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "붉가시나무",2])*(bio_coeff[bio_coeff[,1] == "붉가시나무",4]),
     
     
     ##--------------------------------------------------------------
     ## 기타 활엽수 및 기타 침엽수
     ##--------------------------------------------------------------
-    (data$'침활구분' =="활엽수") ~ (data$'추정간재적')*(coeff[coeff$'수종' == "기타 활엽수",2])*(coeff[coeff$'수종' == "기타 활엽수",4]),
-    (data$'침활구분' =="침엽수") ~ (data$'추정간재적')*(coeff[coeff$'수종' == "기타 침엽수",2])*(coeff[coeff$'수종' == "기타 침엽수",4]),
+    (data$'침활구분' =="활엽수") ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "기타 활엽수",2])*(bio_coeff[bio_coeff[,1] == "기타 활엽수",4]),
+    (data$'침활구분' =="침엽수") ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "기타 침엽수",2])*(bio_coeff[bio_coeff[,1] == "기타 침엽수",4]),
     TRUE ~ NA_real_
     
   ))
@@ -113,28 +113,28 @@ carbon_stock <- function(data){
     ##--------------------------------------------------------------
     ## 강원지방소나무
     ##--------------------------------------------------------------
-    (data$'수종명' =="소나무" && (data$'시군구' == "영주군" || data$'시군구' == "봉화군" || data$'시군구' == "울진군" || data$'시군구' == "영양군" || data$광역시도 == "강원도" )) 
-    ~ (data$'추정간재적')*(coeff[coeff$'수종' == "강원지방소나무",2])*(coeff[coeff$'수종' == "강원지방소나무",4])*(1+coeff[coeff$'수종' == "강원지방소나무",6])*0.51,
+    (data$'수종명' =="소나무" && (data$'시군구' == "영주군" || data$'시군구' == "봉화군" || data$'시군구' == "울진군" || data$'시군구' == "영양군" || data$'광역시도' == "강원도" )) 
+    ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "강원지방소나무",2])*(bio_coeff[bio_coeff[,1] == "강원지방소나무",4])*(1+bio_coeff[bio_coeff[,1] == "강원지방소나무",6])*0.51,
     
-    data$'수종명' =="소나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "중부지방소나무",2])*(coeff[coeff$'수종' == "중부지방소나무",4])*(1+coeff[coeff$'수종' == "중부지방소나무",6])*0.51,
-    data$'수종명' =="낙엽송" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "낙엽송",2])*(coeff[coeff$'수종' == "낙엽송",4])*(1+coeff[coeff$'수종' == "낙엽송",6])*0.51,
-    data$'수종명' =="리기다소나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "리기다소나무",2])*(coeff[coeff$'수종' == "리기다소나무",4])*(1+coeff[coeff$'수종' == "리기다소나무",6])*0.51,
-    data$'수종명' =="곰솔" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "곰솔",2])*(coeff[coeff$'수종' == "곰솔",4])*(1+coeff[coeff$'수종' == "곰솔",6])*0.51,
-    data$'수종명' =="잣나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "잣나무",2])*(coeff[coeff$'수종' == "잣나무",4])*(1+coeff[coeff$'수종' == "잣나무",6])*0.51,
-    data$'수종명' =="삼나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "삼나무",2])*(coeff[coeff$'수종' == "삼나무",4])*(1+coeff[coeff$'수종' == "삼나무",6])*0.51,
-    data$'수종명' =="편백" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "편백",2])*(coeff[coeff$'수종' == "편백",4])*(1+coeff[coeff$'수종' == "편백",6])*0.51*0.51,
-    data$'수종명' =="굴참나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "굴참나무",2])*(coeff[coeff$'수종' == "굴참나무",4])*(1+coeff[coeff$'수종' == "굴참나무",6])*0.48,
-    data$'수종명' =="신갈나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "신갈나무",2])*(coeff[coeff$'수종' == "신갈나무",4])*(1+coeff[coeff$'수종' == "신갈나무",6])*0.48,
-    data$'수종명' =="상수리나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "상수리나무",2])*(coeff[coeff$'수종' == "상수리나무",4])*(1+coeff[coeff$'수종' == "상수리나무",6])*0.48,
-    data$'수종명' =="졸참나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "졸참나무",2])*(coeff[coeff$'수종' == "졸참나무",4])*(1+coeff[coeff$'수종' == "졸참나무",6])*0.48,
-    data$'수종명' =="붉가시나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "붉가시나무",2])*(coeff[coeff$'수종' == "붉가시나무",4])*(1+coeff[coeff$'수종' == "붉가시나무",6])*0.48,
+    data$'수종명' =="소나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "중부지방소나무",2])*(bio_coeff[bio_coeff[,1] == "중부지방소나무",4])*(1+bio_coeff[bio_coeff[,1] == "중부지방소나무",6])*0.51,
+    data$'수종명' =="낙엽송" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "낙엽송",2])*(bio_coeff[bio_coeff[,1] == "낙엽송",4])*(1+bio_coeff[bio_coeff[,1] == "낙엽송",6])*0.51,
+    data$'수종명' =="리기다소나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "리기다소나무",2])*(bio_coeff[bio_coeff[,1] == "리기다소나무",4])*(1+bio_coeff[bio_coeff[,1] == "리기다소나무",6])*0.51,
+    data$'수종명' =="곰솔" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "곰솔",2])*(bio_coeff[bio_coeff[,1] == "곰솔",4])*(1+bio_coeff[bio_coeff[,1] == "곰솔",6])*0.51,
+    data$'수종명' =="잣나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "잣나무",2])*(bio_coeff[bio_coeff[,1] == "잣나무",4])*(1+bio_coeff[bio_coeff[,1] == "잣나무",6])*0.51,
+    data$'수종명' =="삼나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "삼나무",2])*(bio_coeff[bio_coeff[,1] == "삼나무",4])*(1+bio_coeff[bio_coeff[,1] == "삼나무",6])*0.51,
+    data$'수종명' =="편백" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "편백",2])*(bio_coeff[bio_coeff[,1] == "편백",4])*(1+bio_coeff[bio_coeff[,1] == "편백",6])*0.51*0.51,
+    data$'수종명' =="굴참나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "굴참나무",2])*(bio_coeff[bio_coeff[,1] == "굴참나무",4])*(1+bio_coeff[bio_coeff[,1] == "굴참나무",6])*0.48,
+    data$'수종명' =="신갈나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "신갈나무",2])*(bio_coeff[bio_coeff[,1] == "신갈나무",4])*(1+bio_coeff[bio_coeff[,1] == "신갈나무",6])*0.48,
+    data$'수종명' =="상수리나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "상수리나무",2])*(bio_coeff[bio_coeff[,1] == "상수리나무",4])*(1+bio_coeff[bio_coeff[,1] == "상수리나무",6])*0.48,
+    data$'수종명' =="졸참나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "졸참나무",2])*(bio_coeff[bio_coeff[,1] == "졸참나무",4])*(1+bio_coeff[bio_coeff[,1] == "졸참나무",6])*0.48,
+    data$'수종명' =="붉가시나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "붉가시나무",2])*(bio_coeff[bio_coeff[,1] == "붉가시나무",4])*(1+bio_coeff[bio_coeff[,1] == "붉가시나무",6])*0.48,
     
     
     ##--------------------------------------------------------------
     ## 기타 활엽수 및 기타 침엽수
     ##--------------------------------------------------------------
-    (data$'침활구분' =="활엽수") ~ (data$'추정간재적')*(coeff[coeff$'수종' == "기타 활엽수",2])*(coeff[coeff$'수종' == "기타 활엽수",4])*(1+coeff[coeff$'수종' == "기타 활엽수",6])*0.48,
-    (data$'침활구분' =="침엽수") ~ (data$'추정간재적')*(coeff[coeff$'수종' == "기타 침엽수",2])*(coeff[coeff$'수종' == "기타 침엽수",4])*(1+coeff[coeff$'수종' == "기타 침엽수",6])*0.51,
+    (data$'침활구분' =="활엽수") ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "기타 활엽수",2])*(bio_coeff[bio_coeff[,1] == "기타 활엽수",4])*(1+bio_coeff[bio_coeff[,1] == "기타 활엽수",6])*0.48,
+    (data$'침활구분' =="침엽수") ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "기타 침엽수",2])*(bio_coeff[bio_coeff[,1] == "기타 침엽수",4])*(1+bio_coeff[bio_coeff[,1] == "기타 침엽수",6])*0.51,
     TRUE ~ NA_real_
     
   ))
@@ -158,28 +158,28 @@ co2_stock <- function(data){
     ##--------------------------------------------------------------
     ## 강원지방소나무
     ##--------------------------------------------------------------
-    (data$'수종명' =="소나무" && (data$'시군구' == "영주군" || data$'시군구' == "봉화군" || data$'시군구' == "울진군" || data$'시군구' == "영양군" || data$광역시도 == "강원도" )) 
-    ~ (data$'추정간재적')*(coeff[coeff$'수종' == "강원지방소나무",2])*(coeff[coeff$'수종' == "강원지방소나무",4])*(1+coeff[coeff$'수종' == "강원지방소나무",6])*0.51*(44/12),
+    (data$'수종명' =="소나무" && (data$'시군구' == "영주군" || data$'시군구' == "봉화군" || data$'시군구' == "울진군" || data$'시군구' == "영양군" || data$'광역시도' == "강원도" )) 
+    ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "강원지방소나무",2])*(bio_coeff[bio_coeff[,1] == "강원지방소나무",4])*(1+bio_coeff[bio_coeff[,1] == "강원지방소나무",6])*0.51*(44/12),
     
-    data$'수종명' =="소나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "중부지방소나무",2])*(coeff[coeff$'수종' == "중부지방소나무",4])*(1+coeff[coeff$'수종' == "중부지방소나무",6])*0.51*(44/12),
-    data$'수종명' =="낙엽송" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "낙엽송",2])*(coeff[coeff$'수종' == "낙엽송",4])*(1+coeff[coeff$'수종' == "낙엽송",6])*0.51*(44/12),
-    data$'수종명' =="리기다소나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "리기다소나무",2])*(coeff[coeff$'수종' == "리기다소나무",4])*(1+coeff[coeff$'수종' == "리기다소나무",6])*0.51*(44/12),
-    data$'수종명' =="곰솔" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "곰솔",2])*(coeff[coeff$'수종' == "곰솔",4])*(1+coeff[coeff$'수종' == "곰솔",6])*0.51*(44/12),
-    data$'수종명' =="잣나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "잣나무",2])*(coeff[coeff$'수종' == "잣나무",4])*(1+coeff[coeff$'수종' == "잣나무",6])*0.51*(44/12),
-    data$'수종명' =="삼나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "삼나무",2])*(coeff[coeff$'수종' == "삼나무",4])*(1+coeff[coeff$'수종' == "삼나무",6])*0.51*(44/12),
-    data$'수종명' =="편백" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "편백",2])*(coeff[coeff$'수종' == "편백",4])*(1+coeff[coeff$'수종' == "편백",6])*0.51*(44/12)*0.51*(44/12),
-    data$'수종명' =="굴참나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "굴참나무",2])*(coeff[coeff$'수종' == "굴참나무",4])*(1+coeff[coeff$'수종' == "굴참나무",6])*0.48*(44/12),
-    data$'수종명' =="신갈나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "신갈나무",2])*(coeff[coeff$'수종' == "신갈나무",4])*(1+coeff[coeff$'수종' == "신갈나무",6])*0.48*(44/12),
-    data$'수종명' =="상수리나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "상수리나무",2])*(coeff[coeff$'수종' == "상수리나무",4])*(1+coeff[coeff$'수종' == "상수리나무",6])*0.48*(44/12),
-    data$'수종명' =="졸참나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "졸참나무",2])*(coeff[coeff$'수종' == "졸참나무",4])*(1+coeff[coeff$'수종' == "졸참나무",6])*0.48*(44/12),
-    data$'수종명' =="붉가시나무" ~ (data$'추정간재적')*(coeff[coeff$'수종' == "붉가시나무",2])*(coeff[coeff$'수종' == "붉가시나무",4])*(1+coeff[coeff$'수종' == "붉가시나무",6])*0.48*(44/12),
+    data$'수종명' =="소나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "중부지방소나무",2])*(bio_coeff[bio_coeff[,1] == "중부지방소나무",4])*(1+bio_coeff[bio_coeff[,1] == "중부지방소나무",6])*0.51*(44/12),
+    data$'수종명' =="낙엽송" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "낙엽송",2])*(bio_coeff[bio_coeff[,1] == "낙엽송",4])*(1+bio_coeff[bio_coeff[,1] == "낙엽송",6])*0.51*(44/12),
+    data$'수종명' =="리기다소나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "리기다소나무",2])*(bio_coeff[bio_coeff[,1] == "리기다소나무",4])*(1+bio_coeff[bio_coeff[,1] == "리기다소나무",6])*0.51*(44/12),
+    data$'수종명' =="곰솔" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "곰솔",2])*(bio_coeff[bio_coeff[,1] == "곰솔",4])*(1+bio_coeff[bio_coeff[,1] == "곰솔",6])*0.51*(44/12),
+    data$'수종명' =="잣나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "잣나무",2])*(bio_coeff[bio_coeff[,1] == "잣나무",4])*(1+bio_coeff[bio_coeff[,1] == "잣나무",6])*0.51*(44/12),
+    data$'수종명' =="삼나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "삼나무",2])*(bio_coeff[bio_coeff[,1] == "삼나무",4])*(1+bio_coeff[bio_coeff[,1] == "삼나무",6])*0.51*(44/12),
+    data$'수종명' =="편백" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "편백",2])*(bio_coeff[bio_coeff[,1] == "편백",4])*(1+bio_coeff[bio_coeff[,1] == "편백",6])*0.51*(44/12)*0.51*(44/12),
+    data$'수종명' =="굴참나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "굴참나무",2])*(bio_coeff[bio_coeff[,1] == "굴참나무",4])*(1+bio_coeff[bio_coeff[,1] == "굴참나무",6])*0.48*(44/12),
+    data$'수종명' =="신갈나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "신갈나무",2])*(bio_coeff[bio_coeff[,1] == "신갈나무",4])*(1+bio_coeff[bio_coeff[,1] == "신갈나무",6])*0.48*(44/12),
+    data$'수종명' =="상수리나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "상수리나무",2])*(bio_coeff[bio_coeff[,1] == "상수리나무",4])*(1+bio_coeff[bio_coeff[,1] == "상수리나무",6])*0.48*(44/12),
+    data$'수종명' =="졸참나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "졸참나무",2])*(bio_coeff[bio_coeff[,1] == "졸참나무",4])*(1+bio_coeff[bio_coeff[,1] == "졸참나무",6])*0.48*(44/12),
+    data$'수종명' =="붉가시나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "붉가시나무",2])*(bio_coeff[bio_coeff[,1] == "붉가시나무",4])*(1+bio_coeff[bio_coeff[,1] == "붉가시나무",6])*0.48*(44/12),
     
     
     ##--------------------------------------------------------------
     ## 기타 활엽수 및 기타 침엽수
     ##--------------------------------------------------------------
-    (data$'침활구분' =="활엽수") ~ (data$'추정간재적')*(coeff[coeff$'수종' == "기타 활엽수",2])*(coeff[coeff$'수종' == "기타 활엽수",4])*(1+coeff[coeff$'수종' == "기타 활엽수",6])*0.48*(44/12),
-    (data$'침활구분' =="침엽수") ~ (data$'추정간재적')*(coeff[coeff$'수종' == "기타 침엽수",2])*(coeff[coeff$'수종' == "기타 침엽수",4])*(1+coeff[coeff$'수종' == "기타 침엽수",6])*0.51*(44/12),
+    (data$'침활구분' =="활엽수") ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "기타 활엽수",2])*(bio_coeff[bio_coeff[,1] == "기타 활엽수",4])*(1+bio_coeff[bio_coeff[,1] == "기타 활엽수",6])*0.48*(44/12),
+    (data$'침활구분' =="침엽수") ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "기타 침엽수",2])*(bio_coeff[bio_coeff[,1] == "기타 침엽수",4])*(1+bio_coeff[bio_coeff[,1] == "기타 침엽수",6])*0.51*(44/12),
     TRUE ~ NA_real_
     
   ))
