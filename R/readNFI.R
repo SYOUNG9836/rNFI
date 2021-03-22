@@ -57,21 +57,14 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
       
       
       ##--------------------------------------------------------------
+      ## 특정 시트 없으면??
       ## 일반정보 sheet 불러오기 
       ## 기본 타입 text, 일부 logical("산림여부", "조사가능여부")과 factor("토지이용코드", "토지이용","임상코드","임상")
-      ## 타입을 지정한 열이 불러온 자료에 없으면? 타입은 바꿔야겠고 흠.. 고민 그 사람이 알아서 그 열을 만들어서 넣게 해야할까? 
-      ## 아님 코드로 필수열 임의로 삽입?
       ##--------------------------------------------------------------
       General_info <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "일반정보", 
                                          col_names = TRUE, col_types = "text")
       
-      G_cname <- c("산림여부", "조사가능여부")
-      General_info[ , G_cname ] <- lapply(lapply(General_info[ , G_cname ], as.numeric), as.logical)
-      
-      G_cname2 <- c("토지이용코드", "토지이용","임상코드","임상")
-      General_info[ , G_cname2 ] <- lapply (General_info[ , G_cname2 ], as.factor)
-      
-      
+     
       
       ##--------------------------------------------------------------
       ## 비산림면적 sheet 불러오기 
@@ -80,9 +73,7 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
       Non_forest <-readxl:: read_excel(paste(dir, filenames[i], sep = ""), sheet = "비산림면적",
                                        col_names = TRUE, col_types = "text")
       
-      N_cname <- c("기본조사원 비산림면적", "대경목조사원 비산림면적")
-      Non_forest[ , N_cname ] <- lapply(Non_forest[ , N_cname ], as.numeric)
-      
+    
       
       ##--------------------------------------------------------------
       ## 임분조사표 sheet 불러오기 
@@ -92,11 +83,7 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
       Stand_inve <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "임분조사표",
                                        col_names = TRUE, col_types = "text")
       
-      S_cname <- c("도로로부터의거리", "해발고","경사","방위","중심수관밀도",	"0도수관밀도",
-                   "120도수관밀도",	"240도수관밀도", "수관밀도평균")
-      Stand_inve[ , S_cname ] <- lapply(Stand_inve[ , S_cname ], as.numeric)
-      
-      Stand_inve$"조사일자" <- as.Date(Stand_inve$"조사일자", format = '%Y%m%d')
+     
       
       
       ##--------------------------------------------------------------
@@ -107,16 +94,11 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
       Tree_inve <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "임목조사표",
                                       col_names = TRUE, col_types = "text")
       
-      T_cname <- c("흉고직경", "지하고", "수고", "거리(m)", "방위각(º)", "수령",	"수길이",	"생장량",
-                   "수피",	"비율", "표준목간재적",	"추정수고",	"추정간재적")
-      Tree_inve[ , T_cname ] <- lapply(Tree_inve[ , T_cname ], as.numeric)
-      
-      Tree_inve[ , "대경목조사원내존재여부" ] <- 
-        lapply(lapply(Tree_inve[ , "대경목조사원내존재여부" ], as.numeric), as.logical)
-      
+    
       
       ##--------------------------------------------------------------
       ## merge
+      ## merge 기준이 되는 '집락번호', '표본점번호', '조사차기' 중 하나라도 없으면? 
       ##--------------------------------------------------------------
       data_merge <- merge(x=Tree_inve, y=Stand_inve, 
                           by=c('집락번호', '표본점번호', '조사차기'), all.x=TRUE)
@@ -163,7 +145,7 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
       
       ##--------------------------------------------------------------
       ## 모든 시트를 입목자료 기준으로 merge
-      ## 임목이 없는 임분 자료는 얻을 수 없음, 필요할 일이 있을까요?
+      ## 임목이 없는 임분 자료는 얻을 수 없음, 필요할 일이 있을까?
       ##--------------------------------------------------------------
       data_merge <- merge(x=data_merge, y=General_info, 
                           by=c('집락번호', '표본점번호', '조사차기',  '조사연도', '임상코드', '임상'), all.x=TRUE)
@@ -189,12 +171,7 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
       Stand_inve <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "임분조사표",
                                        col_names = TRUE, col_types = "text")
       
-      S_cname <- c("도로로부터의거리", "해발고","경사","방위","중심수관밀도",	"0도수관밀도",
-                   "120도수관밀도",	"240도수관밀도", "수관밀도평균")
-      Stand_inve[ , S_cname ] <- lapply(Stand_inve[ , S_cname ], as.numeric)
-      
-      Stand_inve$"조사일자" <- as.Date(Stand_inve$"조사일자", format = '%Y%m%d')
-      
+ 
       
       
       ##--------------------------------------------------------------
@@ -203,13 +180,7 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
       Tree_inve <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "임목조사표",
                                       col_names = TRUE, col_types = "text")
       
-      T_cname <- c("흉고직경", "지하고", "수고", "거리(m)", "방위각(º)", "수령",	"수길이",	"생장량",
-                   "수피",	"비율", "표준목간재적",	"추정수고",	"추정간재적")
-      Tree_inve[ , T_cname ] <- lapply(Tree_inve[ , T_cname ], as.numeric)
-      
-      Tree_inve[ , "대경목조사원내존재여부" ] <- 
-        lapply(lapply(Tree_inve[ , "대경목조사원내존재여부" ], as.numeric), as.logical)
-      
+ 
       
       
       ##--------------------------------------------------------------
@@ -267,6 +238,26 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
   ## .xlsx별(연도별) 데이터 합치기
   ##--------------------------------------------------------------
   NFI <- do.call(rbind, data)
+  
+  log_col <- c("산림여부", "조사가능여부", "대경목조사원내존재여부" )
+  NFI[ , colnames(NFI) %in% log_col ] <- lapply(lapply(NFI[ , colnames(NFI) %in% log_col ], as.numeric), as.logical)
+  
+  
+  fac_col <- c("토지이용코드", "토지이용","임상코드","임상")
+  NFI[ , colnames(NFI) %in% fac_col ] <- lapply(NFI[ , colnames(NFI) %in% fac_col ], as.factor)
+  
+  
+  
+  num_col <- c("기본조사원 비산림면적", "대경목조사원 비산림면적","도로로부터의거리", "해발고","경사","방위","중심수관밀도",	"0도수관밀도",
+               "120도수관밀도",	"240도수관밀도", "수관밀도평균","흉고직경", "지하고", "수고", "거리(m)", "방위각(º)", "수령",	"수길이",	"생장량",
+               "수피",	"비율", "표준목간재적",	"추정수고",	"추정간재적")
+  NFI[ , colnames(NFI) %in% num_col ] <- lapply(NFI[ , colnames(NFI) %in% num_col ], as.numeric)
+  
+  
+  
+  date_col <- c("조사일자")
+  NFI[ , colnames(NFI) %in% date_col ] <- as.Date(NFI[ , colnames(NFI) %in% date_col ], format = '%Y%m%d')
+  
   
   return(NFI) 
   
