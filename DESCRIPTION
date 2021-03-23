@@ -19,6 +19,11 @@ Imports:
     dplyr,
     magrittr,
     readxl,
-    stringr
+    stringr,
+    stringi
 Depends: 
     R (>= 2.10)
+Suggests: 
+    rgdal,
+    sp,
+    raster

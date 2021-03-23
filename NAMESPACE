@@ -2,5 +2,6 @@
 
 export("%>%")
 export(biomass)
+export(clip_NFI)
 export(readNFI)
 importFrom(magrittr,"%>%")
