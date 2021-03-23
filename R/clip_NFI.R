@@ -58,7 +58,7 @@ clip_NFI <- function(NFI_point_dir, NFI_DF=NULL, plygn=NULL, district=NULL){
   else if(!is.null(NFI_DF)) {
     
     sample_list <- unique(NFI_DF[,"표본점번호"])
-    clip_point <- nfi_point %>% spdplyr::filter(nfi_point$SP_ID %in% sample_list)
+    clip_point <- nfi_point[nfi_point@data$SP_ID %in% sample_list,]
   }
   
   else  {
