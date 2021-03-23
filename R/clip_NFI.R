@@ -12,8 +12,8 @@
 
 clip_NFI <- function(NFI_point_dir, NFI_DF=NULL, plygn=NULL, district=NULL){
   
-  if(!dir.exists(NFI_point_dir)) {
-    stop(paste('Directory ', NFI_point_dir, ' does not exist.'))}
+  if(!file.exists(NFI_point_dir)) {
+    stop(paste('file ', NFI_point_dir, ' does not exist.'))}
   
   
   
