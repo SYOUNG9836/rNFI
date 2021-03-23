@@ -35,6 +35,14 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
     stop(paste('Directory ', dir, ' does not exist.'))
   }
   
+  if(!is.character(district)) {
+    stop("param 'district' must be 'character'")
+  }
+  
+  if(!is.logical(col_all)) {
+    stop("param 'col_all' must be 'logical'")
+  }
+  
   ##--------------------------------------------------------------
   ## district error message
   ## 행정표준코드관리시스템에서 우리나라 법정동명,코드 변화 파일 다운로드, 이와 비교 시 없는 법정동명일 때 에러 즉 오타
