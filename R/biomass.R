@@ -17,7 +17,7 @@
 
 T__biomass <- function(data){
   
-  t_bm <- data  %>% dplyr::mutate(T__biomass = dplyr::case_when(
+  output <- data  %>% dplyr::mutate(T__bm = dplyr::case_when(
     
     
     ##--------------------------------------------------------------
@@ -52,7 +52,7 @@ T__biomass <- function(data){
   
   
   
-  return(t_bm)
+  return(output)
   
 }
 
@@ -63,7 +63,7 @@ T__biomass <- function(data){
 ##--------------------------------------------------------------
 AG_biomass <- function(data){
   
-  ag_bm <- data  %>% dplyr::mutate(AG_biomass = dplyr::case_when(
+  output <- data  %>% dplyr::mutate(AG_bm = dplyr::case_when(
     
     
     ##--------------------------------------------------------------
@@ -97,7 +97,7 @@ AG_biomass <- function(data){
   
   
   
-  return(ag_bm)
+  return(output)
   
 }
 
@@ -107,7 +107,7 @@ AG_biomass <- function(data){
 ##--------------------------------------------------------------
 carbon_stock <- function(data){
   
-  carbn_s <- data  %>% dplyr::mutate(carbon_stock = dplyr::case_when(
+  output <- data  %>% dplyr::mutate(c_stck = dplyr::case_when(
     
     
     ##--------------------------------------------------------------
@@ -142,7 +142,7 @@ carbon_stock <- function(data){
   
   
   
-  return(carbn_s)
+  return(output)
   
 }
 
@@ -152,7 +152,7 @@ carbon_stock <- function(data){
 ##--------------------------------------------------------------
 co2_stock <- function(data){
   
-  co2_s <- data  %>% dplyr::mutate(co2_stock = dplyr::case_when(
+  output <- data  %>% dplyr::mutate(co2_stck = dplyr::case_when(
     
     
     ##--------------------------------------------------------------
@@ -187,7 +187,7 @@ co2_stock <- function(data){
   
   
   
-  return(co2_s)
+  return(output)
   
 }
 
@@ -230,20 +230,20 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
       bm <- bm %>% 
         dplyr::group_by(bm$'표본점번호', bm[,grpby]) %>% 
         dplyr::summarise(volume_sum =sum(get('추정간재적')),
-                         biomass_sum = sum(T__biomass),
-                         AG_biomass_sum = sum(AG_biomass),
-                         carbon_stock_sum = sum(carbon_stock),
-                         co2_stock_sum = sum(co2_stock), .groups = 'drop')
+                         biomass_sum = sum(T__bm),
+                         AG_biomass_sum = sum(AG_bm),
+                         carbon_stock_sum = sum(c_stck),
+                         co2_stock_sum = sum(co2_stck), .groups = 'drop')
     }
     else{
       bm <- bm %>% dplyr::filter(bm$'수목형태구분'=="교목") 
       bm <- bm %>%  
         dplyr::group_by(bm$'표본점번호') %>% 
         dplyr::summarise(volume_sum =sum(get('추정간재적')),
-                         biomass_sum = sum(T__biomass),
-                         AG_biomass_sum = sum(AG_biomass),
-                         carbon_stock_sum = sum(carbon_stock),
-                         co2_stock_sum = sum(co2_stock), .groups = 'drop')
+                         biomass_sum = sum(T__bm),
+                         AG_biomass_sum = sum(AG_bm),
+                         carbon_stock_sum = sum(c_stck),
+                         co2_stock_sum = sum(co2_stck), .groups = 'drop')
     }
     
     
@@ -260,10 +260,10 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
       bm <- bm %>%
         dplyr::group_by(bm[,grpby]) %>% 
         dplyr::summarise(volume_sum =sum(get('추정간재적')),
-                         biomass_sum = sum(T__biomass),
-                         AG_biomass_sum = sum(AG_biomass),
-                         carbon_stock_sum = sum(carbon_stock),
-                         co2_stock_sum = sum(co2_stock), .groups = 'drop')
+                         biomass_sum = sum(T__bm),
+                         AG_biomass_sum = sum(AG_bm),
+                         carbon_stock_sum = sum(c_stck),
+                         co2_stock_sum = sum(co2_stck), .groups = 'drop')
     }}
   
   return(bm)
