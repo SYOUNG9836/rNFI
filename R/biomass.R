@@ -3,7 +3,7 @@
 ## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)(1+뿌리함량비)-----------------
 T_bm <- function(data){
   
-  output <- data  %>% dplyr::mutate(T_biomass = dplyr::case_when(
+  output <- data  %>% mutate(T_biomass = case_when(
     
     ## bio_coeff = 국가고유배출계수, 
     ## 출처 : "탄소배출계수를 활용한 국가 온실가스 통계 작성", 
@@ -44,7 +44,7 @@ T_bm <- function(data){
 ## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)-------------------------------
 AG_bm <- function(data){
   
-  output <- data  %>% dplyr::mutate(AG_biomass = dplyr::case_when(
+  output <- data  %>% mutate(AG_biomass = case_when(
     
     (data$'수종명' =="소나무" && (data$'시군구' == "영주군" || data$'시군구' == "봉화군" || data$'시군구' == "울진군" || data$'시군구' == "영양군" || data$'광역시도' == "강원도" )) 
     ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "강원지방소나무",2])*(bio_coeff[bio_coeff[,1] == "강원지방소나무",4]),
@@ -78,7 +78,7 @@ AG_bm <- function(data){
 ## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)(1+뿌리함량비)*(0.51(침) or 0.48(활))-----------------------
 c_stck <- function(data){
   
-  output <- data  %>% dplyr::mutate(carbon_stock = dplyr::case_when(
+  output <- data  %>% mutate(carbon_stock = case_when(
     
     (data$'수종명' =="소나무" && (data$'시군구' == "영주군" || data$'시군구' == "봉화군" || data$'시군구' == "울진군" || data$'시군구' == "영양군" || data$'광역시도' == "강원도" )) 
     ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "강원지방소나무",2])*(bio_coeff[bio_coeff[,1] == "강원지방소나무",4])*(1+bio_coeff[bio_coeff[,1] == "강원지방소나무",6])*0.51,
@@ -133,7 +133,7 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
   data_temp <- c_stck(data_temp)
   ## 이산탄소흡수량 구하기--------------------------------------------------------------
   ## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)(1+뿌리함량비)*(0.51(침) or 0.48(활))*(44/12)--------------------
-  data_temp <- data_temp %>% dplyr::mutate(data$co2_stock = carbon_stock*(44/12))
+  data_temp <- data_temp %>% mutate(co2_stock = carbon_stock*(44/12))
   data <- data_temp
   
   
@@ -144,29 +144,29 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
     ## byplot + group_by--------------------------------------------------------------------------
     ## ex) 수종명, 수관급, 형질급, 광역시도, 시군구, 읍면동, 지형, 임상, 경급, 영급------------------- 
     if (!is.null(grpby)){
-      data <- data %>% dplyr::filter(data$'수목형태구분'=="교목") 
+      data <- data %>% filter(data$'수목형태구분'=="교목") 
       bm <- data %>% 
-        dplyr::group_by(data$'표본점번호', data[,grpby]) %>% 
-        dplyr::summarise(bm_volume = sum(get('추정간재적'), na.rm=TRUE),
+        group_by(data$'표본점번호', data[,grpby]) %>% 
+        summarise(bm_volume = sum(get('추정간재적'), na.rm=TRUE),
                          bm_biomass = sum(data$T_biomass, na.rm=TRUE),
                          bm_AG = sum(data$AG_biomass, na.rm=TRUE),
                          bm_carbon = sum(data$carbon_stock, na.rm=TRUE),
                          bm_co2 = sum(data$co2_stock, na.rm=TRUE), .groups = 'drop')
-      bm <- dplyr::rename("volume(m3)"= "bm_volume", "biomass(ton)" = "bm_biomass", "AG_biomasS(ton)" = "bm_AG" ,
+      bm <- rename("volume(m3)"= "bm_volume", "biomass(ton)" = "bm_biomass", "AG_biomasS(ton)" = "bm_AG" ,
                           "carbon_stock(tC)" = "bm_carbon", "co2_stock(tCO2)" = "bm_co2" )
     }
     
     ## byplot-------------------------------------------------------------------------
     else{
-      data <- data %>% dplyr::filter(data$'수목형태구분'=="교목") 
+      data <- data %>% filter(data$'수목형태구분'=="교목") 
       bm <- data %>% 
-        dplyr::group_by(data$'표본점번호') %>% 
-        dplyr::summarise(bm_volume = sum(get('추정간재적'), na.rm=TRUE),
+        group_by(data$'표본점번호') %>% 
+        summarise(bm_volume = sum(get('추정간재적'), na.rm=TRUE),
                          bm_biomass = sum(data$T_biomass, na.rm=TRUE),
                          bm_AG = sum(data$AG_biomass, na.rm=TRUE),
                          bm_carbon = sum(data$carbon_stock, na.rm=TRUE),
                          bm_co2 = sum(data$co2_stock, na.rm=TRUE), .groups = 'drop')
-      bm <- dplyr::rename("volume(m3)"= "bm_volume", "biomass(ton)" = "bm_biomass", "AG_biomasS(ton)" = "bm_AG" ,
+      bm <- rename("volume(m3)"= "bm_volume", "biomass(ton)" = "bm_biomass", "AG_biomasS(ton)" = "bm_AG" ,
                           "carbon_stock(tC)" = "bm_carbon", "co2_stock(tCO2)" = "bm_co2" )
     }
     
@@ -177,22 +177,22 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
   else{
     
     if (!is.null(grpby)){
-      data <- data %>% dplyr::filter(data$'수목형태구분'=="교목") 
+      data <- data %>% filter(data$'수목형태구분'=="교목") 
       bm <- data %>% 
-        dplyr::group_by(data[,grpby]) %>%  
-        dplyr::summarise(bm_volume = sum(get('추정간재적'), na.rm=TRUE),
+        group_by(data[,grpby]) %>%  
+        summarise(bm_volume = sum(get('추정간재적'), na.rm=TRUE),
                          bm_biomass = sum(data$T_biomass, na.rm=TRUE),
                          bm_AG = sum(data$AG_biomass, na.rm=TRUE),
                          bm_carbon = sum(data$carbon_stock, na.rm=TRUE),
                          bm_co2 = sum(data$co2_stock, na.rm=TRUE), .groups = 'drop')
       
-      bm <- dplyr::rename("volume(m3)"= "bm_volume", "biomass(ton)" = "bm_biomass", "AG_biomasS(ton)" = "bm_AG" ,
+      bm <- rename("volume(m3)"= "bm_volume", "biomass(ton)" = "bm_biomass", "AG_biomasS(ton)" = "bm_AG" ,
                           "carbon_stock(tC)" = "bm_carbon", "co2_stock(tCO2)" = "bm_co2" )
      }
     
     else{
       bm <- data
-      bm <- dplyr::rename("biomass(ton)" = "T_biomass", "AG_biomasS(ton)" = "AG_biomass" ,
+      bm <- rename("biomass(ton)" = "T_biomass", "AG_biomasS(ton)" = "AG_biomass" ,
                           "carbon_stock(tC)" = "carbon_stock", "co2_stock(tCO2)" = "co2_stock" )
       }
     

@@ -27,4 +27,5 @@ Suggests:
     rgdal,
     sp,
     raster,
-    spdplyr
+    spdplyr,
+    sf

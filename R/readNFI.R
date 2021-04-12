@@ -80,13 +80,13 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
         
         if(nchar(site_code) == 10){
           data_merge <- data_merge %>% 
-            dplyr::filter(data_merge$'읍면동코드' == substr(site_code,1,8))}
+            filter(data_merge$'읍면동코드' == substr(site_code,1,8))}
         
         else if(nchar(site_code) == 5){
-          data_merge <- data_merge %>% dplyr::filter(data_merge$'시군구코드' == site_code)}
+          data_merge <- data_merge %>% filter(data_merge$'시군구코드' == site_code)}
         
         else{
-          data_merge <- data_merge %>% dplyr::filter(data_merge$'시도코드' == site_code)}
+          data_merge <- data_merge %>% filter(data_merge$'시도코드' == site_code)}
         
         
         ## NFI 자료가 없는 지역구 error-----------------------------------------------------------
@@ -132,13 +132,13 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
         
         if(nchar(site_code) == 10){
           data_merge <- data_merge %>% 
-            dplyr::filter(data_merge$'읍면동코드' == substr(site_code,1,8))}
+            filter(data_merge$'읍면동코드' == substr(site_code,1,8))}
         
         else if(nchar(site_code) == 5){
-          data_merge <- data_merge %>% dplyr::filter(data_merge$'시군구코드' == site_code)}
+          data_merge <- data_merge %>% filter(data_merge$'시군구코드' == site_code)}
         
         else{
-          data_merge <- data_merge %>% dplyr::filter(data_merge$'시도코드' == site_code)}
+          data_merge <- data_merge %>% filter(data_merge$'시도코드' == site_code)}
         
       
         if(nrow(data_merge) == 0) {
