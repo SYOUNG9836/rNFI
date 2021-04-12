@@ -152,7 +152,7 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
                          bm_AG = sum(data$AG_biomass, na.rm=TRUE),
                          bm_carbon = sum(data$carbon_stock, na.rm=TRUE),
                          bm_co2 = sum(data$co2_stock, na.rm=TRUE), .groups = 'drop')
-      bm <- rename("volume(m3)"= "bm_volume", "biomass(ton)" = "bm_biomass", "AG_biomasS(ton)" = "bm_AG" ,
+      bm <- bm %>% rename("volume(m3)"= "bm_volume", "biomass(ton)" = "bm_biomass", "AG_biomasS(ton)" = "bm_AG" ,
                           "carbon_stock(tC)" = "bm_carbon", "co2_stock(tCO2)" = "bm_co2" )
     }
     
@@ -166,7 +166,7 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
                          bm_AG = sum(data$AG_biomass, na.rm=TRUE),
                          bm_carbon = sum(data$carbon_stock, na.rm=TRUE),
                          bm_co2 = sum(data$co2_stock, na.rm=TRUE), .groups = 'drop')
-      bm <- rename("volume(m3)"= "bm_volume", "biomass(ton)" = "bm_biomass", "AG_biomasS(ton)" = "bm_AG" ,
+      bm <- bm %>% rename("volume(m3)"= "bm_volume", "biomass(ton)" = "bm_biomass", "AG_biomasS(ton)" = "bm_AG" ,
                           "carbon_stock(tC)" = "bm_carbon", "co2_stock(tCO2)" = "bm_co2" )
     }
     
@@ -177,7 +177,7 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
   else{
     
     if (!is.null(grpby)){
-      data <- data %>% filter(data$'수목형태구분'=="교목") 
+      data <- data %>% filter(data$'수목형태구분'=="교목", ) 
       bm <- data %>% 
         group_by(data[,grpby]) %>%  
         summarise(bm_volume = sum(get('추정간재적'), na.rm=TRUE),
@@ -186,13 +186,13 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
                          bm_carbon = sum(data$carbon_stock, na.rm=TRUE),
                          bm_co2 = sum(data$co2_stock, na.rm=TRUE), .groups = 'drop')
       
-      bm <- rename("volume(m3)"= "bm_volume", "biomass(ton)" = "bm_biomass", "AG_biomasS(ton)" = "bm_AG" ,
+      bm <- bm %>% rename("volume(m3)"= "bm_volume", "biomass(ton)" = "bm_biomass", "AG_biomasS(ton)" = "bm_AG" ,
                           "carbon_stock(tC)" = "bm_carbon", "co2_stock(tCO2)" = "bm_co2" )
      }
     
     else{
       bm <- data
-      bm <- rename("biomass(ton)" = "T_biomass", "AG_biomasS(ton)" = "AG_biomass" ,
+      bm <- bm %>% rename("biomass(ton)" = "T_biomass", "AG_biomasS(ton)" = "AG_biomass" ,
                           "carbon_stock(tC)" = "carbon_stock", "co2_stock(tCO2)" = "co2_stock" )
       }
     
