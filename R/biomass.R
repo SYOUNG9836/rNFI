@@ -144,7 +144,7 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
     ## byplot + group_by--------------------------------------------------------------------------
     ## ex) 수종명, 수관급, 형질급, 광역시도, 시군구, 읍면동, 지형, 임상, 경급, 영급------------------- 
     if (!is.null(grpby)){
-      data <- data %>% filter(data$'수목형태구분'=="교목") 
+      data <- data %>% filter(data$'수목형태구분'=="교목", data$'대경목조사원내존재여부' == 0) 
       bm <- data %>% 
         group_by(data$'표본점번호', data[,grpby]) %>% 
         summarise(bm_volume = sum(get('추정간재적'), na.rm=TRUE),
@@ -158,7 +158,7 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
     
     ## byplot-------------------------------------------------------------------------
     else{
-      data <- data %>% filter(data$'수목형태구분'=="교목") 
+      data <- data %>% filter(data$'수목형태구분'=="교목", data$'대경목조사원내존재여부' == 0) 
       bm <- data %>% 
         group_by(data$'표본점번호') %>% 
         summarise(bm_volume = sum(get('추정간재적'), na.rm=TRUE),
@@ -177,7 +177,7 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
   else{
     
     if (!is.null(grpby)){
-      data <- data %>% filter(data$'수목형태구분'=="교목", ) 
+      data <- data %>% filter(data$'수목형태구분'=="교목", data$'대경목조사원내존재여부' == 0 ) 
       bm <- data %>% 
         group_by(data[,grpby]) %>%  
         summarise(bm_volume = sum(get('추정간재적'), na.rm=TRUE),
