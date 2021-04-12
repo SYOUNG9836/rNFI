@@ -20,5 +20,5 @@ merge data nfi
 This function read NFI data
 }
 \examples{
-readNFI("C:/SYP/y2021/y202101/rNFI/data/NFI/NFI6/", district = "\uc804\ub77c\ub0a8\ub3c4 \uc2e0\uc548\uad70") 
+readNFI("C:/SYP/y2021/y202101/rNFI/data/NFI/NFI6/", district = "\uc804\ub77c\ub0a8\ub3c4") 
 }

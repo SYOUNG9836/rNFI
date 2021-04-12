@@ -13,7 +13,7 @@ clip_NFI(NFI_point_dir, NFI_DF = NULL, plygn = NULL, district = NULL)
 
 \item{plygn}{: plygn}
 
-\item{District}{: District}
+\item{district}{: district}
 }
 \description{
 This function clip_NFI
