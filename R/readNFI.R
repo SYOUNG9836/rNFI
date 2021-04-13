@@ -27,19 +27,13 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
     stop(paste('Directory ', dir, ' does not exist.'))
   }
   
-  if(!is.character(district)) {
-    stop("param 'district' must be 'character'")
-  }
+  
   
   if(!is.logical(col_all)) {
     stop("param 'col_all' must be 'logical'")
   }
  
-  ## district_code = 법정동 코드 전체자료, 출처 : "행정표준코드관리시스템"
-  ## 행정표준코드관리시스템에 없는 법정동명일 때 error----------------------------------------------
-  if(any(district %in% district_code[,2] == FALSE )) {
-    stop(paste( 'District ', district, ' does not exist.'))
-  }
+  
   
   
   
@@ -74,6 +68,16 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
       
       ## 지역별 filitering--------------------------------------------------------------
       if(!is.null(district)){
+        
+        if(!is.character(district)) {
+          stop("param 'district' must be 'character'")
+        }
+        
+        ## district_code = 법정동 코드 전체자료, 출처 : "행정표준코드관리시스템"
+        ## 행정표준코드관리시스템에 없는 법정동명일 때 error----------------------------------------------
+        if(any(district %in% district_code[,2] == FALSE )) {
+          stop(paste( 'District ', district, ' does not exist.'))
+        }
         
         
         site_code <- (gsub("-", "", district_code[district_code[,2] == district, 1]))
