@@ -133,7 +133,7 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
   data_temp <- c_stck(data_temp)
   ## 이산탄소흡수량 구하기--------------------------------------------------------------
   ## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)(1+뿌리함량비)*(0.51(침) or 0.48(활))*(44/12)--------------------
-  data_temp <- data_temp %>% mutate(co2_stock = carbon_stock*(44/12))
+  data_temp <- data_temp %>% mutate(co2_stock = data_temp$carbon_stock*(44/12))
   data <- data_temp
   
   
@@ -151,9 +151,16 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
                          bm_biomass = sum(data$T_biomass, na.rm=TRUE),
                          bm_AG = sum(data$AG_biomass, na.rm=TRUE),
                          bm_carbon = sum(data$carbon_stock, na.rm=TRUE),
-                         bm_co2 = sum(data$co2_stock, na.rm=TRUE), .groups = 'drop')
+                         bm_co2 = sum(data$co2_stock, na.rm=TRUE),
+                         bm_volume_ha = sum(get('추정간재적'), na.rm=TRUE)/0.04,
+                         bm_biomass_ha = sum(data$T_biomass, na.rm=TRUE)/0.04,
+                         bm_AG_ha = sum(data$AG_biomass, na.rm=TRUE)/0.04,
+                         bm_carbon_ha = sum(data$carbon_stock, na.rm=TRUE)/0.04,
+                         bm_co2_ha = sum(data$co2_stock, na.rm=TRUE),.groups = 'drop')
       bm <- bm %>% rename("volume(m3)"= "bm_volume", "biomass(ton)" = "bm_biomass", "AG_biomasS(ton)" = "bm_AG" ,
-                          "carbon_stock(tC)" = "bm_carbon", "co2_stock(tCO2)" = "bm_co2" )
+                          "carbon_stock(tC)" = "bm_carbon", "co2_stock(tCO2)" = "bm_co2", 
+                          "volume(m3/ha)"= "bm_volume_ha", "biomass(ton/ha)" = "bm_biomass_ha", "AG_biomasS(ton/ha)" = "bm_AG_ha" ,
+                           "carbon_stock(tC/ha)" = "bm_carbon_ha", "co2_stock(tCO2/ha)" = "bm_co2_ha")
     }
     
     ## byplot-------------------------------------------------------------------------
@@ -162,12 +169,19 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
       bm <- data %>% 
         group_by(data$'표본점번호') %>% 
         summarise(bm_volume = sum(get('추정간재적'), na.rm=TRUE),
-                         bm_biomass = sum(data$T_biomass, na.rm=TRUE),
-                         bm_AG = sum(data$AG_biomass, na.rm=TRUE),
-                         bm_carbon = sum(data$carbon_stock, na.rm=TRUE),
-                         bm_co2 = sum(data$co2_stock, na.rm=TRUE), .groups = 'drop')
+                  bm_biomass = sum(data$T_biomass, na.rm=TRUE),
+                  bm_AG = sum(data$AG_biomass, na.rm=TRUE),
+                  bm_carbon = sum(data$carbon_stock, na.rm=TRUE),
+                  bm_co2 = sum(data$co2_stock, na.rm=TRUE),
+                  bm_volume_ha = sum(get('추정간재적'), na.rm=TRUE)/0.04,
+                  bm_biomass_ha = sum(data$T_biomass, na.rm=TRUE)/0.04,
+                  bm_AG_ha = sum(data$AG_biomass, na.rm=TRUE)/0.04,
+                  bm_carbon_ha = sum(data$carbon_stock, na.rm=TRUE)/0.04,
+                  bm_co2_ha = sum(data$co2_stock, na.rm=TRUE),.groups = 'drop')
       bm <- bm %>% rename("volume(m3)"= "bm_volume", "biomass(ton)" = "bm_biomass", "AG_biomasS(ton)" = "bm_AG" ,
-                          "carbon_stock(tC)" = "bm_carbon", "co2_stock(tCO2)" = "bm_co2" )
+                          "carbon_stock(tC)" = "bm_carbon", "co2_stock(tCO2)" = "bm_co2", 
+                          "volume(m3/ha)"= "bm_volume_ha", "biomass(ton/ha)" = "bm_biomass_ha", "AG_biomasS(ton/ha)" = "bm_AG_ha" ,
+                          "carbon_stock(tC/ha)" = "bm_carbon_ha", "co2_stock(tCO2/ha)" = "bm_co2_ha")
     }
     
     
