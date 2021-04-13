@@ -77,7 +77,7 @@ clip_NFI <- function(NFI_point_dir, NFI_DF=NULL, plygn=NULL, district=NULL){
   
   
   else  {
-    stop("clip_NFI needs more parameters")}
+    clip_point <- nfi_point}
   
   
   return(clip_point)
