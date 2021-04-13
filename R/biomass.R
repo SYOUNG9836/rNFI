@@ -156,7 +156,7 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
                          bm_biomass_ha = sum(T_biomass, na.rm=TRUE)/0.04,
                          bm_AG_ha = sum(AG_biomass, na.rm=TRUE)/0.04,
                          bm_carbon_ha = sum(carbon_stock, na.rm=TRUE)/0.04,
-                         bm_co2_ha = sum(co2_stock, na.rm=TRUE),.groups = 'drop')
+                         bm_co2_ha = sum(co2_stock, na.rm=TRUE)/0.04,.groups = 'drop')
       bm <- bm %>% rename("volume_m3"= "bm_volume", "biomass_ton" = "bm_biomass", "AG_biomasS_ton" = "bm_AG" ,
                           "carbon_stock_tC" = "bm_carbon", "co2_stock_tCO2" = "bm_co2", 
                           "volume_m3_ha"= "bm_volume_ha", "biomass_ton_ha" = "bm_biomass_ha", "AG_biomasS_ton_ha" = "bm_AG_ha" ,
@@ -177,7 +177,7 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
                   bm_biomass_ha = sum(T_biomass, na.rm=TRUE)/0.04,
                   bm_AG_ha = sum(AG_biomass, na.rm=TRUE)/0.04,
                   bm_carbon_ha = sum(carbon_stock, na.rm=TRUE)/0.04,
-                  bm_co2_ha = sum(co2_stock, na.rm=TRUE),.groups = 'drop')
+                  bm_co2_ha = sum(co2_stock, na.rm=TRUE)/0.04,.groups = 'drop')
       bm <- bm %>% rename("volume_m3"= "bm_volume", "biomass_ton" = "bm_biomass", "AG_biomasS_ton" = "bm_AG" ,
                           "carbon_stock_tC" = "bm_carbon", "co2_stock_tCO2" = "bm_co2", 
                           "volume_m3_ha"= "bm_volume_ha", "biomass_ton_ha" = "bm_biomass_ha", "AG_biomasS_ton_ha" = "bm_AG_ha" ,
