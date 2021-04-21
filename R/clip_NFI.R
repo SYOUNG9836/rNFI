@@ -17,26 +17,25 @@ clip_NFI <- function(NFI_point_dir, NFI_DF=NULL, plygn=NULL, district=NULL){
 
 
     
-  nfi_point <- rgdal::readOGR(NFI_point_dir)
-  nfi_point <- sp::spTransform(nfi_point, "+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=600000 +ellps=GRS80 +units=m +no_defs")
-  
+  nfi_point <- sf::st_read (NFI_point_dir)
+  nfi_point <- sf::st_transform(nfi_point, crs = 5186)
   
   
   if(!is.null(plygn)){
     
     if (first(class(plygn)) %in% c('sf', 'SpatialPolygons', 'SpatialPolygonsDataFrame') == FALSE){
-      stop('mask must be spatial polygons object of class sp or sf. ')
+      stop('mask must be spatial polygons object of class sp or sf.')
     }
     
-    if(first(class(plygn)) == c('sf')){
-      plygn <- sf::as_Spatial(plygn)
+    if(first(class(plygn)) == c('SpatialPolygons') || first(class(plygn)) == c('SpatialPolygonsDataFrame')){
+      plygn <- sf::st_as_sf(plygn)
       
     }
     
     
     
-    plygn <- sp::spTransform(plygn, "+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=600000 +ellps=GRS80 +units=m +no_defs")
-    clip_point<- raster::intersect(nfi_point,plygn)
+    plygn <- sf::st_transform(plygn, crs = 5186)
+    clip_point<- sf::st_intersects(nfi_point,plygn)
     
     }
   
@@ -61,7 +60,7 @@ clip_NFI <- function(NFI_point_dir, NFI_DF=NULL, plygn=NULL, district=NULL){
     
     
     
-    clip_point <- raster::intersect(nfi_point,region)
+    clip_point <- sf::st_intersects(nfi_point,region)
     
   }
   
@@ -70,7 +69,7 @@ clip_NFI <- function(NFI_point_dir, NFI_DF=NULL, plygn=NULL, district=NULL){
   else if(!is.null(NFI_DF)) {
     
     sample_list <- unique(NFI_DF[,"표본점번호"])
-    clip_point <- nfi_point[nfi_point@data$SP_ID %in% sample_list,]
+    clip_point <- nfi_point[nfi_point$SP_ID %in% sample_list,]
     
   }
   
