@@ -35,7 +35,7 @@ clip_NFI <- function(NFI_point_dir, NFI_DF=NULL, plygn=NULL, district=NULL){
     
     
     plygn <- sf::st_transform(plygn, crs = 5186)
-    clip_point<- sf::st_intersects(nfi_point,plygn)
+    clip_point<- sf::st_intersection(nfi_point,plygn)
     
     }
   
@@ -60,7 +60,7 @@ clip_NFI <- function(NFI_point_dir, NFI_DF=NULL, plygn=NULL, district=NULL){
     
     
     
-    clip_point <- sf::st_intersects(nfi_point,region)
+    clip_point <- sf::st_intersection(nfi_point,region)
     
   }
   
