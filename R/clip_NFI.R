@@ -49,7 +49,6 @@ clip_NFI <- function(NFI_point_dir, NFI_DF=NULL, plygn=NULL, district=NULL){
     ## epsg5186
     ## do, sgg, emd = 대한민국 행정구역 시도/시군구/읍면동 2020.05
     ## 출처 : http://www.gisdeveloper.co.kr/?p=2332
-    ## do <- sp::spTransform(do, "+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=600000 +ellps=GRS80 +units=m +no_defs")  
     region <- 
       if(nchar(site_code) == 2){
       do[do$CTPRVN_CD == site_code, ]
