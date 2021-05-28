@@ -144,19 +144,19 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
     ## byplot + group_by--------------------------------------------------------------------------
     ## ex) 수종명, 수관급, 형질급, 광역시도, 시군구, 읍면동, 지형, 임상, 경급, 영급------------------- 
     if (!is.null(grpby)){
-      data <- data %>% filter(data$'수목형태구분'=="교목", data$'대경목조사원내존재여부' == 0) 
+      data <- data %>% filter(data$'대경목조사원내존재여부' == 0) 
       bm <- data %>% 
         group_by(data$'표본점번호', data[,grpby]) %>% 
         summarise(bm_volume = sum(get('추정간재적'), na.rm=TRUE),
-                         bm_biomass = sum(T_biomass, na.rm=TRUE),
-                         bm_AG = sum(AG_biomass, na.rm=TRUE),
-                         bm_carbon = sum(carbon_stock, na.rm=TRUE),
-                         bm_co2 = sum(co2_stock, na.rm=TRUE),
+                         bm_biomass = sum(.data$T_biomass, na.rm=TRUE),
+                         bm_AG = sum(.data$AG_biomass, na.rm=TRUE),
+                         bm_carbon = sum(.data$carbon_stock, na.rm=TRUE),
+                         bm_co2 = sum(.data$co2_stock, na.rm=TRUE),
                          bm_volume_ha = sum(get('추정간재적'), na.rm=TRUE)/0.04,
-                         bm_biomass_ha = sum(T_biomass, na.rm=TRUE)/0.04,
-                         bm_AG_ha = sum(AG_biomass, na.rm=TRUE)/0.04,
-                         bm_carbon_ha = sum(carbon_stock, na.rm=TRUE)/0.04,
-                         bm_co2_ha = sum(co2_stock, na.rm=TRUE)/0.04,.groups = 'drop')
+                         bm_biomass_ha = sum(.data$T_biomass, na.rm=TRUE)/0.04,
+                         bm_AG_ha = sum(.data$AG_biomass, na.rm=TRUE)/0.04,
+                         bm_carbon_ha = sum(.data$carbon_stock, na.rm=TRUE)/0.04,
+                         bm_co2_ha = sum(.data$co2_stock, na.rm=TRUE)/0.04,.groups = 'drop')
       bm <- bm %>% rename("volume_m3"= "bm_volume", "biomass_ton" = "bm_biomass", "AG_biomasS_ton" = "bm_AG" ,
                           "carbon_stock_tC" = "bm_carbon", "co2_stock_tCO2" = "bm_co2", 
                           "volume_m3_ha"= "bm_volume_ha", "biomass_ton_ha" = "bm_biomass_ha", "AG_biomasS_ton_ha" = "bm_AG_ha" ,
@@ -165,19 +165,20 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
     
     ## byplot-------------------------------------------------------------------------
     else{
-      data <- data %>% filter(data$'수목형태구분'=="교목", data$'대경목조사원내존재여부' == 0) 
+      data <- data %>% filter(data$'대경목조사원내존재여부' == 0) 
       bm <- data %>% 
         group_by(data$'표본점번호') %>% 
         summarise(bm_volume = sum(get('추정간재적'), na.rm=TRUE),
-                  bm_biomass = sum(T_biomass, na.rm=TRUE),
-                  bm_AG = sum(AG_biomass, na.rm=TRUE),
-                  bm_carbon = sum(carbon_stock, na.rm=TRUE),
-                  bm_co2 = sum(co2_stock, na.rm=TRUE),
+                  bm_biomass = sum(.data$T_biomass, na.rm=TRUE),
+                  bm_AG = sum(.data$AG_biomass, na.rm=TRUE),
+                  bm_carbon = sum(.data$carbon_stock, na.rm=TRUE),
+                  bm_co2 = sum(.data$co2_stock, na.rm=TRUE),
                   bm_volume_ha = sum(get('추정간재적'), na.rm=TRUE)/0.04,
-                  bm_biomass_ha = sum(T_biomass, na.rm=TRUE)/0.04,
-                  bm_AG_ha = sum(AG_biomass, na.rm=TRUE)/0.04,
-                  bm_carbon_ha = sum(carbon_stock, na.rm=TRUE)/0.04,
-                  bm_co2_ha = sum(co2_stock, na.rm=TRUE)/0.04,.groups = 'drop')
+                  bm_biomass_ha = sum(.data$T_biomass, na.rm=TRUE)/0.04,
+                  bm_AG_ha = sum(.data$AG_biomass, na.rm=TRUE)/0.04,
+                  bm_carbon_ha = sum(.data$carbon_stock, na.rm=TRUE)/0.04,
+                  bm_co2_ha = sum(.data$co2_stock, na.rm=TRUE)/0.04,.groups = 'drop')
+                  
       bm <- bm %>% rename("volume_m3"= "bm_volume", "biomass_ton" = "bm_biomass", "AG_biomasS_ton" = "bm_AG" ,
                           "carbon_stock_tC" = "bm_carbon", "co2_stock_tCO2" = "bm_co2", 
                           "volume_m3_ha"= "bm_volume_ha", "biomass_ton_ha" = "bm_biomass_ha", "AG_biomasS_ton_ha" = "bm_AG_ha" ,
@@ -191,14 +192,14 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
   else{
     
     if (!is.null(grpby)){
-      data <- data %>% filter(data$'수목형태구분'=="교목", data$'대경목조사원내존재여부' == 0 ) 
+      data <- data %>% filter(data$'대경목조사원내존재여부' == 0 ) 
       bm <- data %>% 
         group_by(data[,grpby]) %>%  
         summarise(bm_volume = sum(get('추정간재적'), na.rm=TRUE),
-                         bm_biomass = sum(T_biomass, na.rm=TRUE),
-                         bm_AG = sum(AG_biomass, na.rm=TRUE),
-                         bm_carbon = sum(carbon_stock, na.rm=TRUE),
-                         bm_co2 = sum(co2_stock, na.rm=TRUE), .groups = 'drop')
+                         bm_biomass = sum(.data$T_biomass, na.rm=TRUE),
+                         bm_AG = sum(.data$AG_biomass, na.rm=TRUE),
+                         bm_carbon = sum(.data$carbon_stock, na.rm=TRUE),
+                         bm_co2 = sum(.data$co2_stock, na.rm=TRUE), .groups = 'drop')
       
       bm <- bm %>% rename("volume_m3"= "bm_volume", "biomass_ton" = "bm_biomass", "AG_biomasS_ton" = "bm_AG" ,
                           "carbon_stock_tC_" = "bm_carbon", "co2_stock_tCO2" = "bm_co2" )
