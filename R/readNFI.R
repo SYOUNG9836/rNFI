@@ -6,7 +6,7 @@
 #' @param col_all : all column read 
 #' @return merge data nfi
 #' @examples
-#' readNFI("C:/SYP/y2021/y202101/rNFI/data/NFI/NFI6/", district = "\uc804\ub77c\ub0a8\ub3c4") 
+#' readNFI("D:/y2021/y202101/rNFI/NFI/NFI7/", district = "\uc804\ub77c\ub0a8\ub3c4") 
 #' @export
 
 
