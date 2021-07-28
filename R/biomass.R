@@ -195,7 +195,7 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
       data <- data %>% filter(data$'대경목조사원내존재여부' == 0 )
       plot_num <- n_distinct(data$'표본점번호')
       bm <- data %>% 
-        group_by(data[,grpby] %>%  
+        group_by(data[, grpby]) %>%  
         summarise(bm_volume = sum(get('추정간재적'), na.rm=TRUE),
                          bm_biomass = sum(.data$T_biomass, na.rm=TRUE),
                          bm_AG = sum(.data$AG_biomass, na.rm=TRUE),
