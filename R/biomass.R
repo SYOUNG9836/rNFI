@@ -179,7 +179,7 @@ biomass <- function(data, byplot= FALSE, grpby=NULL){
                   bm_carbon_ha = sum(.data$carbon_stock, na.rm=TRUE)/0.04,
                   bm_co2_ha = sum(.data$co2_stock, na.rm=TRUE)/0.04,.groups = 'drop')
                   
-      bm <- bm %>% rename(("plot_id"= "data$표본점번호","volume_m3"= "bm_volume", "biomass_ton" = "bm_biomass", "AG_biomasS_ton" = "bm_AG" ,
+      bm <- bm %>% rename("plot_id"= "data$표본점번호","volume_m3"= "bm_volume", "biomass_ton" = "bm_biomass", "AG_biomasS_ton" = "bm_AG" ,
                           "carbon_stock_tC" = "bm_carbon", "co2_stock_tCO2" = "bm_co2", 
                           "volume_m3_ha"= "bm_volume_ha", "biomass_ton_ha" = "bm_biomass_ha", "AG_biomass_ton_ha" = "bm_AG_ha" ,
                           "carbon_stock_tC_ha" = "bm_carbon_ha", "co2_stock_tCO2_ha" = "bm_co2_ha")
