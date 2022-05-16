@@ -3,7 +3,7 @@
 export(Descriptive_statistics)
 export(biomass)
 export(clip_NFI)
-export(data)
+export(diversity_NFI)
 export(importancevalue_NFI)
 export(readNFI)
 import(BiodiversityR)

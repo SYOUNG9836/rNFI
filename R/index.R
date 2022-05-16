@@ -12,8 +12,6 @@
 
 ##  
 
-data <- NFI
-
 diversity_NFI <- function(data){
   
   
@@ -54,10 +52,9 @@ diversity_NFI <- function(data){
 ##  
 
 importancevalue_NFI <- function(data){
-  data <- data %>% filter(data$'수목형태구분' == c("교목"))
   
-  data_temp <- data %>% select("표본점번호","수종명","흉고직경")
-  data_temp$basal <- 0.0000785*(data_temp$흉고직경)^2
+  data_temp <- data # %>% filter(data$'수목형태구분' == c("교목"))
+  data_temp$basal <- 0.0000785*(data_temp$'흉고직경')^2
   data_iv <- data_temp %>% group_by(data_temp$"표본점번호" , data_temp$"수종명") %>% summarise(count = n(), basal =sum(basal, na.rm=T),.groups = 'drop')
   
   colnames(data_iv) <- c("plot","species", "count","basal")
