@@ -30,11 +30,7 @@ diversity_NFI <- function(data){
   indices$Shannon <- diversity(abundance.matrix) # shannon is default
   indices$simpson <- diversity(abundance.matrix, "simpson")
   
-  
-  
-  
-  
-  
+  return(indices)
   
   
 }
@@ -71,6 +67,8 @@ importancevalue_NFI <- function(data){
   data_iv_result$species <- rownames(data_iv_result)
   rownames(data_iv_result) <- NULL
   
+  return(data_iv_result)
+  
 }
 
 #'Descriptive_statistics Function
@@ -86,7 +84,7 @@ importancevalue_NFI <- function(data){
 ##
 
 
-Descriptive_statistics<- function(data, grpby="표본점번호"){
+summary_NFI<- function(data, grpby="표본점번호"){
   
   data_temp <- data
   data_temp$basal <- 0.0000785*(data_temp$'흉고직경')^2
@@ -98,6 +96,9 @@ Descriptive_statistics<- function(data, grpby="표본점번호"){
               mean_dominant_H = mean(get('추정수고')[get('수관급')=="우세목"], na.rm=TRUE),
               mean_basal= mean(basal, na.rm=TRUE),
               mean_volume= mean(get('추정간재적'), na.rm=TRUE),.groups = 'drop')
+  
+  
+  return(data_temp)
   
 }
 

@@ -111,14 +111,14 @@ c_stck <- function(data){
 
 
 
-#' biomass() Function
+#' biomass2() Function
 #'
 #' This function 
 #' @param data : data
 #' @param byplot : byplot
 #' @param grpby : grpby
 #' @param largetree : largetree 
-#' @keywords biomass
+#' @keywords biomass2
 #' @export 
 
 
