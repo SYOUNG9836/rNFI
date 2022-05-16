@@ -20,7 +20,10 @@ Imports:
     magrittr,
     readxl,
     stringr,
-    stringi
+    stringi,
+    vegan,
+    tidyr,
+    BiodiversityR
 Depends: 
     R (>= 2.10)
 Suggests: 
