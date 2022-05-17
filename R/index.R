@@ -27,8 +27,11 @@ diversity_NFI <- function(data){
   abundance.matrix[is.na(abundance.matrix)] <- 0
   
   indices$Richness <- rowSums(abundance.matrix>0)
-  indices$Shannon <- diversity(abundance.matrix) # shannon is default
-  indices$simpson <- diversity(abundance.matrix, "simpson")
+  indices$Shannon <- vegan::diversity(abundance.matrix) # shannon is default
+  indices$simpson <- vegan::diversity(abundance.matrix, "simpson")
+  indices$evenness  <- indices$Shannon/log(indices$Richness)
+  
+  indices <- indices %>% rename("plot_id"= "data$표본점번호")
   
   return(indices)
   
@@ -57,7 +60,7 @@ importancevalue_NFI <- function(data){
   data_iv <- data.frame(data_iv)
   
   ##importancevalue
-  data_iv_result<-importancevalue(data_iv, site='plot', species='species', count='count', 
+  data_iv_result<-BiodiversityR::importancevalue(data_iv, site='plot', species='species', count='count', 
                                   basal='basal', factor="", level="")
   
   str(data_iv_result)
@@ -97,6 +100,7 @@ summary_NFI<- function(data, grpby="표본점번호"){
               mean_basal= mean(basal, na.rm=TRUE),
               mean_volume= mean(get('추정간재적'), na.rm=TRUE),.groups = 'drop')
   
+  data_temp <- data_temp %>% rename("grpby"= "data_temp[,grpby]")
   
   return(data_temp)
   
