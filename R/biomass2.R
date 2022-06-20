@@ -239,7 +239,7 @@ biomass2 <- function(data, byplot= TRUE, grpby=NULL,largetree=TRUE ){
         
         
         bm_temp <- bm_temp %>% 
-          group_by(plot_id, grpby) %>% 
+          group_by(plot_id) %>% 
           summarise(volume_m3_ha = sum(volume_m3, na.rm=TRUE),
                     biomass_ton_ha = sum(biomass_ton, na.rm=TRUE),
                     AG_biomass_ton_ha = sum(AG_biomasS_ton, na.rm=TRUE),
