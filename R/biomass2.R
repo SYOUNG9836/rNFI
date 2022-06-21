@@ -210,7 +210,7 @@ biomass2 <- function(data, byplot= TRUE, grpby=NULL,largetree=TRUE ){
       
     }
     
-    ## byplot-------------------------------------------------------------------------
+    ## byplot !groupby-------------------------------------------------------------------------
     else{
       
       if(largetree){
