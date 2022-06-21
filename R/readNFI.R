@@ -145,8 +145,8 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
           data_merge <- data_merge %>% filter(data_merge$'시도코드' == site_code)}
         
       
-        if(nrow(data_merge) == 0) {
-          stop(paste('NFI data in ',district ,' does not exist.'))}
+        # if(nrow(data_merge) == 0) {
+        #   stop(paste('NFI data in ',district ,' does not exist.'))}
         }
     
       data[[i]] <- data_merge
