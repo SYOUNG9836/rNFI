@@ -10,7 +10,7 @@
 #' @export
 
 
-readNFI <- function(dir, district=NULL, col_all=FALSE){
+readNFI <- function(dir, district=NULL, col_all=TRUE){
    
   
   ## 경로에 있는 .xlsx 파일 리스트 불러오기--------------------------------------------------
@@ -118,10 +118,13 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
     ## 필요한 column만 불러오기, defult--------------------------------------------------------------
     else {
     
-      ## 일반정보 sheet(토지이용), 임분조사표 sheet, 임목조사표 sheet만 불러오기---------------------------------------------
+      ## 일반정보 sheet(토지이용), 비산림면적, 임분조사표 sheet, 임목조사표 sheet만 불러오기---------------------------------------------
       
       General_info <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "일반정보", 
                                          col_names = TRUE, col_types = "text")
+    
+      Non_forest <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "비산림면적",
+                                       col_names = TRUE, col_types = "text")
       
       Stand_inve <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "임분조사표",
                                        col_names = TRUE, col_types = "text")
@@ -156,12 +159,14 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
       
       
       General_info <- General_info[(names(General_info) %in% c('집락번호', '표본점번호', '조사차기',  '조사연도', 
-                                          '임상코드', '임상', "토지이용코드", "토지이용"))]
+                                          "토지이용코드", "토지이용"))]
       
       
       data_merge <- merge(x=data_merge, y=General_info, 
-                          by=c('집락번호', '표본점번호', '조사차기',  '조사연도', '임상코드', '임상'), 
+                          by=c('집락번호', '표본점번호', '조사차기',  '조사연도'), 
                           all.x=TRUE)
+      data_merge <- merge(x=data_merge, y=Non_forest, 
+                          by=c('집락번호', '표본점번호', '조사차기', '조사연도'), all.x=TRUE)
     
       data[[i]] <- data_merge
       
@@ -191,7 +196,8 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
   
   
   date_col <- c("조사일자")
-  NFI[ , colnames(NFI) %in% date_col ] <- as.Date(NFI[ , colnames(NFI) %in% date_col ], format = '%Y%m%d')
+  NFI[ , colnames(NFI) %in% date_col ] <- lapply(NFI[ , colnames(NFI) %in% date_col ], as.character)
+  NFI[ , colnames(NFI) %in% date_col ] <- lapply(NFI[ , colnames(NFI) %in% date_col ], function(x) as.Date( x ,format = '%Y%m%d'))
   
   
   

@@ -134,8 +134,12 @@ biomass2 <- function(data, byplot= TRUE, grpby=NULL){
   ## 이산탄소흡수량 구하기--------------------------------------------------------------
   ## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)(1+뿌리함량비)*(0.51(침) or 0.48(활))*(44/12)--------------------
   data_temp <- data_temp %>% mutate(co2_stock = data_temp$carbon_stock*(44/12))
-  data_temp <- data_temp %>% filter(data_temp$'토지이용' == "입목지")
+  data_temp <- data_temp %>% filter(data_temp$'토지이용' == "임목지")
   data_temp$largetree <- ifelse(data_temp$'흉고직경'>=30, 1, 0)
+  
+  data_temp$largetree_area <- (100 - data_temp$'대경목조사원 비산림면적')/100
+  data_temp$tree_area <-(100 - data_temp$'기본조사원 비산림면적')/100
+  
   data <- data_temp
   
   
@@ -234,9 +238,10 @@ biomass2 <- function(data, byplot= TRUE, grpby=NULL){
     
     if (!is.null(grpby)){
       
+      
       # 대경목 조사원
       bm_temp <- data %>% 
-        group_by(data$'표본점번호',data$'조사연도', data$'임상코드', data[,grpby], largetree) %>% 
+        group_by(data$'표본점번호',data$'조사연도', data$'임상코드', data[,grpby], largetree, largetree_area, tree_area) %>% 
         summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
                   biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
                   AG_biomass_ton = sum(.data$AG_biomass, na.rm=TRUE),
@@ -246,7 +251,9 @@ biomass2 <- function(data, byplot= TRUE, grpby=NULL){
       
       condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomasS_ton","carbon_stock_tC","co2_stock_tCO2"))
       bm_temp[condition] <- 
-        lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, x/0.08 , x/0.04))
+        lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, 
+                                                      x/(0.08*bm_temp$largetree_area),
+                                                      x/(0.04*bm_temp$tree_area)))
       bm_temp <- bm_temp %>% rename("plot_id"= "data$표본점번호", "year"= "data$조사연도", 
                                     "forest_stand"= "data$임상코드", "grpby"= "data[, grpby]")
       
@@ -328,7 +335,8 @@ biomass2 <- function(data, byplot= TRUE, grpby=NULL){
                   carbon_stock_tC_ha = sum(carbon_stock_tC_ha, na.rm=TRUE),
                   co2_stock_tCO2_ha = sum(co2_stock_tCO2_ha, na.rm=TRUE),.groups = 'drop')
       
-     bm <- bm_temp3
+      
+      bm <- bm_temp3
       
         
 

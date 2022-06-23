@@ -4,7 +4,7 @@
 \alias{readNFI}
 \title{readNFI() Function}
 \usage{
-readNFI(dir, district = NULL, col_all = FALSE)
+readNFI(dir, district = NULL, col_all = TRUE)
 }
 \arguments{
 \item{dir}{: dir}
