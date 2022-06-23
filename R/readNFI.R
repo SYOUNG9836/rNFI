@@ -118,12 +118,17 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
     ## 필요한 column만 불러오기, defult--------------------------------------------------------------
     else {
     
-      ## 임분조사표 sheet, 임목조사표 sheet만 불러오기---------------------------------------------
+      ## 일반정보 sheet(토지이용), 임분조사표 sheet, 임목조사표 sheet만 불러오기---------------------------------------------
+      
+      General_info <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "일반정보", 
+                                         col_names = TRUE, col_types = "text")
+      
       Stand_inve <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "임분조사표",
                                        col_names = TRUE, col_types = "text")
       
       Tree_inve <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "임목조사표",
                                       col_names = TRUE, col_types = "text")
+      
       
       data_merge <- merge(x=Tree_inve, y=Stand_inve, 
                           by=c('집락번호', '표본점번호', '조사차기'), all.x=TRUE)
@@ -147,7 +152,16 @@ readNFI <- function(dir, district=NULL, col_all=FALSE){
       
         # if(nrow(data_merge) == 0) {
         #   stop(paste('NFI data in ',district ,' does not exist.'))}
-        }
+      }
+      
+      
+      General_info <- General_info[(names(General_info) %in% c('집락번호', '표본점번호', '조사차기',  '조사연도', 
+                                          '임상코드', '임상', "토지이용코드", "토지이용"))]
+      
+      
+      data_merge <- merge(x=data_merge, y=General_info, 
+                          by=c('집락번호', '표본점번호', '조사차기',  '조사연도', '임상코드', '임상'), 
+                          all.x=TRUE)
     
       data[[i]] <- data_merge
       

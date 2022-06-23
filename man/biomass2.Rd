@@ -4,9 +4,9 @@
 \alias{biomass2}
 \title{biomass2() Function}
 \usage{
-biomass2(data, byplot = TRUE, grpby = NULL, largetree = TRUE)
+biomass2(data, byplot = TRUE, grpby = NULL)
 
-biomass2(data, byplot = TRUE, grpby = NULL, largetree = TRUE)
+biomass2(data, byplot = TRUE, grpby = NULL)
 }
 \arguments{
 \item{data}{: data}
