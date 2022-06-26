@@ -122,7 +122,7 @@ c_stck <- function(data){
 #' @export 
 
 
-biomass2 <- function(data, byplot= TRUE, grpby=NULL,largetree=TRUE ){
+biomass <- function(data, byplot= TRUE, grpby=NULL,largetree=TRUE ){
   
   ## 추정간재적 type이 num이 아닌 경우 as.numeric--------------------------------------------------------------
   if (!is.numeric(data$'추정간재적')){

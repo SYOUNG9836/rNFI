@@ -78,6 +78,7 @@ importancevalue_NFI <- function(data){
 #'
 #' This function 
 #' @param data : data
+#' @param grpby : 표본점번호
 #' @keywords plot
 #' @export 
 #' 

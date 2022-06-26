@@ -8,6 +8,8 @@ summary_NFI(data, grpby = "표본점번호")
 }
 \arguments{
 \item{data}{: data}
+
+\item{grpby}{: 표본점번호}
 }
 \description{
 This function

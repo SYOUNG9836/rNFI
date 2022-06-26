@@ -194,11 +194,39 @@ readNFI <- function(dir, district=NULL, col_all=TRUE){
                "수피",	"비율", "표준목간재적",	"추정수고",	"추정간재적")
   NFI[ , colnames(NFI) %in% num_col ] <- lapply(NFI[ , colnames(NFI) %in% num_col ], as.numeric)
   
-  
+  #NFI 7차 조사일자.x 조사일자.y
   #date_col <- c("조사일자")
   #NFI[ , colnames(NFI) %in% date_col ] <- lapply(NFI[ , colnames(NFI) %in% date_col ], as.character)
   #NFI[ , colnames(NFI) %in% date_col ] <- lapply(NFI[ , colnames(NFI) %in% date_col ], function(x) as.Date( x ,format = '%Y%m%d'))
   
+  
+  
+  NFI$'침활구분'[is.na(NFI$'침활구분')] <- unlist(lapply(NFI$'수종명'[is.na(NFI$'침활구분')],
+                                                 FUN=function(x){Species_DB$type[which(x==Species_DB$species)]}))
+  
+  
+  NFI$basal_area <- (pi*(NFI$'흉고직경'/2)^2)/10000
+  NFI$'추정간재적'[is.na(NFI$'추정간재적')] <- ifelse(NFI$'침활구분'[is.na(NFI$'추정간재적')] =="활엽수",
+                                            (0.1673*(NFI$'흉고직경'^2.393))/1000, (0.086*(NFI$'흉고직경'^2.393))/1000)
+  
+  
+  
+  stand_temp <- NFI %>% 
+    mutate(deciduous_ba = ifelse(NFI$"침활구분" == "활엽수",  basal_area, 0)) %>%
+    group_by(NFI$'표본점번호',NFI$'조사연도') %>% 
+    summarise(all_ba = sum(basal_area), 
+              deciduous_ba = sum(deciduous_ba),
+              .groups = 'drop')
+  
+  stand_temp$percent <- (stand_temp$deciduous_ba/stand_temp$all_ba) *100
+  stand_temp$stand <- ifelse(stand_temp$percent>=75, "Deciduous", 
+                             ifelse(stand_temp$percent>25, "Mixed", "Coniferous"))
+  
+  
+  stand_temp <- stand_temp %>% rename("표본점번호"= "NFI$표본점번호", "조사연도"= "NFI$조사연도")
+  
+  condition <- (names(stand_temp) %in% c("표본점번호","조사연도","stand"))
+  NFI <- merge(NFI, stand_temp[condition], by= c("표본점번호","조사연도"), all.x=T)
   
   
   return(NFI) 

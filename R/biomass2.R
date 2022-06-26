@@ -233,15 +233,15 @@ biomass2 <- function(data, byplot= TRUE, grpby=NULL){
     }
   }
   
-  ## !byplot--------------------------------------------------------------
+  ## !byplot grpby--------------------------------------------------------------
   else{
     
     if (!is.null(grpby)){
       
       
-      # 대경목 조사원
+      # 대경목 조사원 (0.08ha + 0.04ha)
       bm_temp <- data %>% 
-        group_by(data$'표본점번호',data$'조사연도', data$'임상코드', data[,grpby], largetree, largetree_area, tree_area) %>% 
+        group_by(data$'표본점번호',data$'조사연도', stand, data[,grpby], largetree, largetree_area, tree_area) %>% 
         summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
                   biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
                   AG_biomass_ton = sum(.data$AG_biomass, na.rm=TRUE),
@@ -255,18 +255,18 @@ biomass2 <- function(data, byplot= TRUE, grpby=NULL){
                                                       x/(0.08*bm_temp$largetree_area),
                                                       x/(0.04*bm_temp$tree_area)))
       bm_temp <- bm_temp %>% rename("plot_id"= "data$표본점번호", "year"= "data$조사연도", 
-                                    "forest_stand"= "data$임상코드", "grpby"= "data[, grpby]")
+                                    "grpby"= "data[, grpby]")
       
       # 플롯별
       bm_temp <- bm_temp %>% 
-        group_by(plot_id, year, forest_stand, grpby) %>% 
+        group_by(plot_id, year, stand, grpby) %>% 
         summarise(volume_m3_ha = sum(volume_m3, na.rm=TRUE),
                   biomass_ton_ha = sum(biomass_ton, na.rm=TRUE),
                   AG_biomass_ton_ha = sum(AG_biomass_ton, na.rm=TRUE),
                   carbon_stock_tC_ha = sum(carbon_stock_tC, na.rm=TRUE),
                   co2_stock_tCO2_ha = sum(co2_stock_tCO2, na.rm=TRUE),.groups = 'drop')
       
-      # 
+
       weight_grpby <- bm_temp %>% 
         group_by(grpby) %>% 
         summarise(plot_num_all = n(),.groups = 'drop')
@@ -278,17 +278,18 @@ biomass2 <- function(data, byplot= TRUE, grpby=NULL){
       
       
       weight_stand <- bm_temp %>% 
-        group_by(year, forest_stand, grpby) %>% 
+        group_by(year, stand, grpby) %>% 
         summarise(plot_num_stand = n(),.groups = 'drop')
       
       
+      # Double sampling for post-stratification(forest stand)
+      weight_DSS <- merge(weight_stand, weight_year, by =c("year", "grpby"))
+      weight_DSS$weight_DSS <- weight_DSS$plot_num_stand/weight_DSS$plot_num_year
       
-      weight <- merge(weight_stand, weight_year, by =c("year", "grpby"))
-      weight$weight <- weight$plot_num_stand/weight$plot_num_year
       
-      #기본계획구(p)내 표본층(h)의 ha당 평균 임목자원량
-      bm_temp2 <- bm_temp %>% 
-        group_by(year, forest_stand, grpby) %>% 
+      # 기본계획구(p)내 표본층(h)의 ha당 평균 임목자원량
+      bm_temp_DSS <- bm_temp %>% 
+        group_by(year, stand, grpby) %>% 
         summarise(volume_m3_ha = sum(volume_m3_ha, na.rm=TRUE),
                   biomass_ton_ha = sum(biomass_ton_ha, na.rm=TRUE),
                   AG_biomass_ton_ha = sum(AG_biomass_ton_ha, na.rm=TRUE),
@@ -296,16 +297,16 @@ biomass2 <- function(data, byplot= TRUE, grpby=NULL){
                   co2_stock_tCO2_ha = sum(co2_stock_tCO2_ha, na.rm=TRUE),.groups = 'drop')
       
       
-      bm_temp2 <- merge(bm_temp2, weight, by =c("year", "forest_stand", "grpby"))
+      bm_temp_DSS <- merge(bm_temp_DSS, weight_DSS, by =c("year", "stand", "grpby"))
       
       
-      condition <- (names(bm_temp2) %in% c("volume_m3_ha","biomass_ton_ha","AG_biomass_ton_ha","carbon_stock_tC_ha","co2_stock_tCO2_ha"))
-      bm_temp2[condition] <- 
-        lapply(bm_temp2[condition], function(x) (x/bm_temp2$plot_num_stand)*bm_temp2$weight)
+      condition <- (names(bm_temp_DSS) %in% c("volume_m3_ha","biomass_ton_ha","AG_biomass_ton_ha","carbon_stock_tC_ha","co2_stock_tCO2_ha"))
+      bm_temp_DSS[condition] <- 
+        lapply(bm_temp_DSS[condition], function(x) (x/bm_temp_DSS$plot_num_stand)*bm_temp_DSS$weight_DSS)
       
       
-      #
-      bm_temp3 <- bm_temp2 %>% 
+  
+      bm_temp_WMA <- bm_temp_DSS %>% 
         group_by(year, grpby) %>% 
         summarise(volume_m3_ha = sum(volume_m3_ha, na.rm=TRUE),
                   biomass_ton_ha = sum(biomass_ton_ha, na.rm=TRUE),
@@ -314,21 +315,79 @@ biomass2 <- function(data, byplot= TRUE, grpby=NULL){
                   co2_stock_tCO2_ha = sum(co2_stock_tCO2_ha, na.rm=TRUE),.groups = 'drop')
       
       
-      
-      weight <- merge(weight_year, weight_grpby, by =c("grpby"))
-      weight$weight <- weight$plot_num_year/weight$plot_num_all
-      
-      
-      bm_temp3 <- merge(bm_temp3, weight, by =c("year", "grpby"))
+      # Weighted Moving Average(to combine annual inventory field data)
+      weight_WMA <- merge(weight_year, weight_grpby, by =c("grpby"))
+      weight_WMA$weight_WMA <- weight_WMA$plot_num_year/weight_WMA$plot_num_all
       
       
-      condition <- (names(bm_temp3) %in% c("volume_m3_ha","biomass_ton_ha","AG_biomass_ton_ha","carbon_stock_tC_ha","co2_stock_tCO2_ha"))
-      bm_temp3[condition] <- 
-        lapply(bm_temp3[condition], function(x) x*bm_temp3$weight )
+      bm_temp_WMA <- merge(bm_temp_WMA, weight_WMA, by =c("year", "grpby"))
       
       
-      bm_temp3 <- bm_temp3 %>% 
+      condition <- (names(bm_temp_WMA) %in% c("volume_m3_ha","biomass_ton_ha","AG_biomass_ton_ha","carbon_stock_tC_ha","co2_stock_tCO2_ha"))
+      bm_temp_WMA[condition] <- 
+        lapply(bm_temp_WMA[condition], function(x) x*bm_temp_WMA$weight_WMA )
+      
+      
+      bm <- bm_temp_WMA %>% 
         group_by(grpby) %>% 
+        summarise(volume_m3_ha = sum(volume_m3_ha, na.rm=TRUE),
+                  biomass_ton_ha = sum(biomass_ton_ha, na.rm=TRUE),
+                  AG_biomass_ton_ha = sum(AG_biomass_ton_ha, na.rm=TRUE),
+                  carbon_stock_tC_ha = sum(carbon_stock_tC_ha, na.rm=TRUE),
+                  co2_stock_tCO2_ha = sum(co2_stock_tCO2_ha, na.rm=TRUE),.groups = 'drop')
+
+        
+
+    }
+    
+    else{
+        
+      
+      # 대경목 조사원 (0.08ha + 0.04ha)
+      bm_temp <- data %>% 
+        group_by(data$'표본점번호',data$'조사연도', stand, largetree, largetree_area, tree_area) %>% 
+        summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
+                  biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
+                  AG_biomass_ton = sum(.data$AG_biomass, na.rm=TRUE),
+                  carbon_stock_tC = sum(.data$carbon_stock, na.rm=TRUE),
+                  co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),.groups = 'drop')
+      
+      
+      condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomasS_ton","carbon_stock_tC","co2_stock_tCO2"))
+      bm_temp[condition] <- 
+        lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, 
+                                                      x/(0.08*bm_temp$largetree_area),
+                                                      x/(0.04*bm_temp$tree_area)))
+      bm_temp <- bm_temp %>% rename("plot_id"= "data$표본점번호", "year"= "data$조사연도")
+      
+      # 플롯별
+      bm_temp <- bm_temp %>% 
+        group_by(plot_id, year, stand) %>% 
+        summarise(volume_m3_ha = sum(volume_m3, na.rm=TRUE),
+                  biomass_ton_ha = sum(biomass_ton, na.rm=TRUE),
+                  AG_biomass_ton_ha = sum(AG_biomass_ton, na.rm=TRUE),
+                  carbon_stock_tC_ha = sum(carbon_stock_tC, na.rm=TRUE),
+                  co2_stock_tCO2_ha = sum(co2_stock_tCO2, na.rm=TRUE),.groups = 'drop')
+
+      
+      weight_year <- bm_temp %>% 
+        group_by(year) %>% 
+        summarise(plot_num_year = n(),.groups = 'drop')
+      
+      
+      weight_stand <- bm_temp %>% 
+        group_by(year, stand) %>% 
+        summarise(plot_num_stand = n(),.groups = 'drop')
+      
+      
+      # Double sampling for post-stratification(forest stand)
+      weight_DSS <- merge(weight_stand, weight_year, by =c("year"))
+      weight_DSS$weight_DSS <- weight_DSS$plot_num_stand/weight_DSS$plot_num_year
+      
+      
+      # 기본계획구(p)내 표본층(h)의 ha당 평균 임목자원량
+      bm_temp_DSS <- bm_temp %>% 
+        group_by(year, stand) %>% 
         summarise(volume_m3_ha = sum(volume_m3_ha, na.rm=TRUE),
                   biomass_ton_ha = sum(biomass_ton_ha, na.rm=TRUE),
                   AG_biomass_ton_ha = sum(AG_biomass_ton_ha, na.rm=TRUE),
@@ -336,44 +395,47 @@ biomass2 <- function(data, byplot= TRUE, grpby=NULL){
                   co2_stock_tCO2_ha = sum(co2_stock_tCO2_ha, na.rm=TRUE),.groups = 'drop')
       
       
-      bm <- bm_temp3
+      bm_temp_DSS <- merge(bm_temp_DSS, weight_DSS, by =c("year", "stand"))
       
-        
-
-    }
-    
-    else{
-        
-        plot_num <- n_distinct(data$'표본점번호')
-        
-        bm <- data %>% 
-          summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
-                    biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
-                    AG_biomass_ton = sum(.data$AG_biomass, na.rm=TRUE),
-                    carbon_stock_tC = sum(.data$carbon_stock, na.rm=TRUE),
-                    co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),.groups = 'drop')
-        
-        
-        bm_temp <- data %>% 
-          group_by(largetree)
-        summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
-                  biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
-                  AG_biomass_ton = sum(.data$AG_biomass, na.rm=TRUE),
-                  carbon_stock_tC = sum(.data$carbon_stock, na.rm=TRUE),
-                  co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),.groups = 'drop')
-        
-        bm_temp[,2:6] <- lapply(bm_temp[,2:6], function(x) ifelse(bm_temp$largetree == 1, x/(0.08*plot_num) , x/(0.04*plot_num)))
-        
-        
-        bm_temp <- bm_temp %>% 
-          summarise(volume_m3_ha = sum(volume_m3, na.rm=TRUE),
-                    biomass_ton_ha = sum(biomass_ton, na.rm=TRUE),
-                    AG_biomass_ton_ha = sum(AG_biomass_ton, na.rm=TRUE),
-                    carbon_stock_tC_ha = sum(carbon_stock_tC, na.rm=TRUE),
-                    co2_stock_tCO2_ha = sum(co2_stock_tCO2, na.rm=TRUE),.groups = 'drop')
-        
-        bm <- cbind(bm, bm_temp) 
-        
+      
+      condition <- (names(bm_temp_DSS) %in% c("volume_m3_ha","biomass_ton_ha","AG_biomass_ton_ha","carbon_stock_tC_ha","co2_stock_tCO2_ha"))
+      bm_temp_DSS[condition] <- 
+        lapply(bm_temp_DSS[condition], function(x) (x/bm_temp_DSS$plot_num_stand)*bm_temp_DSS$weight_DSS)
+      
+      
+      
+      bm_temp_WMA <- bm_temp_DSS %>% 
+        group_by(year) %>% 
+        summarise(volume_m3_ha = sum(volume_m3_ha, na.rm=TRUE),
+                  biomass_ton_ha = sum(biomass_ton_ha, na.rm=TRUE),
+                  AG_biomass_ton_ha = sum(AG_biomass_ton_ha, na.rm=TRUE),
+                  carbon_stock_tC_ha = sum(carbon_stock_tC_ha, na.rm=TRUE),
+                  co2_stock_tCO2_ha = sum(co2_stock_tCO2_ha, na.rm=TRUE),.groups = 'drop')
+      
+      
+      # Weighted Moving Average(to combine annual inventory field data)
+      weight_WMA <- weight_year
+      plot_num_all <- sum(weight_WMA$plot_num_year)
+      weight_WMA$weight_WMA <- weight_WMA$plot_num_year/plot_num_all
+      
+      
+      bm_temp_WMA <- merge(bm_temp_WMA, weight_WMA, by =c("year"))
+      
+      
+      condition <- (names(bm_temp_WMA) %in% c("volume_m3_ha","biomass_ton_ha","AG_biomass_ton_ha","carbon_stock_tC_ha","co2_stock_tCO2_ha"))
+      bm_temp_WMA[condition] <- 
+        lapply(bm_temp_WMA[condition], function(x) x*bm_temp_WMA$weight_WMA )
+      
+      
+      bm <- bm_temp_WMA %>% 
+        summarise(volume_m3_ha = sum(volume_m3_ha, na.rm=TRUE),
+                  biomass_ton_ha = sum(biomass_ton_ha, na.rm=TRUE),
+                  AG_biomass_ton_ha = sum(AG_biomass_ton_ha, na.rm=TRUE),
+                  carbon_stock_tC_ha = sum(carbon_stock_tC_ha, na.rm=TRUE),
+                  co2_stock_tCO2_ha = sum(co2_stock_tCO2_ha, na.rm=TRUE),.groups = 'drop')
+      
+      
+      
       
     }
     
