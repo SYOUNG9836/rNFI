@@ -4,7 +4,7 @@
 \alias{summary_NFI}
 \title{Descriptive_statistics Function}
 \usage{
-summary_NFI(data, grpby = "표본점번호")
+summary_NFI(data, grpby = NULL)
 }
 \arguments{
 \item{data}{: data}
