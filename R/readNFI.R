@@ -176,9 +176,9 @@ readNFI <- function(dir, district=NULL, col_all=TRUE){
   
   
   ## .xlsx별(연도별) 데이터 합치기--------------------------------------------------------------
-  NFI <- do.call(rbind, data)
-  
-  
+  #NFI <- do.call(rbind, data)
+  NFI <- data.table::rbindlist(data, fill=TRUE, use.names=TRUE)
+  NFI <- as.data.frame(NFI)
   
   log_col <- c("산림여부", "조사가능여부")
   NFI[ , colnames(NFI) %in% log_col ] <- lapply(lapply(NFI[ , colnames(NFI) %in% log_col ], as.numeric), as.logical)
