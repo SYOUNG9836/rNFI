@@ -62,13 +62,14 @@ importancevalue_NFI <- function(data){
   ##importancevalue
   data_iv_result<-BiodiversityR::importancevalue(data_iv, site='plot', species='species', count='count', 
                                   basal='basal', factor="", level="")
-  
-  str(data_iv_result)
-  
+
   
   data_iv_result  <- as.data.frame(data_iv_result) # %>% select(importance.value)
   data_iv_result$species <- rownames(data_iv_result)
   rownames(data_iv_result) <- NULL
+  
+  data_iv_result$importance.value <-  data_iv_result$importance.value/3
+  
   
   return(data_iv_result)
   
