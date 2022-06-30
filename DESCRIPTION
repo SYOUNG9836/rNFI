@@ -23,7 +23,8 @@ Imports:
     vegan,
     tidyr,
     BiodiversityR,
-    data.table
+    data.table,
+    ggplot2
 Depends: 
     R (>= 2.10)
 Suggests: 

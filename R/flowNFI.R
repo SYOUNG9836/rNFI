@@ -2,15 +2,22 @@
 #'
 #' This function loop function
 #' @param data : data 
-#' @param grpby : grpby
+#' @param grpby : grpby 시도코드; 시군구코드; 읍면동 코드
 #' @param type : biomass; iv
+#' @param output: poly; line 
 #' @return merge data
 #' @export
 
 
-flowNFI <- function(data, grpby="", type = "biomass"){
+flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
   
-  flow <- vector("list", length = (length(unique(data$"조사연도"))-4))
+  theme_set(theme_bw())
+  theme_update(text = element_text(size=13))
+  
+  
+  y <- enquo(y)
+  
+  flow_list <- vector("list", length = (length(unique(data$"조사연도"))-4))
   
   for(i in 1:(length(unique(data$"조사연도"))-4)){ 
   
@@ -20,19 +27,116 @@ flowNFI <- function(data, grpby="", type = "biomass"){
     
     
     if(type == "biomass"){
-      flow[[i]] <- biomass2(data_temp, byplot = FALSE, grpby = grpby )
-      flow[[i]]$year <- e_year
-    }
-    else if(type == "iv"){
-      flow[[i]] <- importancevalue_NFI(data_temp)
-      flow[[i]]$year <- e_year
+      flow_list[[i]] <- biomass2(data_temp, byplot = FALSE, grpby = grpby )
+      flow_list[[i]]$year <- e_year
+    }else if(type == "iv"){
+      flow_list[[i]] <- importancevalue_NFI(data_temp)
+      flow_list[[i]]$year <- e_year
+    }else{
+      stop(paste( type, ' does not exist.'))
     }
   }
   
-  flow_df <- data.table::rbindlist(flow, fill=TRUE, use.names=TRUE)
+  flow_df <- data.table::rbindlist(flow_list, fill=TRUE, use.names=TRUE)
   flow_df <- as.data.frame(flow_df)
   
+  
+  district_code[,1] <- (gsub("-", "", district_code[,1]))
+  flow_df$name <- unlist(lapply(flow_df$grpby, 
+                                FUN=function(x){district_code$"법정동명"[which(x==district_code$"법정동코드")]}))
+
+  
+  if(type =="biomass"){
+    
+    if(output =="table"){
+      
+      flow <- flow_df
+      
+    }else if(output =="poly"){
+      
+      if(nchar(flow_df$grpby[1]) == 10){
+        
+        bm_poly <- merge(emd, flow_df, by.x=c("EMD_CD"), by.y = c("grpby"), all.y=T)
+        
+        flow <- ggplot() + 
+          geom_sf(data = bm_poly, aes(fill = !!y))+
+          coord_sf(expand = FALSE)+
+          facet_wrap(~year)+
+          scale_fill_viridis_c(direction = -1,  alpha = .7)  #trans = "sqrt", alpha = .4
+        
+      }else if(nchar(flow_df$grpby[1]) == 5){
+        
+        bm_poly <- merge(sgg, flow_df, by.x=c("SIG_CD"), by.y = c("grpby"), all.y=T)
+        
+        flow <- ggplot() + 
+          geom_sf(data = bm_poly, aes(fill = !!y)) + 
+          coord_sf(expand = FALSE)+
+          facet_wrap(~year)+
+          scale_fill_viridis_c(direction = -1,  alpha = .7)  #trans = "sqrt", alpha = .4
+        
+      }else{
+        
+        bm_poly <- merge(do, flow_df, by.x=c("CTPRVN_CD"), by.y = c("grpby"), all.y=T)
+        
+        flow <- ggplot() + 
+          geom_sf(data = bm_poly, aes(fill = !!y))+
+          coord_sf(expand = FALSE)+
+          facet_wrap(~year)+
+          scale_fill_viridis_c(direction = -1,  alpha = .7)  #trans = "sqrt", alpha = .4
+        
+      }
+      
+    }else if(output =="line"){
+      
+      flow <- ggplot(flow_df) + 
+        geom_line(aes(x=year, y=!!y, color = reorder(name, -!!y)), size = 1.1)+ 
+        theme(axis.title.x = element_text(vjust=-1.5),
+              axis.title.y.left = element_text(vjust=4),
+              axis.title.y.right = element_text(vjust=4))+
+        theme(plot.margin = unit(c(0.3,0.1,0.5,0.6), "cm"), legend.title = element_blank()) + 
+        scale_x_discrete(guide = guide_axis(check.overlap = TRUE))+
+        guides(fill = guide_legend(reverse = TRUE))
+      
+    }else{
+      
+      stop(paste( output, ' does not exist.'))
+      
+    }
+  }else if(type=="iv"){
+    
+    if(output =="table"){
+      
+      flow <- flow_df
+      
+    } else if(output =="line"){
+      
+      flow <- flow_df %>% 
+        filter(species %in% reorder(species, importance.value)[1:10]) %>%
+        ggplot() + 
+        geom_line(aes(x=year, y=importance.value, color = reorder(species, -importance.value)), size = 1.1)+ 
+        theme(axis.title.x = element_text(vjust=-1.5),
+              axis.title.y.left = element_text(vjust=4),
+              axis.title.y.right = element_text(vjust=4))+
+        theme(plot.margin = unit(c(0.3,0.1,0.5,0.6), "cm"), legend.title = element_blank()) + 
+        guides(fill = guide_legend(reverse = TRUE))
+      
+    } else{
+      
+      stop(paste( output, ' does not exist.'))
+      
+    }
+    
+    
+   
+    
+  }
+  
+  return(flow)
+    
 }
+
+  
+
   
 
 
