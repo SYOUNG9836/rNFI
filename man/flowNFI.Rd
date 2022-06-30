@@ -4,14 +4,16 @@
 \alias{flowNFI}
 \title{flowNFI() Function}
 \usage{
-flowNFI(data, grpby = "", type = "biomass")
+flowNFI(data, grpby = "", y = NULL, type = "biomass", output = "line")
 }
 \arguments{
 \item{data}{: data}
 
-\item{grpby}{: grpby}
+\item{grpby}{: grpby 시도코드; 시군구코드; 읍면동 코드}
 
 \item{type}{: biomass; iv}
+
+\item{output:}{poly; line}
 }
 \value{
 merge data

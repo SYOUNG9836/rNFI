@@ -57,13 +57,19 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
       if(nchar(flow_df$grpby[1]) == 10){
         
         bm_poly <- merge(emd, flow_df, by.x=c("EMD_CD"), by.y = c("grpby"), all.y=T)
+        bm_poly <- sf::st_as_sf( bm_poly )
         
         flow <- ggplot() + 
-          geom_sf(data = bm_poly, aes(fill = !!y))+
-          coord_sf(expand = FALSE)+
+          geom_sf(data = bm_poly, aes(fill = volume_m3_ha , geometry = geometry))+
+          coord_sf(expand = FALSE, lims_method = "geometry_bbox")+
+          #scale_x_discrete(guide = guide_axis(check.overlap = TRUE))+
           facet_wrap(~year)+
-          scale_x_discrete(guide = guide_axis(check.overlap = TRUE))+
-          scale_fill_viridis_c(direction = -1,  alpha = .7)  #trans = "sqrt", alpha = .4
+          theme(axis.text.x = element_text(angle =90, vjust = 1))+
+          #ggspatial::annotation_scale(location = "bl", width_hint = 0.1) +
+          #ggspatial::annotation_north_arrow(location = "bl", which_north = "true", 
+          #                       pad_x = unit(0.0, "in"), pad_y = unit(0.1, "in"),
+          #                       style = north_arrow_fancy_orienteering)+
+          scale_fill_viridis_c(direction = -1,  alpha = .7)
         
       }else if(nchar(flow_df$grpby[1]) == 5){
         
