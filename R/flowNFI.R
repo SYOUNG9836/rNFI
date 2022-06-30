@@ -62,6 +62,7 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
           geom_sf(data = bm_poly, aes(fill = !!y))+
           coord_sf(expand = FALSE)+
           facet_wrap(~year)+
+          scale_x_discrete(guide = guide_axis(check.overlap = TRUE))+
           scale_fill_viridis_c(direction = -1,  alpha = .7)  #trans = "sqrt", alpha = .4
         
       }else if(nchar(flow_df$grpby[1]) == 5){
@@ -72,6 +73,7 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
           geom_sf(data = bm_poly, aes(fill = !!y)) + 
           coord_sf(expand = FALSE)+
           facet_wrap(~year)+
+          scale_x_discrete(guide = guide_axis(check.overlap = TRUE))+
           scale_fill_viridis_c(direction = -1,  alpha = .7)  #trans = "sqrt", alpha = .4
         
       }else{
@@ -82,6 +84,7 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
           geom_sf(data = bm_poly, aes(fill = !!y))+
           coord_sf(expand = FALSE)+
           facet_wrap(~year)+
+          scale_x_discrete(guide = guide_axis(check.overlap = TRUE))+
           scale_fill_viridis_c(direction = -1,  alpha = .7)  #trans = "sqrt", alpha = .4
         
       }
@@ -94,7 +97,6 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
               axis.title.y.left = element_text(vjust=4),
               axis.title.y.right = element_text(vjust=4))+
         theme(plot.margin = unit(c(0.3,0.1,0.5,0.6), "cm"), legend.title = element_blank()) + 
-        scale_x_discrete(guide = guide_axis(check.overlap = TRUE))+
         guides(fill = guide_legend(reverse = TRUE))
       
     }else{
