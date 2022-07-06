@@ -60,7 +60,7 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
         bm_poly <- sf::st_as_sf( bm_poly )
         
         flow <- ggplot() + 
-          geom_sf(data = bm_poly, aes(fill = volume_m3_ha , geometry = geometry))+
+          geom_sf(data = bm_poly, aes(fill = !!y , geometry = geometry))+
           coord_sf(expand = FALSE, lims_method = "geometry_bbox")+
           #scale_x_discrete(guide = guide_axis(check.overlap = TRUE))+
           facet_wrap(~year)+
@@ -76,22 +76,32 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
         bm_poly <- merge(sgg, flow_df, by.x=c("SIG_CD"), by.y = c("grpby"), all.y=T)
         
         flow <- ggplot() + 
-          geom_sf(data = bm_poly, aes(fill = !!y)) + 
-          coord_sf(expand = FALSE)+
+          geom_sf(data = bm_poly, aes(fill = !!y , geometry = geometry))+
+          coord_sf(expand = FALSE, lims_method = "geometry_bbox")+
+          #scale_x_discrete(guide = guide_axis(check.overlap = TRUE))+
           facet_wrap(~year)+
-          scale_x_discrete(guide = guide_axis(check.overlap = TRUE))+
-          scale_fill_viridis_c(direction = -1,  alpha = .7)  #trans = "sqrt", alpha = .4
+          theme(axis.text.x = element_text(angle =90, vjust = 1))+
+          #ggspatial::annotation_scale(location = "bl", width_hint = 0.1) +
+          #ggspatial::annotation_north_arrow(location = "bl", which_north = "true", 
+          #                       pad_x = unit(0.0, "in"), pad_y = unit(0.1, "in"),
+          #                       style = north_arrow_fancy_orienteering)+
+          scale_fill_viridis_c(direction = -1,  alpha = .7)
         
       }else{
         
         bm_poly <- merge(do, flow_df, by.x=c("CTPRVN_CD"), by.y = c("grpby"), all.y=T)
         
         flow <- ggplot() + 
-          geom_sf(data = bm_poly, aes(fill = !!y))+
-          coord_sf(expand = FALSE)+
+          geom_sf(data = bm_poly, aes(fill = !!y , geometry = geometry))+
+          coord_sf(expand = FALSE, lims_method = "geometry_bbox")+
+          #scale_x_discrete(guide = guide_axis(check.overlap = TRUE))+
           facet_wrap(~year)+
-          scale_x_discrete(guide = guide_axis(check.overlap = TRUE))+
-          scale_fill_viridis_c(direction = -1,  alpha = .7)  #trans = "sqrt", alpha = .4
+          theme(axis.text.x = element_text(angle =90, vjust = 1))+
+          #ggspatial::annotation_scale(location = "bl", width_hint = 0.1) +
+          #ggspatial::annotation_north_arrow(location = "bl", which_north = "true", 
+          #                       pad_x = unit(0.0, "in"), pad_y = unit(0.1, "in"),
+          #                       style = north_arrow_fancy_orienteering)+
+          scale_fill_viridis_c(direction = -1,  alpha = .7)
         
       }
       
@@ -100,8 +110,7 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
       flow <- ggplot(flow_df) + 
         geom_line(aes(x=year, y=!!y, color = reorder(name, -!!y)), size = 1.1)+ 
         theme(axis.title.x = element_text(vjust=-1.5),
-              axis.title.y.left = element_text(vjust=4),
-              axis.title.y.right = element_text(vjust=4))+
+              axis.title.y = element_text(vjust=4))+
         theme(plot.margin = unit(c(0.3,0.1,0.5,0.6), "cm"), legend.title = element_blank()) + 
         guides(fill = guide_legend(reverse = TRUE))
       
@@ -123,8 +132,7 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
         ggplot() + 
         geom_line(aes(x=year, y=importance.value, color = reorder(species, -importance.value)), size = 1.1)+ 
         theme(axis.title.x = element_text(vjust=-1.5),
-              axis.title.y.left = element_text(vjust=4),
-              axis.title.y.right = element_text(vjust=4))+
+              axis.title.y = element_text(vjust=4))+
         theme(plot.margin = unit(c(0.3,0.1,0.5,0.6), "cm"), legend.title = element_blank()) + 
         guides(fill = guide_legend(reverse = TRUE))
       

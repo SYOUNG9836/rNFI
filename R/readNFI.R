@@ -229,6 +229,34 @@ readNFI <- function(dir, district=NULL, col_all=TRUE){
   NFI <- merge(NFI, stand_temp[condition], by= c("표본점번호","조사연도"), all.x=T)
   
   
+  
+  NFI[NFI$"표본점번호"==132168 ,"시군구코드"] <- "46910250"
+  NFI[NFI$"표본점번호"==132168 ,"시도코드"] <- "46910"
+  NFI[NFI$"표본점번호"==132168 ,"시군구"] <- "신안군"
+  NFI[NFI$"표본점번호"==132168 ,"시도"] <- "전라남도"
+  NFI[NFI$"표본점번호"==132168 ,"읍면동"] <- "지도읍"
+  
+  NFI[NFI$"시도코드"==36,"시군구코드"] <- "36110"
+  NFI[NFI$"시도코드"==36,"시도코드"] <- "36110"
+  
+  
+  
+  # NFI <- merge(NFI, samplepoint_district, by.x = c("집락번호", "표본점번호"), by.y = c("SP_ID", "SP_NAME"), all.x=T)
+  # 
+  # NFI[is.na(NFI$CTPRVN_CD ),"CTP_KOR_NM"] <- NFI[is.na(NFI$CTPRVN_CD),"시도"]
+  # NFI[is.na(NFI$CTPRVN_CD ),"CTPRVN_CD"] <- NFI[is.na(NFI$CTPRVN_CD),"시도코드"]
+  # 
+  # NFI[is.na(NFI$SIG_CD),"SIG_KOR_NM"] <- NFI[is.na(NFI$SIG_CD),"시군구"]
+  # NFI[is.na(NFI$SIG_CD),"SIG_CD"] <- NFI[is.na(NFI$SIG_CD),"시군구코드"]
+  # 
+  # 
+  # NFI[is.na(NFI$EMD_CD),"EMD_KOR_NM"] <- NFI[is.na(NFI$EMD_CD),"읍면동"]
+  # NFI[is.na(NFI$EMD_CD),"EMD_CD"] <- NFI[is.na(NFI$EMD_CD),"읍면동코드"]
+  
+  
+ 
+  
+  
   return(NFI) 
   
   
