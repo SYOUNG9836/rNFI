@@ -27,7 +27,7 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
     
     
     if(type == "biomass"){
-      flow_list[[i]] <- biomass2(data_temp, byplot = FALSE, grpby = grpby )
+      flow_list[[i]] <- biomass(data_temp, byplot = FALSE, grpby = grpby )
       flow_list[[i]]$year <- e_year
     }else if(type == "iv"){
       flow_list[[i]] <- importancevalue_NFI(data_temp)
@@ -56,7 +56,7 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
       
       if(nchar(flow_df$grpby[1]) == 10){
         
-        bm_poly <- merge(emd, flow_df, by.x=c("EMD_CD"), by.y = c("grpby"), all.y=T)
+        bm_poly <- right_join(emd, flow_df, by.x=c("EMD_CD"), by.y = c("grpby"))
         bm_poly <- sf::st_as_sf( bm_poly )
         
         flow <- ggplot() + 
@@ -73,7 +73,7 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
         
       }else if(nchar(flow_df$grpby[1]) == 5){
         
-        bm_poly <- merge(sgg, flow_df, by.x=c("SIG_CD"), by.y = c("grpby"), all.y=T)
+        bm_poly <- right_join(sgg, flow_df, by.x=c("SIG_CD"), by.y = c("grpby"))
         
         flow <- ggplot() + 
           geom_sf(data = bm_poly, aes(fill = !!y , geometry = geometry))+
@@ -89,7 +89,7 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
         
       }else{
         
-        bm_poly <- merge(do, flow_df, by.x=c("CTPRVN_CD"), by.y = c("grpby"), all.y=T)
+        bm_poly <- right_join(do, flow_df, by.x=c("CTPRVN_CD"), by.y = c("grpby"))
         
         flow <- ggplot() + 
           geom_sf(data = bm_poly, aes(fill = !!y , geometry = geometry))+

@@ -2,9 +2,9 @@
 % Please edit documentation in R/biomass.R
 \name{biomass}
 \alias{biomass}
-\title{biomass2() Function}
+\title{biomass() Function}
 \usage{
-biomass(data, byplot = TRUE, grpby = NULL, largetree = TRUE)
+biomass(data, byplot = TRUE, grpby = NULL)
 }
 \arguments{
 \item{data}{: data}
@@ -12,10 +12,8 @@ biomass(data, byplot = TRUE, grpby = NULL, largetree = TRUE)
 \item{byplot}{: byplot}
 
 \item{grpby}{: grpby}
-
-\item{largetree}{: largetree}
 }
 \description{
 This function
 }
-\keyword{biomass2}
+\keyword{biomass}

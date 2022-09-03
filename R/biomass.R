@@ -1,108 +1,58 @@
 
 ## biomass 구하기--------------------------------------------------------------
 ## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)(1+뿌리함량비)-----------------
-T_bm <- function(data){
+bm_df <- function(data){
   
-  output <- data  %>% mutate(T_biomass = case_when(
+  
+  output <- data  %>% mutate(species_bm = case_when(
     
     ## bio_coeff = 국가고유배출계수, 
     ## 출처 : "탄소배출계수를 활용한 국가 온실가스 통계 작성", 
     ## "NIFoS 산림정책이슈 제129호 : 주요 산림수종의 표준 탄소흡수량(ver.1.2)"
     
     ## 강원지방소나무--------------------------------------------------------------
-    (data$'수종명' =="소나무" && (data$'시군구' == "영주군" || data$'시군구' == "봉화군" || data$'시군구' == "울진군" || data$'시군구' == "영양군" || data$'광역시도' == "강원도" )) 
-    ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "강원지방소나무",2])*(bio_coeff[bio_coeff[,1] == "강원지방소나무",4])*(1+bio_coeff[bio_coeff[,1] == "강원지방소나무",6]),
+    (data$'수종명' =="소나무" && (data$SIG_KOR_NM == "영주군" || data$SIG_KOR_NM == "봉화군" || data$SIG_KOR_NM == "울진군" || dataSIG_KOR_NM == "영양군" || data$SIG_KOR_NM == "강원도" )) 
+    ~ "강원지방소나무" ,
     
     ## 수종별--------------------------------------------------------------
-    data$'수종명' =="소나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "중부지방소나무",2])*(bio_coeff[bio_coeff[,1] == "중부지방소나무",4])*(1+bio_coeff[bio_coeff[,1] == "중부지방소나무",6]),
-    data$'수종명' =="낙엽송" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "낙엽송",2])*(bio_coeff[bio_coeff[,1] == "낙엽송",4])*(1+bio_coeff[bio_coeff[,1] == "낙엽송",6]),
-    data$'수종명' =="리기다소나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "리기다소나무",2])*(bio_coeff[bio_coeff[,1] == "리기다소나무",4])*(1+bio_coeff[bio_coeff[,1] == "리기다소나무",6]),
-    data$'수종명' =="곰솔" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "곰솔",2])*(bio_coeff[bio_coeff[,1] == "곰솔",4])*(1+bio_coeff[bio_coeff[,1] == "곰솔",6]),
-    data$'수종명' =="잣나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "잣나무",2])*(bio_coeff[bio_coeff[,1] == "잣나무",4])*(1+bio_coeff[bio_coeff[,1] == "잣나무",6]),
-    data$'수종명' =="삼나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "삼나무",2])*(bio_coeff[bio_coeff[,1] == "삼나무",4])*(1+bio_coeff[bio_coeff[,1] == "삼나무",6]),
-    data$'수종명' =="편백" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "편백",2])*(bio_coeff[bio_coeff[,1] == "편백",4])*(1+bio_coeff[bio_coeff[,1] == "편백",6]),
-    data$'수종명' =="굴참나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "굴참나무",2])*(bio_coeff[bio_coeff[,1] == "굴참나무",4])*(1+bio_coeff[bio_coeff[,1] == "굴참나무",6]),
-    data$'수종명' =="신갈나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "신갈나무",2])*(bio_coeff[bio_coeff[,1] == "신갈나무",4])*(1+bio_coeff[bio_coeff[,1] == "신갈나무",6]),
-    data$'수종명' =="상수리나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "상수리나무",2])*(bio_coeff[bio_coeff[,1] == "상수리나무",4])*(1+bio_coeff[bio_coeff[,1] == "상수리나무",6]),
-    data$'수종명' =="졸참나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "졸참나무",2])*(bio_coeff[bio_coeff[,1] == "졸참나무",4])*(1+bio_coeff[bio_coeff[,1] == "졸참나무",6]),
-    data$'수종명' =="붉가시나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "붉가시나무",2])*(bio_coeff[bio_coeff[,1] == "붉가시나무",4])*(1+bio_coeff[bio_coeff[,1] == "붉가시나무",6]),
+    data$'수종명' =="소나무" ~ "중부지방소나무",
+    data$'수종명' =="낙엽송" ~ "낙엽송" ,
+    data$'수종명' =="리기다소나무" ~ "리기다소나무",
+    data$'수종명' =="곰솔" ~ "곰솔",
+    data$'수종명' =="잣나무" ~ "잣나무",
+    data$'수종명' =="삼나무" ~ "삼나무" ,
+    data$'수종명' =="편백" ~ "편백" ,
+    data$'수종명' =="굴참나무" ~ "굴참나무" ,
+    data$'수종명' =="신갈나무" ~ "신갈나무" ,
+    data$'수종명' =="상수리나무" ~ "상수리나무" ,
+    data$'수종명' =="졸참나무" ~ "졸참나무" ,
+    data$'수종명' =="붉가시나무" ~ "붉가시나무" ,
     
     ## 기타 활엽수 및 기타 침엽수--------------------------------------------------------------
-    (data$'침활구분' =="활엽수") ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "기타 활엽수",2])*(bio_coeff[bio_coeff[,1] == "기타 활엽수",4])*(1+bio_coeff[bio_coeff[,1] == "기타 활엽수",6]),
-    (data$'침활구분' =="침엽수") ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "기타 침엽수",2])*(bio_coeff[bio_coeff[,1] == "기타 침엽수",4])*(1+bio_coeff[bio_coeff[,1] == "기타 침엽수",6]),
-    TRUE ~ NA_real_
+    (data$'침활구분' =="활엽수") ~ "기타 활엽수" ,
+    (data$'침활구분' =="침엽수") ~ "기타 침엽수",
+    TRUE ~ as.character(NA)
     
   ))
   
-  return(output)
+  ## bio_coeff = 국가고유배출계수, 
+  ## 출처 : "탄소배출계수를 활용한 국가 온실가스 통계 작성", 
+  ## "NIFoS 산림정책이슈 제129호 : 주요 산림수종의 표준 탄소흡수량(ver.1.2)"
+  output <- left_join(output, bio_coeff, by.x= c("species_bm"), by.y= c("수종") )
   
-}
-
-
-
-## 지상부 biomass 구하기--------------------------------------------------------------
-## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)-------------------------------
-AG_bm <- function(data){
-  
-  output <- data  %>% mutate(AG_biomass = case_when(
-    
-    (data$'수종명' =="소나무" && (data$'시군구' == "영주군" || data$'시군구' == "봉화군" || data$'시군구' == "울진군" || data$'시군구' == "영양군" || data$'광역시도' == "강원도" )) 
-    ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "강원지방소나무",2])*(bio_coeff[bio_coeff[,1] == "강원지방소나무",4]),
-    
-    data$'수종명' =="소나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "중부지방소나무",2])*(bio_coeff[bio_coeff[,1] == "중부지방소나무",4]),
-    data$'수종명' =="낙엽송" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "낙엽송",2])*(bio_coeff[bio_coeff[,1] == "낙엽송",4]),
-    data$'수종명' =="리기다소나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "리기다소나무",2])*(bio_coeff[bio_coeff[,1] == "리기다소나무",4]),
-    data$'수종명' =="곰솔" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "곰솔",2])*(bio_coeff[bio_coeff[,1] == "곰솔",4]),
-    data$'수종명' =="잣나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "잣나무",2])*(bio_coeff[bio_coeff[,1] == "잣나무",4]),
-    data$'수종명' =="삼나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "삼나무",2])*(bio_coeff[bio_coeff[,1] == "삼나무",4]),
-    data$'수종명' =="편백" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "편백",2])*(bio_coeff[bio_coeff[,1] == "편백",4]),
-    data$'수종명' =="굴참나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "굴참나무",2])*(bio_coeff[bio_coeff[,1] == "굴참나무",4]),
-    data$'수종명' =="신갈나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "신갈나무",2])*(bio_coeff[bio_coeff[,1] == "신갈나무",4]),
-    data$'수종명' =="상수리나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "상수리나무",2])*(bio_coeff[bio_coeff[,1] == "상수리나무",4]),
-    data$'수종명' =="졸참나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "졸참나무",2])*(bio_coeff[bio_coeff[,1] == "졸참나무",4]),
-    data$'수종명' =="붉가시나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "붉가시나무",2])*(bio_coeff[bio_coeff[,1] == "붉가시나무",4]),
-    
-    (data$'침활구분' =="활엽수") ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "기타 활엽수",2])*(bio_coeff[bio_coeff[,1] == "기타 활엽수",4]),
-    (data$'침활구분' =="침엽수") ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "기타 침엽수",2])*(bio_coeff[bio_coeff[,1] == "기타 침엽수",4]),
-    TRUE ~ NA_real_
-    
-  ))
-  
-  return(output)
-  
-}
-
-
-
-## 탄소흡수량 구하기-----------------------------------------------
-## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)(1+뿌리함량비)*(0.51(침) or 0.48(활))-----------------------
-c_stck <- function(data){
-  
-  output <- data  %>% mutate(carbon_stock = case_when(
-    
-    (data$'수종명' =="소나무" && (data$'시군구' == "영주군" || data$'시군구' == "봉화군" || data$'시군구' == "울진군" || data$'시군구' == "영양군" || data$'광역시도' == "강원도" )) 
-    ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "강원지방소나무",2])*(bio_coeff[bio_coeff[,1] == "강원지방소나무",4])*(1+bio_coeff[bio_coeff[,1] == "강원지방소나무",6])*0.51,
-    
-    data$'수종명' =="소나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "중부지방소나무",2])*(bio_coeff[bio_coeff[,1] == "중부지방소나무",4])*(1+bio_coeff[bio_coeff[,1] == "중부지방소나무",6])*0.51,
-    data$'수종명' =="낙엽송" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "낙엽송",2])*(bio_coeff[bio_coeff[,1] == "낙엽송",4])*(1+bio_coeff[bio_coeff[,1] == "낙엽송",6])*0.51,
-    data$'수종명' =="리기다소나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "리기다소나무",2])*(bio_coeff[bio_coeff[,1] == "리기다소나무",4])*(1+bio_coeff[bio_coeff[,1] == "리기다소나무",6])*0.51,
-    data$'수종명' =="곰솔" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "곰솔",2])*(bio_coeff[bio_coeff[,1] == "곰솔",4])*(1+bio_coeff[bio_coeff[,1] == "곰솔",6])*0.51,
-    data$'수종명' =="잣나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "잣나무",2])*(bio_coeff[bio_coeff[,1] == "잣나무",4])*(1+bio_coeff[bio_coeff[,1] == "잣나무",6])*0.51,
-    data$'수종명' =="삼나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "삼나무",2])*(bio_coeff[bio_coeff[,1] == "삼나무",4])*(1+bio_coeff[bio_coeff[,1] == "삼나무",6])*0.51,
-    data$'수종명' =="편백" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "편백",2])*(bio_coeff[bio_coeff[,1] == "편백",4])*(1+bio_coeff[bio_coeff[,1] == "편백",6])*0.51*0.51,
-    data$'수종명' =="굴참나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "굴참나무",2])*(bio_coeff[bio_coeff[,1] == "굴참나무",4])*(1+bio_coeff[bio_coeff[,1] == "굴참나무",6])*0.48,
-    data$'수종명' =="신갈나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "신갈나무",2])*(bio_coeff[bio_coeff[,1] == "신갈나무",4])*(1+bio_coeff[bio_coeff[,1] == "신갈나무",6])*0.48,
-    data$'수종명' =="상수리나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "상수리나무",2])*(bio_coeff[bio_coeff[,1] == "상수리나무",4])*(1+bio_coeff[bio_coeff[,1] == "상수리나무",6])*0.48,
-    data$'수종명' =="졸참나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "졸참나무",2])*(bio_coeff[bio_coeff[,1] == "졸참나무",4])*(1+bio_coeff[bio_coeff[,1] == "졸참나무",6])*0.48,
-    data$'수종명' =="붉가시나무" ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "붉가시나무",2])*(bio_coeff[bio_coeff[,1] == "붉가시나무",4])*(1+bio_coeff[bio_coeff[,1] == "붉가시나무",6])*0.48,
-    
-    (data$'침활구분' =="활엽수") ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "기타 활엽수",2])*(bio_coeff[bio_coeff[,1] == "기타 활엽수",4])*(1+bio_coeff[bio_coeff[,1] == "기타 활엽수",6])*0.48,
-    (data$'침활구분' =="침엽수") ~ (data$'추정간재적')*(bio_coeff[bio_coeff[,1] == "기타 침엽수",2])*(bio_coeff[bio_coeff[,1] == "기타 침엽수",4])*(1+bio_coeff[bio_coeff[,1] == "기타 침엽수",6])*0.51,
-    TRUE ~ NA_real_
-    
-  ))
-  
-  
+  ## 지상부 biomass 구하기--------------------------------------------------------------
+  ## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)-------------------------------
+  output$AG_biomass <- (output$'추정간재적')*(output$"목재기본밀도_값")*(output$"바이오매스확장계수_값")
+  ## biomass 구하기--------------------------------------------------------------
+  ## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)(1+뿌리함량비)-----------------
+  output$T_biomass <- output$AG_biomass*(1+output$"뿌리함량비_값")
+  ## 탄소흡수량 구하기-----------------------------------------------
+  ## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)(1+뿌리함량비)*(0.51(침) or 0.48(활))-----------------------
+  output$CF <- ifelse(output$'침활구분' =="활엽수", 0.48, 0.51 ) ##탄소전환계수
+  output$carbon_stock <- output$T_biomass*output$CF
+  ## 이산탄소흡수량 구하기--------------------------------------------------------------
+  ## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)(1+뿌리함량비)*(0.51(침) or 0.48(활))*(44/12)--------------------
+  output$co2_stock = output$carbon_stock*(44/12)
   
   
   return(output)
@@ -111,30 +61,34 @@ c_stck <- function(data){
 
 
 
-#' biomass2() Function
+
+
+
+
+#' biomass() Function
 #'
 #' This function 
 #' @param data : data
 #' @param byplot : byplot
 #' @param grpby : grpby
-#' @param largetree : largetree 
-#' @keywords biomass2
+#' @keywords biomass
 #' @export 
 
 
-biomass <- function(data, byplot= TRUE, grpby=NULL,largetree=TRUE ){
+biomass <- function(data, byplot= TRUE, grpby=NULL){
   
   ## 추정간재적 type이 num이 아닌 경우 as.numeric--------------------------------------------------------------
   if (!is.numeric(data$'추정간재적')){
     data$'추정간재적' <- as.numeric(data$'추정간재적')} 
   
   
-  data_temp <- T_bm(data)
-  data_temp <- AG_bm(data_temp)
-  data_temp <- c_stck(data_temp)
-  ## 이산탄소흡수량 구하기--------------------------------------------------------------
-  ## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)(1+뿌리함량비)*(0.51(침) or 0.48(활))*(44/12)--------------------
-  data_temp <- data_temp %>% mutate(co2_stock = data_temp$carbon_stock*(44/12))
+  data_temp <- bm_df(data)
+  data_temp <- data_temp %>% filter(data_temp$'토지이용' == "임목지")
+  data_temp$largetree <- ifelse(data_temp$'흉고직경'>=30, 1, 0)
+  
+  data_temp$largetree_area <- (100 - data_temp$'대경목조사원 비산림면적')/100
+  data_temp$tree_area <-(100 - data_temp$'기본조사원 비산림면적')/100
+  
   data <- data_temp
   
   
@@ -146,252 +100,291 @@ biomass <- function(data, byplot= TRUE, grpby=NULL,largetree=TRUE ){
     ## ex) 수종명, 수관급, 형질급, 광역시도, 시군구, 읍면동, 지형, 임상, 경급, 영급------------------- 
     if (!is.null(grpby)){
       
-      if(largetree){
-        
-        
         bm <- data %>% 
-          group_by(data$'표본점번호', data[,grpby]) %>% 
+          group_by(data$'표본점번호', data$'조사연도', data[,grpby]) %>% 
           summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
                     biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
-                    AG_biomasS_ton = sum(.data$AG_biomass, na.rm=TRUE),
+                    AG_biomass_ton = sum(.data$AG_biomass, na.rm=TRUE),
                     carbon_stock_tC = sum(.data$carbon_stock, na.rm=TRUE),
                     co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),.groups = 'drop')
         
-        bm <- bm %>% rename("plot_id"= "data$표본점번호","grpby"= "data[, grpby]")
+        bm <- bm %>% rename("plot_id"= "data$표본점번호","year"= "data$조사연도" ) #"grpby"= "data[, grpby]"
         
         
         bm_temp <- data %>% 
-          group_by(data$'표본점번호', data[,grpby], largetree) %>% 
+          group_by(data$'표본점번호', data$'조사연도', data[,grpby], largetree) %>% 
           summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
                     biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
-                    AG_biomasS_ton = sum(.data$AG_biomass, na.rm=TRUE),
+                    AG_biomass_ton = sum(.data$AG_biomass, na.rm=TRUE),
                     carbon_stock_tC = sum(.data$carbon_stock, na.rm=TRUE),
                     co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),.groups = 'drop')
         
-        bm_temp[,4:8] <- lapply(bm_temp[,4:8], function(x) ifelse(bm_temp$largetree == 1, x/0.08 , x/0.04))
-        bm_temp <- bm_temp %>% rename("plot_id"= "data$표본점번호","grpby"= "data[, grpby]")
+        
+        condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomasS_ton","carbon_stock_tC","co2_stock_tCO2"))
+        bm_temp[condition] <- lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, x/0.08 , x/0.04))
+        bm_temp <- bm_temp %>% rename("plot_id"= "data$표본점번호", "year"= "data$조사연도")  #"grpby"= "data[, grpby]"
         
         
         bm_temp <- bm_temp %>% 
           group_by(plot_id, grpby) %>% 
           summarise(volume_m3_ha = sum(volume_m3, na.rm=TRUE),
                     biomass_ton_ha = sum(biomass_ton, na.rm=TRUE),
-                    AG_biomass_ton_ha = sum(AG_biomasS_ton, na.rm=TRUE),
+                    AG_biomass_ton_ha = sum(AG_biomass_ton, na.rm=TRUE),
                     carbon_stock_tC_ha = sum(carbon_stock_tC, na.rm=TRUE),
                     co2_stock_tCO2_ha = sum(co2_stock_tCO2, na.rm=TRUE),.groups = 'drop')
         
-        bm <- merge(bm, bm_temp, key=c(plot_id, grpby) ,  all= TRUE) 
+        bm <- full_join(bm, bm_temp, by=c('plot_id', 'year')) 
         
         
-        
-        
-        
-      }
-      else{
-        
-        data <- data %>% filter(data$'대경목조사원내존재여부' == 0) 
-        bm <- data %>% 
-          group_by(data$'표본점번호', data[,grpby]) %>% 
-          summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
-                    biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
-                    AG_biomasS_ton = sum(.data$AG_biomass, na.rm=TRUE),
-                    carbon_stock_tC = sum(.data$carbon_stock, na.rm=TRUE),
-                    co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),
-                    volume_m3_ha = sum(get('추정간재적'), na.rm=TRUE)/0.04,
-                    biomass_ton_ha = sum(.data$T_biomass, na.rm=TRUE)/0.04,
-                    AG_biomass_ton_ha = sum(.data$AG_biomass, na.rm=TRUE)/0.04,
-                    carbon_stock_tC_ha = sum(.data$carbon_stock, na.rm=TRUE)/0.04,
-                    co2_stock_tCO2_ha = sum(.data$co2_stock, na.rm=TRUE)/0.04,.groups = 'drop')
-        bm <- bm %>% rename("plot_id"= "data$표본점번호","grpby"= "data[, grpby]")
-      }
-      
-      
-      
-      
     }
     
     ## byplot !groupby-------------------------------------------------------------------------
     else{
       
-      if(largetree){
-        
         bm <- data %>% 
-          group_by(data$'표본점번호') %>% 
+          group_by(data$'표본점번호', data$'조사연도') %>% 
           summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
                     biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
-                    AG_biomasS_ton = sum(.data$AG_biomass, na.rm=TRUE),
+                    AG_biomass_ton = sum(.data$AG_biomass, na.rm=TRUE),
                     carbon_stock_tC = sum(.data$carbon_stock, na.rm=TRUE),
                     co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),.groups = 'drop')
         
-        bm <- bm %>% rename("plot_id"= "data$표본점번호")
+        bm <- bm %>% rename("plot_id"= "data$표본점번호", "year"= "data$조사연도")
         
         
         bm_temp <- data %>% 
-          group_by(data$'표본점번호', largetree) %>% 
+          group_by(data$'표본점번호', data$'조사연도', largetree) %>% 
           summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
                     biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
-                    AG_biomasS_ton = sum(.data$AG_biomass, na.rm=TRUE),
+                    AG_biomass_ton = sum(.data$AG_biomass, na.rm=TRUE),
                     carbon_stock_tC = sum(.data$carbon_stock, na.rm=TRUE),
                     co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),.groups = 'drop')
         
-        bm_temp[,3:7] <- lapply(bm_temp[,3:7], function(x) ifelse(bm_temp$largetree == 1, x/0.08 , x/0.04))
-        bm_temp <- bm_temp %>% rename("plot_id"= "data$표본점번호")
+        
+        condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomasS_ton","carbon_stock_tC","co2_stock_tCO2"))
+        bm_temp[condition] <- lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, x/0.08 , x/0.04))
+        bm_temp <- bm_temp %>% rename("plot_id"= "data$표본점번호", "year"= "data$조사연도")
         
         
         bm_temp <- bm_temp %>% 
           group_by(plot_id) %>% 
           summarise(volume_m3_ha = sum(volume_m3, na.rm=TRUE),
                     biomass_ton_ha = sum(biomass_ton, na.rm=TRUE),
-                    AG_biomass_ton_ha = sum(AG_biomasS_ton, na.rm=TRUE),
+                    AG_biomass_ton_ha = sum(AG_biomass_ton, na.rm=TRUE),
                     carbon_stock_tC_ha = sum(carbon_stock_tC, na.rm=TRUE),
                     co2_stock_tCO2_ha = sum(co2_stock_tCO2, na.rm=TRUE),.groups = 'drop')
         
-        bm <- merge(bm, bm_temp, key=c(plot_id),  all= TRUE) 
+        bm <- full_join(bm, bm_temp, by=c('plot_id')) 
         
         
-      }
-      else{
-        
-        data <- data %>% filter(data$'대경목조사원내존재여부' == 0) 
-        bm <- data %>% 
-          group_by(data$'표본점번호') %>% 
-          summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
-                    biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
-                    AG_biomasS_ton = sum(.data$AG_biomass, na.rm=TRUE),
-                    carbon_stock_tC = sum(.data$carbon_stock, na.rm=TRUE),
-                    co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),
-                    volume_m3_ha = sum(get('추정간재적'), na.rm=TRUE)/0.04,
-                    biomass_ton_ha = sum(.data$T_biomass, na.rm=TRUE)/0.04,
-                    AG_biomass_ton_ha = sum(.data$AG_biomass, na.rm=TRUE)/0.04,
-                    carbon_stock_tC_ha = sum(.data$carbon_stock, na.rm=TRUE)/0.04,
-                    co2_stock_tCO2_ha = sum(.data$co2_stock, na.rm=TRUE)/0.04,.groups = 'drop')
-        
-        bm <- bm %>% rename("plot_id"= "data$표본점번호")
-        
-        
-      }
+
+      
     }
   }
   
-  ## 개별 수목별 바이오매스--------------------------------------------------------------
+  ## !byplot grpby--------------------------------------------------------------
   else{
     
     if (!is.null(grpby)){
       
-      if(largetree){
-        
-        plot_num <- n_distinct(data$'표본점번호')
-        
-        bm <- data %>% 
-          group_by(data[,grpby]) %>% 
-          summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
-                    biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
-                    AG_biomasS_ton = sum(.data$AG_biomass, na.rm=TRUE),
-                    carbon_stock_tC = sum(.data$carbon_stock, na.rm=TRUE),
-                    co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),.groups = 'drop')
-        
-        bm <- bm %>% rename("grpby"= "data[, grpby]")
-        
-        
-        bm_temp <- data %>% 
-          group_by(data[,grpby], largetree) %>% 
-          summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
-                    biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
-                    AG_biomasS_ton = sum(.data$AG_biomass, na.rm=TRUE),
-                    carbon_stock_tC = sum(.data$carbon_stock, na.rm=TRUE),
-                    co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),.groups = 'drop')
-        
-        bm_temp[,3:7] <- lapply(bm_temp[,3:7], function(x) ifelse(bm_temp$largetree == 1, x/(0.08*plot_num) , x/(0.04*plot_num)))
-        bm_temp <- bm_temp %>% rename("grpby"= "data[, grpby]")
-        
-        
-        bm_temp <- bm_temp %>% 
-          group_by(plot_id, grpby) %>% 
-          summarise(volume_m3_ha = sum(volume_m3, na.rm=TRUE),
-                    biomass_ton_ha = sum(biomass_ton, na.rm=TRUE),
-                    AG_biomass_ton_ha = sum(AG_biomasS_ton, na.rm=TRUE),
-                    carbon_stock_tC_ha = sum(carbon_stock_tC, na.rm=TRUE),
-                    co2_stock_tCO2_ha = sum(co2_stock_tCO2, na.rm=TRUE),.groups = 'drop')
-        
-        bm <- merge(bm, bm_temp, key=c(grpby) ,  all= TRUE) 
-        
-        
-      }
-      else{
-        
-        data <- data %>% filter(data$'대경목조사원내존재여부' == 0 )
-        plot_num <- n_distinct(data$'표본점번호')
-        bm <- data %>% 
-          group_by(data[, grpby]) %>%  
-          summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
-                    biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
-                    AG_biomasS_ton = sum(.data$AG_biomass, na.rm=TRUE),
-                    carbon_stock_tC = sum(.data$carbon_stock, na.rm=TRUE),
-                    co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),
-                    volume_m3_ha = sum(get('추정간재적'), na.rm=TRUE)/(0.04*plot_num),
-                    biomass_ton_ha = sum(.data$T_biomass, na.rm=TRUE)/(0.04*plot_num),
-                    AG_biomass_ton_ha = sum(.data$AG_biomass, na.rm=TRUE)/(0.04*plot_num),
-                    carbon_stock_tC_ha = sum(.data$carbon_stock, na.rm=TRUE)/(0.04*plot_num),
-                    co2_stock_tCO2_ha = sum(.data$co2_stock, na.rm=TRUE)/(0.04*plot_num),.groups = 'drop')
-        
-        bm <- bm %>% rename("grpby"= "data[, grpby]")
-      }
       
+      # 대경목 조사원 (0.08ha + 0.04ha)
+      bm_temp <- data %>% 
+        group_by(data$'표본점번호',data$'조사연도', stand, data[,grpby], largetree, largetree_area, tree_area) %>% 
+        summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
+                  biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
+                  AG_biomass_ton = sum(.data$AG_biomass, na.rm=TRUE),
+                  carbon_stock_tC = sum(.data$carbon_stock, na.rm=TRUE),
+                  co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),.groups = 'drop')
+      
+      
+      condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomasS_ton","carbon_stock_tC","co2_stock_tCO2"))
+      bm_temp[condition] <- 
+        lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, 
+                                                      x/(0.08*bm_temp$largetree_area),
+                                                      x/(0.04*bm_temp$tree_area)))
+      bm_temp <- bm_temp %>% rename("plot_id"= "data$표본점번호", "year"= "data$조사연도", 
+                                    "grpby"= "data[, grpby]")
+      
+      # 플롯별
+      bm_temp <- bm_temp %>% 
+        group_by(plot_id, year, stand, grpby) %>% 
+        summarise(volume_m3_ha = sum(volume_m3, na.rm=TRUE),
+                  biomass_ton_ha = sum(biomass_ton, na.rm=TRUE),
+                  AG_biomass_ton_ha = sum(AG_biomass_ton, na.rm=TRUE),
+                  carbon_stock_tC_ha = sum(carbon_stock_tC, na.rm=TRUE),
+                  co2_stock_tCO2_ha = sum(co2_stock_tCO2, na.rm=TRUE),.groups = 'drop')
+      
+
+      weight_grpby <- bm_temp %>% 
+        group_by(grpby) %>% 
+        summarise(plot_num_all = n(),.groups = 'drop')
+      
+      
+      weight_year <- bm_temp %>% 
+        group_by(year, grpby) %>% 
+        summarise(plot_num_year = n(),.groups = 'drop')
+      
+      
+      weight_stand <- bm_temp %>% 
+        group_by(year, stand, grpby) %>% 
+        summarise(plot_num_stand = n(),.groups = 'drop')
+      
+      
+      # Double sampling for post-stratification(forest stand)
+      weight_DSS <- full_join(weight_stand, weight_year, by =c("year", "grpby"))
+      weight_DSS$weight_DSS <- weight_DSS$plot_num_stand/weight_DSS$plot_num_year
+      
+      
+      # 기본계획구(p)내 표본층(h)의 ha당 평균 임목자원량
+      bm_temp_DSS <- bm_temp %>% 
+        group_by(year, stand, grpby) %>% 
+        summarise(volume_m3_ha = sum(volume_m3_ha, na.rm=TRUE),
+                  biomass_ton_ha = sum(biomass_ton_ha, na.rm=TRUE),
+                  AG_biomass_ton_ha = sum(AG_biomass_ton_ha, na.rm=TRUE),
+                  carbon_stock_tC_ha = sum(carbon_stock_tC_ha, na.rm=TRUE),
+                  co2_stock_tCO2_ha = sum(co2_stock_tCO2_ha, na.rm=TRUE),.groups = 'drop')
+      
+      
+      bm_temp_DSS <- full_join(bm_temp_DSS, weight_DSS, by =c("year", "stand", "grpby"))
+      
+      
+      condition <- (names(bm_temp_DSS) %in% c("volume_m3_ha","biomass_ton_ha","AG_biomass_ton_ha","carbon_stock_tC_ha","co2_stock_tCO2_ha"))
+      bm_temp_DSS[condition] <- 
+        lapply(bm_temp_DSS[condition], function(x) (x/bm_temp_DSS$plot_num_stand)*bm_temp_DSS$weight_DSS)
+      
+      
+  
+      bm_temp_WMA <- bm_temp_DSS %>% 
+        group_by(year, grpby) %>% 
+        summarise(volume_m3_ha = sum(volume_m3_ha, na.rm=TRUE),
+                  biomass_ton_ha = sum(biomass_ton_ha, na.rm=TRUE),
+                  AG_biomass_ton_ha = sum(AG_biomass_ton_ha, na.rm=TRUE),
+                  carbon_stock_tC_ha = sum(carbon_stock_tC_ha, na.rm=TRUE),
+                  co2_stock_tCO2_ha = sum(co2_stock_tCO2_ha, na.rm=TRUE),.groups = 'drop')
+      
+      
+      # Weighted Moving Average(to combine annual inventory field data)
+      weight_WMA <- full_join(weight_year, weight_grpby, by =c("grpby"))
+      weight_WMA$weight_WMA <- weight_WMA$plot_num_year/weight_WMA$plot_num_all
+      
+      
+      bm_temp_WMA <- full_join(bm_temp_WMA, weight_WMA, by =c("year", "grpby"))
+      
+      
+      condition <- (names(bm_temp_WMA) %in% c("volume_m3_ha","biomass_ton_ha","AG_biomass_ton_ha","carbon_stock_tC_ha","co2_stock_tCO2_ha"))
+      bm_temp_WMA[condition] <- 
+        lapply(bm_temp_WMA[condition], function(x) x*bm_temp_WMA$weight_WMA )
+      
+      
+      bm <- bm_temp_WMA %>% 
+        group_by(grpby) %>% 
+        summarise(volume_m3_ha = sum(volume_m3_ha, na.rm=TRUE),
+                  biomass_ton_ha = sum(biomass_ton_ha, na.rm=TRUE),
+                  AG_biomass_ton_ha = sum(AG_biomass_ton_ha, na.rm=TRUE),
+                  carbon_stock_tC_ha = sum(carbon_stock_tC_ha, na.rm=TRUE),
+                  co2_stock_tCO2_ha = sum(co2_stock_tCO2_ha, na.rm=TRUE),.groups = 'drop')
+
+        
+
     }
     
     else{
+        
       
-      if(largetree){
-        
-        plot_num <- n_distinct(data$'표본점번호')
-        
-        bm <- data %>% 
-          summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
-                    biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
-                    AG_biomasS_ton = sum(.data$AG_biomass, na.rm=TRUE),
-                    carbon_stock_tC = sum(.data$carbon_stock, na.rm=TRUE),
-                    co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),.groups = 'drop')
-        
-        
-        bm_temp <- data %>% 
-          group_by(largetree)
+      # 대경목 조사원 (0.08ha + 0.04ha)
+      bm_temp <- data %>% 
+        group_by(data$'표본점번호',data$'조사연도', stand, largetree, largetree_area, tree_area) %>% 
         summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
                   biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
-                  AG_biomasS_ton = sum(.data$AG_biomass, na.rm=TRUE),
+                  AG_biomass_ton = sum(.data$AG_biomass, na.rm=TRUE),
                   carbon_stock_tC = sum(.data$carbon_stock, na.rm=TRUE),
                   co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),.groups = 'drop')
-        
-        bm_temp[,2:6] <- lapply(bm_temp[,2:6], function(x) ifelse(bm_temp$largetree == 1, x/(0.08*plot_num) , x/(0.04*plot_num)))
-        
-        
-        bm_temp <- bm_temp %>% 
-          summarise(volume_m3_ha = sum(volume_m3, na.rm=TRUE),
-                    biomass_ton_ha = sum(biomass_ton, na.rm=TRUE),
-                    AG_biomass_ton_ha = sum(AG_biomasS_ton, na.rm=TRUE),
-                    carbon_stock_tC_ha = sum(carbon_stock_tC, na.rm=TRUE),
-                    co2_stock_tCO2_ha = sum(co2_stock_tCO2, na.rm=TRUE),.groups = 'drop')
-        
-        bm <- cbind(bm, bm_temp) 
-        
-        
-      }
-      else{
-        
-        data <- data %>% filter(data$'대경목조사원내존재여부' == 0 )
-        plot_num <- n_distinct(data$'표본점번호')
-        bm <- data %>% 
-          summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
-                    biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
-                    AG_biomasS_ton = sum(.data$AG_biomass, na.rm=TRUE),
-                    carbon_stock_tC = sum(.data$carbon_stock, na.rm=TRUE),
-                    co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),
-                    volume_m3_ha = sum(get('추정간재적'), na.rm=TRUE)/(0.04*plot_num),
-                    biomass_ton_ha = sum(.data$T_biomass, na.rm=TRUE)/(0.04*plot_num),
-                    AG_biomass_ton_ha = sum(.data$AG_biomass, na.rm=TRUE)/(0.04*plot_num),
-                    carbon_stock_tC_ha = sum(.data$carbon_stock, na.rm=TRUE)/(0.04*plot_num),
-                    co2_stock_tCO2_ha = sum(.data$co2_stock, na.rm=TRUE)/(0.04*plot_num),.groups = 'drop')
-        
-      }
+      
+      
+      condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomasS_ton","carbon_stock_tC","co2_stock_tCO2"))
+      bm_temp[condition] <- 
+        lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, 
+                                                      x/(0.08*bm_temp$largetree_area),
+                                                      x/(0.04*bm_temp$tree_area)))
+      bm_temp <- bm_temp %>% rename("plot_id"= "data$표본점번호", "year"= "data$조사연도")
+      
+      # 플롯별
+      bm_temp <- bm_temp %>% 
+        group_by(plot_id, year, stand) %>% 
+        summarise(volume_m3_ha = sum(volume_m3, na.rm=TRUE),
+                  biomass_ton_ha = sum(biomass_ton, na.rm=TRUE),
+                  AG_biomass_ton_ha = sum(AG_biomass_ton, na.rm=TRUE),
+                  carbon_stock_tC_ha = sum(carbon_stock_tC, na.rm=TRUE),
+                  co2_stock_tCO2_ha = sum(co2_stock_tCO2, na.rm=TRUE),.groups = 'drop')
+
+      
+      weight_year <- bm_temp %>% 
+        group_by(year) %>% 
+        summarise(plot_num_year = n(),.groups = 'drop')
+      
+      
+      weight_stand <- bm_temp %>% 
+        group_by(year, stand) %>% 
+        summarise(plot_num_stand = n(),.groups = 'drop')
+      
+      
+      # Double sampling for post-stratification(forest stand)
+      weight_DSS <- full_join(weight_stand, weight_year, by =c("year"))
+      weight_DSS$weight_DSS <- weight_DSS$plot_num_stand/weight_DSS$plot_num_year
+      
+      
+      # 기본계획구(p)내 표본층(h)의 ha당 평균 임목자원량
+      bm_temp_DSS <- bm_temp %>% 
+        group_by(year, stand) %>% 
+        summarise(volume_m3_ha = sum(volume_m3_ha, na.rm=TRUE),
+                  biomass_ton_ha = sum(biomass_ton_ha, na.rm=TRUE),
+                  AG_biomass_ton_ha = sum(AG_biomass_ton_ha, na.rm=TRUE),
+                  carbon_stock_tC_ha = sum(carbon_stock_tC_ha, na.rm=TRUE),
+                  co2_stock_tCO2_ha = sum(co2_stock_tCO2_ha, na.rm=TRUE),.groups = 'drop')
+      
+      
+      bm_temp_DSS <- full_join(bm_temp_DSS, weight_DSS, by =c("year", "stand"))
+      
+      
+      condition <- (names(bm_temp_DSS) %in% c("volume_m3_ha","biomass_ton_ha","AG_biomass_ton_ha","carbon_stock_tC_ha","co2_stock_tCO2_ha"))
+      bm_temp_DSS[condition] <- 
+        lapply(bm_temp_DSS[condition], function(x) (x/bm_temp_DSS$plot_num_stand)*bm_temp_DSS$weight_DSS)
+      
+      
+      
+      bm_temp_WMA <- bm_temp_DSS %>% 
+        group_by(year) %>% 
+        summarise(volume_m3_ha = sum(volume_m3_ha, na.rm=TRUE),
+                  biomass_ton_ha = sum(biomass_ton_ha, na.rm=TRUE),
+                  AG_biomass_ton_ha = sum(AG_biomass_ton_ha, na.rm=TRUE),
+                  carbon_stock_tC_ha = sum(carbon_stock_tC_ha, na.rm=TRUE),
+                  co2_stock_tCO2_ha = sum(co2_stock_tCO2_ha, na.rm=TRUE),.groups = 'drop')
+      
+      
+      # Weighted Moving Average(to combine annual inventory field data)
+      weight_WMA <- weight_year
+      plot_num_all <- sum(weight_WMA$plot_num_year)
+      weight_WMA$weight_WMA <- weight_WMA$plot_num_year/plot_num_all
+      
+      
+      bm_temp_WMA <- full_join(bm_temp_WMA, weight_WMA, by =c("year"))
+      
+      
+      condition <- (names(bm_temp_WMA) %in% c("volume_m3_ha","biomass_ton_ha","AG_biomass_ton_ha","carbon_stock_tC_ha","co2_stock_tCO2_ha"))
+      bm_temp_WMA[condition] <- 
+        lapply(bm_temp_WMA[condition], function(x) x*bm_temp_WMA$weight_WMA )
+      
+      
+      bm <- bm_temp_WMA %>% 
+        summarise(volume_m3_ha = sum(volume_m3_ha, na.rm=TRUE),
+                  biomass_ton_ha = sum(biomass_ton_ha, na.rm=TRUE),
+                  AG_biomass_ton_ha = sum(AG_biomass_ton_ha, na.rm=TRUE),
+                  carbon_stock_tC_ha = sum(carbon_stock_tC_ha, na.rm=TRUE),
+                  co2_stock_tCO2_ha = sum(co2_stock_tCO2_ha, na.rm=TRUE),.groups = 'drop')
+      
+      
+      
       
     }
     

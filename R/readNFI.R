@@ -44,6 +44,7 @@ readNFI <- function(dir, district=NULL){
       Non_forest <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "비산림면적",
                                        col_names = TRUE, col_types = "text")
       
+      
       ## 임분조사표 sheet 불러오기--------------------------------------------------------------
       Stand_inve <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "임분조사표",
                                        col_names = TRUE, col_types = "text")
@@ -54,13 +55,14 @@ readNFI <- function(dir, district=NULL){
       
       
       
+      
       ## 임목조사표, 임분조사표 merge-----------------------------------------------------------
-      data_merge <- merge(x=Tree_inve, y=Stand_inve, 
-                          by=c('집락번호', '표본점번호', '조사차기'), all.x=TRUE)
+      data_merge <- left_join(x=Tree_inve, y=Stand_inve, 
+                          by=c('집락번호', '표본점번호', '조사차기'))
       
       ## point DB
-     
-      data_merge <- merge(data_merge, NFI_plot_DB, by=c('표본점번호'), all.x=TRUE)
+      
+      data_merge <- left_join(data_merge, NFI_plot_DB, by=c('표본점번호'))
       
      
       ## 지역별 filitering--------------------------------------------------------------
@@ -98,12 +100,11 @@ readNFI <- function(dir, district=NULL){
       
       
       ## 일반정보, 비산림면적을 입목자료 기준으로 merge----------------------------------------------
-      data_merge <- merge(x=data_merge, y=General_info, 
-                          by=c('집락번호', '표본점번호', '조사차기',  '조사연도', '임상코드', '임상'), 
-                          all.x=TRUE)
+      data_merge <- left_join(x=data_merge, y=General_info, 
+                          by=c('집락번호', '표본점번호', '조사차기',  '조사연도', '임상코드', '임상'))
       
-      data_merge <- merge(x=data_merge, y=Non_forest, 
-                          by=c('집락번호', '표본점번호', '조사차기', '조사연도'), all.x=TRUE)
+      data_merge <- left_join(x=data_merge, y=Non_forest, 
+                          by=c('집락번호', '표본점번호', '조사차기', '조사연도'))
       
       ## .xlsx별(연도별) 데이터 data[[i]]에 기록------------------------------------------
       data[[i]] <- data_merge
@@ -120,7 +121,7 @@ readNFI <- function(dir, district=NULL){
   NFI[ , colnames(NFI) %in% log_col ] <- lapply(lapply(NFI[ , colnames(NFI) %in% log_col ], as.numeric), as.logical)
   
   
-  fac_col <- c("토지이용코드", "토지이용","임상코드","임상")
+  fac_col <- c("토지이용코드", "토지이용","임상코드","임상", '조사연도')
   NFI[ , colnames(NFI) %in% fac_col ] <- lapply(NFI[ , colnames(NFI) %in% fac_col ], as.factor)
   
   ##조사연도 숫자에서 날짜로 바꾸기
@@ -164,7 +165,7 @@ readNFI <- function(dir, district=NULL){
   stand_temp <- stand_temp %>% rename("표본점번호"= "NFI$표본점번호", "조사연도"= "NFI$조사연도")
   
   condition <- (names(stand_temp) %in% c("표본점번호","조사연도", "stand"))
-  NFI <- merge(NFI, stand_temp[condition], by= c("표본점번호","조사연도"), all.x=T)
+  NFI <- left_join(NFI, stand_temp[condition], by= c("표본점번호","조사연도"))
   
   
   
