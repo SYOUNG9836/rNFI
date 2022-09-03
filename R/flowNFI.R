@@ -44,6 +44,11 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
   district_code[,1] <- (gsub("-", "", district_code[,1]))
   flow_df$name <- unlist(lapply(flow_df$grpby, 
                                 FUN=function(x){district_code$"법정동명"[which(x==district_code$"법정동코드")]}))
+  
+  
+  flow_df$year <- as.character(flow_df$year)
+  
+  
 
   
   if(type =="biomass"){
@@ -56,11 +61,11 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
       
       if(nchar(flow_df$grpby[1]) == 10){
         
-        bm_poly <- right_join(emd, flow_df, by.x=c("EMD_CD"), by.y = c("grpby"))
+        bm_poly <- right_join(emd, flow_df, by=c("EMD_CD" = "grpby"))
         bm_poly <- sf::st_as_sf( bm_poly )
         
-        flow <- ggplot() + 
-          geom_sf(data = bm_poly, aes(fill = !!y , geometry = geometry))+
+        flow <- ggplot(bm_poly) + 
+          geom_sf(aes(fill = !!y , geometry = geometry))+
           coord_sf(expand = FALSE, lims_method = "geometry_bbox")+
           #scale_x_discrete(guide = guide_axis(check.overlap = TRUE))+
           facet_wrap(~year)+
@@ -73,10 +78,10 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
         
       }else if(nchar(flow_df$grpby[1]) == 5){
         
-        bm_poly <- right_join(sgg, flow_df, by.x=c("SIG_CD"), by.y = c("grpby"))
+        bm_poly <- right_join(sgg, flow_df, by=c("SIG_CD" = "grpby"))
         
-        flow <- ggplot() + 
-          geom_sf(data = bm_poly, aes(fill = !!y , geometry = geometry))+
+        flow <- ggplot(bm_poly) + 
+          geom_sf( aes(fill = !!y , geometry = geometry))+
           coord_sf(expand = FALSE, lims_method = "geometry_bbox")+
           #scale_x_discrete(guide = guide_axis(check.overlap = TRUE))+
           facet_wrap(~year)+
@@ -89,12 +94,11 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
         
       }else{
         
-        bm_poly <- right_join(do, flow_df, by.x=c("CTPRVN_CD"), by.y = c("grpby"))
+        bm_poly <- right_join(do, flow_df, by=c("CTPRVN_CD" = "grpby"))
         
-        flow <- ggplot() + 
-          geom_sf(data = bm_poly, aes(fill = !!y , geometry = geometry))+
+        flow <- ggplot(bm_poly) + 
+          geom_sf(aes(fill = !!y , geometry = geometry))+
           coord_sf(expand = FALSE, lims_method = "geometry_bbox")+
-          #scale_x_discrete(guide = guide_axis(check.overlap = TRUE))+
           facet_wrap(~year)+
           theme(axis.text.x = element_text(angle =90, vjust = 1))+
           #ggspatial::annotation_scale(location = "bl", width_hint = 0.1) +
@@ -136,6 +140,7 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
         theme(plot.margin = unit(c(0.3,0.1,0.5,0.6), "cm"), legend.title = element_blank()) + 
         guides(fill = guide_legend(reverse = TRUE))
       
+
     } else{
       
       stop(paste( output, ' does not exist.'))

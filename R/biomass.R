@@ -38,7 +38,7 @@ bm_df <- function(data){
   ## bio_coeff = 국가고유배출계수, 
   ## 출처 : "탄소배출계수를 활용한 국가 온실가스 통계 작성", 
   ## "NIFoS 산림정책이슈 제129호 : 주요 산림수종의 표준 탄소흡수량(ver.1.2)"
-  output <- left_join(output, bio_coeff, by.x= c("species_bm"), by.y= c("수종") )
+  output <- left_join(output, bio_coeff, by= c("species_bm" ="수종") )
   
   ## 지상부 biomass 구하기--------------------------------------------------------------
   ## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)-------------------------------
@@ -393,3 +393,4 @@ biomass <- function(data, byplot= TRUE, grpby=NULL){
   return(bm)
   
 }
+

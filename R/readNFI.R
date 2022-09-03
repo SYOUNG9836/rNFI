@@ -121,7 +121,7 @@ readNFI <- function(dir, district=NULL){
   NFI[ , colnames(NFI) %in% log_col ] <- lapply(lapply(NFI[ , colnames(NFI) %in% log_col ], as.numeric), as.logical)
   
   
-  fac_col <- c("토지이용코드", "토지이용","임상코드","임상", '조사연도')
+  fac_col <- c("토지이용코드", "토지이용","임상코드","임상")
   NFI[ , colnames(NFI) %in% fac_col ] <- lapply(NFI[ , colnames(NFI) %in% fac_col ], as.factor)
   
   ##조사연도 숫자에서 날짜로 바꾸기
@@ -131,9 +131,14 @@ readNFI <- function(dir, district=NULL){
                "수피",	"비율", "표준목간재적",	"추정수고",	"추정간재적", "조사연도")
   NFI[ , colnames(NFI) %in% num_col ] <- lapply(NFI[ , colnames(NFI) %in% num_col ], as.numeric)
   
-  #NFI 7차 조사일자.x 조사일자.y
+  
+  char_col <- c("표본점번호", "조사일자", "CTPRVN_CD","SIG_CD", "EMD_CD")
+  NFI[ , colnames(NFI) %in% char_col ] <- lapply(NFI[ , colnames(NFI) %in% char_col ], as.character)
+  
+ 
   #date_col <- c("조사일자")
-  #NFI[ , colnames(NFI) %in% date_col ] <- lapply(NFI[ , colnames(NFI) %in% date_col ], as.character)
+  #NFI$"조사일자" <- as.Date(NFI$"조사일자" ,format = '%Y%m%d')
+  
   #NFI[ , colnames(NFI) %in% date_col ] <- lapply(NFI[ , colnames(NFI) %in% date_col ], function(x) as.Date( x ,format = '%Y%m%d'))
   
   
