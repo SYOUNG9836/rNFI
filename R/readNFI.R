@@ -2,16 +2,15 @@
 #'
 #' This function read NFI data
 #' @param dir : dir
-#' @param district : district
-#' @param col_all : all column read 
+#' @param district : district 
 #' @return merge data nfi
 #' @examples
 #' readNFI("D:/y2021/y202101/rNFI/NFI/NFI7/", district = "\uc804\ub77c\ub0a8\ub3c4") 
 #' @export
 
 
-readNFI <- function(dir, district=NULL, col_all=TRUE){
-   
+readNFI <- function(dir, district=NULL){
+  
   
   ## 경로에 있는 .xlsx 파일 리스트 불러오기--------------------------------------------------
   if (stringr::str_sub(dir,-1) != '/'){
@@ -20,7 +19,7 @@ readNFI <- function(dir, district=NULL, col_all=TRUE){
   filenames <- list.files(path=dir, pattern="xlsx")
   data <- vector("list", length = length(filenames))
   
-   
+  
   
   ## error message--------------------------------------------------------------
   if(!dir.exists(dir)) {
@@ -28,28 +27,23 @@ readNFI <- function(dir, district=NULL, col_all=TRUE){
   }
   
   
-  
-  if(!is.logical(col_all)) {
-    stop("param 'col_all' must be 'logical'")
-  }
  
-  
-  
   
   
   for(i in 1:length(filenames)){
     
-    ## 모든 column 불러오기--------------------------------------------------------------
-    if(col_all){ 
-    
+   
       ## 일반정보 sheet 불러오기--------------------------------------------------------------
       General_info <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "일반정보", 
                                          col_names = TRUE, col_types = "text")
       
+      General_info <- General_info[(names(General_info) != c("조사일자"))]
+      
+      
       ## 비산림면적 sheet 불러오기--------------------------------------------------------------
       Non_forest <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "비산림면적",
                                        col_names = TRUE, col_types = "text")
-
+      
       ## 임분조사표 sheet 불러오기--------------------------------------------------------------
       Stand_inve <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "임분조사표",
                                        col_names = TRUE, col_types = "text")
@@ -59,13 +53,16 @@ readNFI <- function(dir, district=NULL, col_all=TRUE){
                                       col_names = TRUE, col_types = "text")
       
       
-  
+      
       ## 임목조사표, 임분조사표 merge-----------------------------------------------------------
       data_merge <- merge(x=Tree_inve, y=Stand_inve, 
                           by=c('집락번호', '표본점번호', '조사차기'), all.x=TRUE)
       
-    
+      ## point DB
+     
+      data_merge <- merge(data_merge, NFI_plot_DB, by=c('표본점번호'), all.x=TRUE)
       
+     
       ## 지역별 filitering--------------------------------------------------------------
       if(!is.null(district)){
         
@@ -84,22 +81,22 @@ readNFI <- function(dir, district=NULL, col_all=TRUE){
         
         if(nchar(site_code) == 10){
           data_merge <- data_merge %>% 
-            filter(data_merge$'읍면동코드' == substr(site_code,1,8))}
+            filter(data_merge$EMD_CD == substr(site_code,1,8))}
         
         else if(nchar(site_code) == 5){
-          data_merge <- data_merge %>% filter(data_merge$'시군구코드' == site_code)}
+          data_merge <- data_merge %>% filter(data_merge$SIG_CD == site_code)}
         
         else{
-          data_merge <- data_merge %>% filter(data_merge$'시도코드' == site_code)}
+          data_merge <- data_merge %>% filter(data_merge$CTPRVN_CD == site_code)}
         
         
         ## NFI 자료가 없는 지역구 error-----------------------------------------------------------
         if(nrow(data_merge) == 0) {
           stop(paste('NFI data in ',district ,' does not exist.'))}
-        }
-    
+      }
       
-     
+      
+      
       ## 일반정보, 비산림면적을 입목자료 기준으로 merge----------------------------------------------
       data_merge <- merge(x=data_merge, y=General_info, 
                           by=c('집락번호', '표본점번호', '조사차기',  '조사연도', '임상코드', '임상'), 
@@ -114,67 +111,6 @@ readNFI <- function(dir, district=NULL, col_all=TRUE){
     }
     
     
-   
-    ## 필요한 column만 불러오기, defult--------------------------------------------------------------
-    else {
-    
-      ## 일반정보 sheet(토지이용), 비산림면적, 임분조사표 sheet, 임목조사표 sheet만 불러오기---------------------------------------------
-      
-      General_info <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "일반정보", 
-                                         col_names = TRUE, col_types = "text")
-    
-      Non_forest <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "비산림면적",
-                                       col_names = TRUE, col_types = "text")
-      
-      Stand_inve <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "임분조사표",
-                                       col_names = TRUE, col_types = "text")
-      
-      Tree_inve <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "임목조사표",
-                                      col_names = TRUE, col_types = "text")
-      
-      
-      data_merge <- merge(x=Tree_inve, y=Stand_inve, 
-                          by=c('집락번호', '표본점번호', '조사차기'), all.x=TRUE)
-      
-      
-      
-      if(!is.null(district)){
-        
-        site_code <- (gsub("-", "", district_code[district_code[,2] == district, 1]))
-        
-        if(nchar(site_code) == 10){
-          data_merge <- data_merge %>% 
-            filter(data_merge$'읍면동코드' == substr(site_code,1,8))}
-        
-        else if(nchar(site_code) == 5){
-          data_merge <- data_merge %>% filter(data_merge$'시군구코드' == site_code)}
-        
-        else{
-          data_merge <- data_merge %>% filter(data_merge$'시도코드' == site_code)}
-        
-      
-        # if(nrow(data_merge) == 0) {
-        #   stop(paste('NFI data in ',district ,' does not exist.'))}
-      }
-      
-      
-      General_info <- General_info[(names(General_info) %in% c('집락번호', '표본점번호', '조사차기',  '조사연도', 
-                                          "토지이용코드", "토지이용"))]
-      
-      
-      data_merge <- merge(x=data_merge, y=General_info, 
-                          by=c('집락번호', '표본점번호', '조사차기',  '조사연도'), 
-                          all.x=TRUE)
-      data_merge <- merge(x=data_merge, y=Non_forest, 
-                          by=c('집락번호', '표본점번호', '조사차기', '조사연도'), all.x=TRUE)
-    
-      data[[i]] <- data_merge
-      
-      }
-    }
-  
-  
-  
   ## .xlsx별(연도별) 데이터 합치기--------------------------------------------------------------
   #NFI <- do.call(rbind, data)
   NFI <- data.table::rbindlist(data, fill=TRUE, use.names=TRUE)
@@ -200,15 +136,17 @@ readNFI <- function(dir, district=NULL, col_all=TRUE){
   #NFI[ , colnames(NFI) %in% date_col ] <- lapply(NFI[ , colnames(NFI) %in% date_col ], function(x) as.Date( x ,format = '%Y%m%d'))
   
   
+  # 수종별 침활구분 
   
   NFI$'침활구분'[is.na(NFI$'침활구분')] <- unlist(lapply(NFI$'수종명'[is.na(NFI$'침활구분')],
                                                  FUN=function(x){Species_DB$type[which(x==Species_DB$species)]}))
   
   
+  # 흉고단면적 기준 임상구분
+  
   NFI$basal_area <- (pi*(NFI$'흉고직경'/2)^2)/10000
   NFI$'추정간재적'[is.na(NFI$'추정간재적')] <- ifelse(NFI$'침활구분'[is.na(NFI$'추정간재적')] =="활엽수",
                                             (0.1673*(NFI$'흉고직경'^2.393))/1000, (0.086*(NFI$'흉고직경'^2.393))/1000)
-  
   
   
   stand_temp <- NFI %>% 
@@ -225,36 +163,19 @@ readNFI <- function(dir, district=NULL, col_all=TRUE){
   
   stand_temp <- stand_temp %>% rename("표본점번호"= "NFI$표본점번호", "조사연도"= "NFI$조사연도")
   
-  condition <- (names(stand_temp) %in% c("표본점번호","조사연도","stand"))
+  condition <- (names(stand_temp) %in% c("표본점번호","조사연도", "stand"))
   NFI <- merge(NFI, stand_temp[condition], by= c("표본점번호","조사연도"), all.x=T)
   
   
   
-  NFI[NFI$"표본점번호"==132168 ,"시군구코드"] <- "46910250"
-  NFI[NFI$"표본점번호"==132168 ,"시도코드"] <- "46910"
-  NFI[NFI$"표본점번호"==132168 ,"시군구"] <- "신안군"
-  NFI[NFI$"표본점번호"==132168 ,"시도"] <- "전라남도"
-  NFI[NFI$"표본점번호"==132168 ,"읍면동"] <- "지도읍"
-  
-  NFI[NFI$"시도코드"==36,"시군구코드"] <- "36110"
-  NFI[NFI$"시도코드"==36,"시도코드"] <- "36110"
-  
-  
-  
-  # NFI <- merge(NFI, samplepoint_district, by.x = c("집락번호", "표본점번호"), by.y = c("SP_ID", "SP_NAME"), all.x=T)
-  # 
-  # NFI[is.na(NFI$CTPRVN_CD ),"CTP_KOR_NM"] <- NFI[is.na(NFI$CTPRVN_CD),"시도"]
-  # NFI[is.na(NFI$CTPRVN_CD ),"CTPRVN_CD"] <- NFI[is.na(NFI$CTPRVN_CD),"시도코드"]
-  # 
-  # NFI[is.na(NFI$SIG_CD),"SIG_KOR_NM"] <- NFI[is.na(NFI$SIG_CD),"시군구"]
-  # NFI[is.na(NFI$SIG_CD),"SIG_CD"] <- NFI[is.na(NFI$SIG_CD),"시군구코드"]
-  # 
-  # 
-  # NFI[is.na(NFI$EMD_CD),"EMD_KOR_NM"] <- NFI[is.na(NFI$EMD_CD),"읍면동"]
-  # NFI[is.na(NFI$EMD_CD),"EMD_CD"] <- NFI[is.na(NFI$EMD_CD),"읍면동코드"]
-  
+  # NFI[,c('집락번호', '표본점번호', '조사차기',  '조사연도', '흉고직경', "기본조사원 비산림면적", "대경목조사원 비산림면적"
+  #         "stand",  "수종명" , "학명번호", "수목형태구분","침활구분", "흉고직경", ,"basal_area",'추정간재적', 
+  #         "형질급")]
   
  
+  NFI <- NFI[!(names(NFI) %in% c("시도코드", "시도", "시군구코드", "시군구", "읍면동코드", "읍면동",
+                                 "도엽번호", "입력자", "조사N", "조사E", "조사자1", "조사자2", "조사자3", "조사자4"))]
+    
   
   
   return(NFI) 
