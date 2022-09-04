@@ -27,9 +27,7 @@ readNFI <- function(dir, district=NULL){
   }
   
   
-  NFI_plot_DB$"표본점번호" <- as.character(NFI_plot_DB$"표본점번호")
-  
-  
+
   for(i in 1:length(filenames)){
     
    
@@ -79,7 +77,7 @@ readNFI <- function(dir, district=NULL){
         }
         
         
-        site_code <- (gsub("-", "", district_code[district_code[,2] == district, 1]))
+        site_code <- (gsub("-", "", district_code[district_code[,2] == district, 1][1]))
         
         if(nchar(site_code) == 10){
           data_merge <- data_merge %>% 
