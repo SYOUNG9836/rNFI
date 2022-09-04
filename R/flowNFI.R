@@ -62,7 +62,7 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
       if(nchar(flow_df$grpby[1]) == 10){
         
         bm_poly <- right_join(emd, flow_df, by=c("EMD_CD" = "grpby"))
-        bm_poly <- sf::st_as_sf( bm_poly )
+        #bm_poly <- sf::st_as_sf( bm_poly )
         
         flow <- ggplot(bm_poly) + 
           geom_sf(aes(fill = !!y , geometry = geometry))+
@@ -79,6 +79,7 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
       }else if(nchar(flow_df$grpby[1]) == 5){
         
         bm_poly <- right_join(sgg, flow_df, by=c("SIG_CD" = "grpby"))
+        #bm_poly <- sf::st_as_sf( bm_poly )
         
         flow <- ggplot(bm_poly) + 
           geom_sf( aes(fill = !!y , geometry = geometry))+
@@ -95,6 +96,7 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
       }else{
         
         bm_poly <- right_join(do, flow_df, by=c("CTPRVN_CD" = "grpby"))
+        #bm_poly <- sf::st_as_sf( bm_poly )
         
         flow <- ggplot(bm_poly) + 
           geom_sf(aes(fill = !!y , geometry = geometry))+
@@ -112,7 +114,7 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
     }else if(output =="line"){
       
       flow <- ggplot(flow_df) + 
-        geom_line(aes(x=year, y=!!y, color = reorder(name, -!!y)), size = 1.1)+ 
+        geom_line(aes(x=year, y=!!y, group = name, color = reorder(name, -!!y)), size = 1.1)+ 
         theme(axis.title.x = element_text(vjust=-1.5),
               axis.title.y = element_text(vjust=4))+
         theme(plot.margin = unit(c(0.3,0.1,0.5,0.6), "cm"), legend.title = element_blank()) + 
