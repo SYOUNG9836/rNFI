@@ -134,7 +134,7 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
       flow <- flow_df %>% 
         filter(species %in% reorder(species, importance.value)[1:20]) %>%
         ggplot() + 
-        geom_line(aes(x=year, y=importance.value, color = reorder(species, -importance.value)), size = 1.1)+ 
+        geom_line(aes(x=year, y=importance.value, group = species, color = reorder(species, -importance.value)), size = 1.1)+ 
         theme(axis.title.x = element_text(vjust=-1.5),
               axis.title.y = element_text(vjust=4))+
         theme(plot.margin = unit(c(0.3,0.1,0.5,0.6), "cm"), legend.title = element_blank()) + 

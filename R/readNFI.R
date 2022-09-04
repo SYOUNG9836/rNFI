@@ -117,6 +117,9 @@ readNFI <- function(dir, district=NULL){
   NFI <- data.table::rbindlist(data, fill=TRUE, use.names=TRUE)
   NFI <- as.data.frame(NFI)
   
+  NFI$"표본점번호" <- (gsub("-", "", NFI$"표본점번호"))
+  
+
   log_col <- c("산림여부", "조사가능여부")
   NFI[ , colnames(NFI) %in% log_col ] <- lapply(lapply(NFI[ , colnames(NFI) %in% log_col ], as.numeric), as.logical)
   
