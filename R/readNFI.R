@@ -27,7 +27,7 @@ readNFI <- function(dir, district=NULL){
   }
   
   
- 
+  NFI_plot_DB$"표본점번호" <- as.character(NFI_plot_DB$"표본점번호")
   
   
   for(i in 1:length(filenames)){
@@ -62,12 +62,10 @@ readNFI <- function(dir, district=NULL){
       
       ## point DB
       data_merge$"표본점번호" <- (gsub("-", "", data_merge$"표본점번호"))
-      NFI_plot_DB$"표본점번호" <- as.character(NFI_plot_DB$"표본점번호")  
       
       data_merge <- left_join(data_merge, NFI_plot_DB, by=c('표본점번호'))
       
-     
-      ## 지역별 filitering--------------------------------------------------------------
+           ## 지역별 filitering--------------------------------------------------------------
       if(!is.null(district)){
         
         if(!is.character(district)) {
@@ -121,6 +119,8 @@ readNFI <- function(dir, district=NULL){
   #NFI <- do.call(rbind, data)
   NFI <- data.table::rbindlist(data, fill=TRUE, use.names=TRUE)
   NFI <- as.data.frame(NFI)
+  
+  NFI$"집락번호" <- (gsub("-", "", NFI$"집락번호"))
   
   log_col <- c("산림여부", "조사가능여부")
   NFI[ , colnames(NFI) %in% log_col ] <- lapply(lapply(NFI[ , colnames(NFI) %in% log_col ], as.numeric), as.logical)
