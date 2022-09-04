@@ -62,6 +62,8 @@ readNFI <- function(dir, district=NULL){
       
       ## point DB
       data_merge$"표본점번호" <- (gsub("-", "", data_merge$"표본점번호"))
+      NFI_plot_DB$"표본점번호" <- as.character(NFI_plot_DB$"표본점번호")  
+      
       data_merge <- left_join(data_merge, NFI_plot_DB, by=c('표본점번호'))
       
      
