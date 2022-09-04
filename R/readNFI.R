@@ -61,7 +61,7 @@ readNFI <- function(dir, district=NULL){
                           by=c('집락번호', '표본점번호', '조사차기'))
       
       ## point DB
-      
+      data_merge$"표본점번호" <- (gsub("-", "", data_merge$"표본점번호"))
       data_merge <- left_join(data_merge, NFI_plot_DB, by=c('표본점번호'))
       
      
@@ -100,6 +100,9 @@ readNFI <- function(dir, district=NULL){
       
       
       ## 일반정보, 비산림면적을 입목자료 기준으로 merge----------------------------------------------
+      General_info$"표본점번호" <- (gsub("-", "", General_info$"표본점번호"))
+      Non_forest$"표본점번호" <- (gsub("-", "", Non_forest$"표본점번호"))
+      
       data_merge <- left_join(x=data_merge, y=General_info, 
                           by=c('집락번호', '표본점번호', '조사차기',  '조사연도', '임상코드', '임상'))
       
@@ -117,9 +120,6 @@ readNFI <- function(dir, district=NULL){
   NFI <- data.table::rbindlist(data, fill=TRUE, use.names=TRUE)
   NFI <- as.data.frame(NFI)
   
-  NFI$"표본점번호" <- (gsub("-", "", NFI$"표본점번호"))
-  
-
   log_col <- c("산림여부", "조사가능여부")
   NFI[ , colnames(NFI) %in% log_col ] <- lapply(lapply(NFI[ , colnames(NFI) %in% log_col ], as.numeric), as.logical)
   
