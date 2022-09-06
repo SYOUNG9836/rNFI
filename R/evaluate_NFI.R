@@ -3,8 +3,9 @@
 #' This function loop function
 #' @param data : data 
 #' @param grpby : grpby 시도코드; 시군구코드; 읍면동 코드
+#' @param y : y
 #' @param type : biomass; iv
-#' @param output: poly; line 
+#' @param output : poly; line 
 #' @return merge data
 #' @export
 

@@ -4,6 +4,7 @@
 #'
 #' This function 
 #' @param data : data
+#' @param grpby : grpby
 #' @keywords plot
 #' @export 
 #' 
