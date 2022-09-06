@@ -65,7 +65,7 @@ bm_df <- function(data){
 
 
 
-#' biomass() Function
+#' biomass_NFI() Function
 #'
 #' This function 
 #' @param data : data
@@ -75,7 +75,7 @@ bm_df <- function(data){
 #' @export 
 
 
-biomass <- function(data, byplot= TRUE, grpby=NULL){
+biomass_NFI <- function(data, byplot= TRUE, grpby=NULL){
   
   ## 추정간재적 type이 num이 아닌 경우 as.numeric--------------------------------------------------------------
   if (!is.numeric(data$'추정간재적')){
@@ -101,18 +101,18 @@ biomass <- function(data, byplot= TRUE, grpby=NULL){
     if (!is.null(grpby)){
       
         bm <- data %>% 
-          group_by(data$'표본점번호', data$'조사연도', data[,grpby]) %>% 
+          group_by(data$'조사차기', data$'표본점번호', data$'조사연도', data[,grpby]) %>% 
           summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
                     biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
                     AG_biomass_ton = sum(.data$AG_biomass, na.rm=TRUE),
                     carbon_stock_tC = sum(.data$carbon_stock, na.rm=TRUE),
                     co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),.groups = 'drop')
         
-        bm <- bm %>% rename("plot_id"= "data$표본점번호","year"= "data$조사연도" ) #"grpby"= "data[, grpby]"
+        bm <- bm %>% rename('order' = "data$조사차기","plot_id"= "data$표본점번호","year"= "data$조사연도" , "grpby"= "data[, grpby]") #
         
         
         bm_temp <- data %>% 
-          group_by(data$'표본점번호', data$'조사연도', data[,grpby], largetree) %>% 
+          group_by(data$'조사차기', data$'표본점번호', data$'조사연도', data[,grpby], largetree) %>% 
           summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
                     biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
                     AG_biomass_ton = sum(.data$AG_biomass, na.rm=TRUE),
@@ -122,18 +122,18 @@ biomass <- function(data, byplot= TRUE, grpby=NULL){
         
         condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomasS_ton","carbon_stock_tC","co2_stock_tCO2"))
         bm_temp[condition] <- lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, x/0.08 , x/0.04))
-        bm_temp <- bm_temp %>% rename("plot_id"= "data$표본점번호", "year"= "data$조사연도")  #"grpby"= "data[, grpby]"
+        bm_temp <- bm_temp %>% rename('order' = "data$조사차기", "plot_id"= "data$표본점번호", "year"= "data$조사연도", "grpby"= "data[, grpby]")  
         
         
         bm_temp <- bm_temp %>% 
-          group_by(plot_id, grpby) %>% 
+          group_by(order, plot_id, year, grpby) %>% 
           summarise(volume_m3_ha = sum(volume_m3, na.rm=TRUE),
                     biomass_ton_ha = sum(biomass_ton, na.rm=TRUE),
                     AG_biomass_ton_ha = sum(AG_biomass_ton, na.rm=TRUE),
                     carbon_stock_tC_ha = sum(carbon_stock_tC, na.rm=TRUE),
                     co2_stock_tCO2_ha = sum(co2_stock_tCO2, na.rm=TRUE),.groups = 'drop')
         
-        bm <- full_join(bm, bm_temp, by=c('plot_id', 'year')) 
+        bm <- full_join(bm, bm_temp, by=c('order', 'plot_id', 'year', 'grpby')) 
         
         
     }
@@ -142,18 +142,18 @@ biomass <- function(data, byplot= TRUE, grpby=NULL){
     else{
       
         bm <- data %>% 
-          group_by(data$'표본점번호', data$'조사연도') %>% 
+          group_by(data$'조사차기', data$'표본점번호', data$'조사연도') %>% 
           summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
                     biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
                     AG_biomass_ton = sum(.data$AG_biomass, na.rm=TRUE),
                     carbon_stock_tC = sum(.data$carbon_stock, na.rm=TRUE),
                     co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),.groups = 'drop')
         
-        bm <- bm %>% rename("plot_id"= "data$표본점번호", "year"= "data$조사연도")
+        bm <- bm %>% rename('order' = "data$조사차기", "plot_id"= "data$표본점번호", "year"= "data$조사연도")
         
         
         bm_temp <- data %>% 
-          group_by(data$'표본점번호', data$'조사연도', largetree) %>% 
+          group_by(data$'조사차기', data$'표본점번호', data$'조사연도', largetree) %>% 
           summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
                     biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
                     AG_biomass_ton = sum(.data$AG_biomass, na.rm=TRUE),
@@ -163,18 +163,18 @@ biomass <- function(data, byplot= TRUE, grpby=NULL){
         
         condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomasS_ton","carbon_stock_tC","co2_stock_tCO2"))
         bm_temp[condition] <- lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, x/0.08 , x/0.04))
-        bm_temp <- bm_temp %>% rename("plot_id"= "data$표본점번호", "year"= "data$조사연도")
+        bm_temp <- bm_temp %>% rename('order' = "data$조사차기", "plot_id"= "data$표본점번호", "year"= "data$조사연도")
         
         
         bm_temp <- bm_temp %>% 
-          group_by(plot_id) %>% 
+          group_by(order, plot_id, year) %>% 
           summarise(volume_m3_ha = sum(volume_m3, na.rm=TRUE),
                     biomass_ton_ha = sum(biomass_ton, na.rm=TRUE),
                     AG_biomass_ton_ha = sum(AG_biomass_ton, na.rm=TRUE),
                     carbon_stock_tC_ha = sum(carbon_stock_tC, na.rm=TRUE),
                     co2_stock_tCO2_ha = sum(co2_stock_tCO2, na.rm=TRUE),.groups = 'drop')
         
-        bm <- full_join(bm, bm_temp, by=c('plot_id')) 
+        bm <- full_join(bm, bm_temp, by=c('order', 'plot_id', "year")) 
         
         
 

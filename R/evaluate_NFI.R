@@ -1,4 +1,4 @@
-#' flowNFI() Function
+#' evaluate_NFI() Function
 #'
 #' This function loop function
 #' @param data : data 
@@ -9,7 +9,7 @@
 #' @export
 
 
-flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
+evaluate_NFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
   
   theme_set(theme_bw())
   theme_update(text = element_text(size=13))
@@ -27,7 +27,7 @@ flowNFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line"){
     
     
     if(type == "biomass"){
-      flow_list[[i]] <- biomass(data_temp, byplot = FALSE, grpby = grpby )
+      flow_list[[i]] <- biomass_NFI(data_temp, byplot = FALSE, grpby = grpby )
       flow_list[[i]]$year <- e_year
     }else if(type == "iv"){
       flow_list[[i]] <- importancevalue_NFI(data_temp)
