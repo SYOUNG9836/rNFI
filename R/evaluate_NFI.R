@@ -31,7 +31,7 @@ evaluate_NFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line
       flow_list[[i]] <- biomass_NFI(data_temp, byplot = FALSE, grpby = grpby )
       flow_list[[i]]$year <- e_year
     }else if(type == "iv"){
-      flow_list[[i]] <- importancevalue_NFI(data_temp)
+      flow_list[[i]] <- importancevalue_evaluate(data_temp)
       flow_list[[i]]$year <- e_year
     }else{
       stop(paste( type, ' does not exist.'))
