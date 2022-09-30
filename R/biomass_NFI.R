@@ -93,8 +93,10 @@ biomass_NFI <- function(data, byplot= TRUE, grpby=NULL){
   data_temp <- data_temp %>% filter(data_temp$'수목형태구분' == "교목")
   data_temp$largetree <- ifelse(data_temp$'흉고직경'>=30, 1, 0)
   
-  data_temp$largetree_area <- (100 - data_temp$'대경목조사원 비산림면적')/100
-  data_temp$tree_area <-(100 - data_temp$'기본조사원 비산림면적')/100
+  # 단위 m2/10
+  data_temp$largetree_area <- 0.08 - ((data_temp$'대경목조사원 비산림면적'*10)/10000)
+  data_temp$tree_area <- 0.04 - ((data_temp$'기본조사원 비산림면적'*10)/10000)
+
   
   data <- data_temp
   
