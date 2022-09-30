@@ -121,7 +121,7 @@ biomass_NFI <- function(data, byplot= TRUE, grpby=NULL){
         
         
         bm_temp <- data %>% 
-          group_by(data$'조사차기', data$'표본점번호', data$'조사연도', data[,grpby], largetree) %>% 
+          group_by(data$'조사차기', data$'표본점번호', data$'조사연도', data[,grpby], largetree, largetree_area, tree_area) %>% 
           summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
                     biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
                     AG_biomass_ton = sum(.data$AG_biomass, na.rm=TRUE),
@@ -130,7 +130,9 @@ biomass_NFI <- function(data, byplot= TRUE, grpby=NULL){
         
         
         condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomasS_ton","carbon_stock_tC","co2_stock_tCO2"))
-        bm_temp[condition] <- lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, x/0.08 , x/0.04))
+        bm_temp[condition] <- lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, 
+                                                                            x/(bm_temp$largetree_area),
+                                                                            x/(bm_temp$tree_area)))
         bm_temp <- bm_temp %>% rename('order' = "data$조사차기", "plot_id"= "data$표본점번호", "year"= "data$조사연도", "grpby"= "data[, grpby]")  
         
         
@@ -162,7 +164,7 @@ biomass_NFI <- function(data, byplot= TRUE, grpby=NULL){
         
         
         bm_temp <- data %>% 
-          group_by(data$'조사차기', data$'표본점번호', data$'조사연도', largetree) %>% 
+          group_by(data$'조사차기', data$'표본점번호', data$'조사연도', largetree, largetree_area, tree_area) %>% 
           summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
                     biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
                     AG_biomass_ton = sum(.data$AG_biomass, na.rm=TRUE),
@@ -171,7 +173,9 @@ biomass_NFI <- function(data, byplot= TRUE, grpby=NULL){
         
         
         condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomasS_ton","carbon_stock_tC","co2_stock_tCO2"))
-        bm_temp[condition] <- lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, x/0.08 , x/0.04))
+        bm_temp[condition] <- lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1,
+                                                                            x/(bm_temp$largetree_area),
+                                                                            x/(bm_temp$tree_area)))
         bm_temp <- bm_temp %>% rename('order' = "data$조사차기", "plot_id"= "data$표본점번호", "year"= "data$조사연도")
         
         
@@ -210,8 +214,8 @@ biomass_NFI <- function(data, byplot= TRUE, grpby=NULL){
       condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomasS_ton","carbon_stock_tC","co2_stock_tCO2"))
       bm_temp[condition] <- 
         lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, 
-                                                      x/(0.08*bm_temp$largetree_area),
-                                                      x/(0.04*bm_temp$tree_area)))
+                                                      x/(bm_temp$largetree_area),
+                                                      x/(bm_temp$tree_area)))
       bm_temp <- bm_temp %>% rename("plot_id"= "data$표본점번호", "year"= "data$조사연도", 
                                     "grpby"= "data[, grpby]")
       
@@ -314,8 +318,8 @@ biomass_NFI <- function(data, byplot= TRUE, grpby=NULL){
       condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomasS_ton","carbon_stock_tC","co2_stock_tCO2"))
       bm_temp[condition] <- 
         lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, 
-                                                      x/(0.08*bm_temp$largetree_area),
-                                                      x/(0.04*bm_temp$tree_area)))
+                                                      x/(bm_temp$largetree_area),
+                                                      x/(bm_temp$tree_area)))
       bm_temp <- bm_temp %>% rename("plot_id"= "data$표본점번호", "year"= "data$조사연도")
       
       # 플롯별
