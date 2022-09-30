@@ -27,10 +27,16 @@ bm_df <- function(data){
     data$'수종명' =="상수리나무" ~ "상수리나무" ,
     data$'수종명' =="졸참나무" ~ "졸참나무" ,
     data$'수종명' =="붉가시나무" ~ "붉가시나무" ,
+    data$'수종명' =="아까시나무" ~ "아까시나무" ,
+    data$'수종명' =="자작나무" ~ "자작나무" ,
+    data$'수종명' =="백합나무" ~ "백합나무" ,
+    data$'수종명' =="현사시나무" ~ "현사시나무" ,
+    data$'수종명' =="밤나무" ~ "밤나무" ,
     
     ## 기타 활엽수 및 기타 침엽수--------------------------------------------------------------
-    (data$'침활구분' =="활엽수") ~ "기타 활엽수" ,
-    (data$'침활구분' =="침엽수") ~ "기타 침엽수",
+    (data$type_ever_g == 1) ~ "상록활엽수" ,
+    (data$type_leaf =="활엽수") ~ "기타 활엽수" ,
+    (data$type_leaf =="침엽수") ~ "기타 침엽수",
     TRUE ~ as.character(NA)
     
   ))
@@ -48,7 +54,7 @@ bm_df <- function(data){
   output$T_biomass <- output$AG_biomass*(1+output$"뿌리함량비_값")
   ## 탄소흡수량 구하기-----------------------------------------------
   ## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)(1+뿌리함량비)*(0.51(침) or 0.48(활))-----------------------
-  output$CF <- ifelse(output$'침활구분' =="활엽수", 0.48, 0.51 ) ##탄소전환계수
+  output$CF <- ifelse(output$type_leaf =="활엽수", 0.48, 0.51 ) ##탄소전환계수
   output$carbon_stock <- output$T_biomass*output$CF
   ## 이산탄소흡수량 구하기--------------------------------------------------------------
   ## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)(1+뿌리함량비)*(0.51(침) or 0.48(활))*(44/12)--------------------
@@ -84,6 +90,7 @@ biomass_NFI <- function(data, byplot= TRUE, grpby=NULL){
   
   data_temp <- bm_df(data)
   data_temp <- data_temp %>% filter(data_temp$'토지이용' == "임목지")
+  data_temp <- data_temp %>% filter(data_temp$'수목형태구분' == "교목")
   data_temp$largetree <- ifelse(data_temp$'흉고직경'>=30, 1, 0)
   
   data_temp$largetree_area <- (100 - data_temp$'대경목조사원 비산림면적')/100

@@ -146,20 +146,31 @@ read_NFI <- function(dir, district=NULL){
   
   
   # 수종별 침활구분 
+  ## 상록활엽수
+  ## 낙엽활엽수
   
-  NFI$'침활구분'[is.na(NFI$'침활구분')] <- unlist(lapply(NFI$'수종명'[is.na(NFI$'침활구분')],
-                                                 FUN=function(x){Species_DB$type[which(x==Species_DB$species)]}))
+  #NFI$'침활구분'[is.na(NFI$'침활구분')] <- unlist(lapply(NFI$'수종명'[is.na(NFI$'침활구분')],
+  #                                               FUN=function(x){Species_DB$type[which(x==Species_DB$species)]}))
+  
+  #NFI$'침활구분' <- unlist(lapply(NFI$'수종명',
+  #                                FUN=function(x){Species_DB$type[which(x==Species_DB$species)]}))
+ 
+  #NFI$'침활구분_상세' <- unlist(lapply(NFI$'수종명',
+  #                            FUN=function(x){Species_DB$type_ever_g[which(x==Species_DB$species)]}))
+  
+  
+  NFI <- left_join(NFI, Species_DB, by= c("수종명" ="species") )
   
   
   # 흉고단면적 기준 임상구분
   
   NFI$basal_area <- (pi*(NFI$'흉고직경'/2)^2)/10000
-  NFI$'추정간재적'[is.na(NFI$'추정간재적')] <- ifelse(NFI$'침활구분'[is.na(NFI$'추정간재적')] =="활엽수",
-                                            (0.1673*(NFI$'흉고직경'^2.393))/1000, (0.086*(NFI$'흉고직경'^2.393))/1000)
+  #NFI$'추정간재적'[is.na(NFI$'추정간재적')] <- ifelse(NFI$'침활구분'[is.na(NFI$'추정간재적')] =="활엽수",
+  #                                          (0.1673*(NFI$'흉고직경'^2.393))/1000, (0.086*(NFI$'흉고직경'^2.393))/1000)
   
   
   stand_temp <- NFI %>% 
-    mutate(deciduous_ba = ifelse(NFI$"침활구분" == "활엽수",  basal_area, 0)) %>%
+    mutate(deciduous_ba = ifelse(NFI$type_leaf == "활엽수",  basal_area, 0)) %>%
     group_by(NFI$'표본점번호',NFI$'조사연도') %>% 
     summarise(all_ba = sum(basal_area), 
               deciduous_ba = sum(deciduous_ba),
