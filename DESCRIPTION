@@ -24,11 +24,12 @@ Imports:
     tidyr,
     BiodiversityR,
     data.table,
-    ggplot2
+    ggplot2,
+    sf
 Depends: 
     R (>= 2.10)
 Suggests: 
     rgdal,
     sp,
-    raster,
-    sf
+    raster
+    

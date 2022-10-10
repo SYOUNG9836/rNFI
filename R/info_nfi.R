@@ -1,6 +1,7 @@
 #' @import dplyr
 #' @import BiodiversityR
 #' @import ggplot2
+#' @import sf
 #' @importFrom magrittr %>%
 NULL
 
