@@ -40,13 +40,6 @@ evaluate_NFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line
   
   flow_df <- data.table::rbindlist(flow_list, fill=TRUE, use.names=TRUE)
   flow_df <- as.data.frame(flow_df)
-  
-  
-  district_code[,1] <- (gsub("-", "", district_code[,1]))
-  flow_df$name <- unlist(lapply(flow_df$grpby, 
-                                FUN=function(x){district_code$"법정동명"[which(x==district_code$"법정동코드")]}))
-  
-  
   flow_df$year <- as.character(flow_df$year)
   
   
@@ -60,9 +53,15 @@ evaluate_NFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line
       
     }else if(output =="poly"){
       
-      if(nchar(flow_df$grpby[1]) == 10){
+      
+      district_code[,1] <- (gsub("-", "", district_code[,1]))
+      flow_df$name <- unlist(lapply(flow_df$grpby, 
+                                    FUN=function(x){district_code$"법정동코드"[which(x==district_code$"법정동명")]}))
+      
+      
+      if(nchar(flow_df$name[1]) == 10){
         
-        bm_poly <- right_join(emd, flow_df, by=c("EMD_CD" = "grpby"))
+        bm_poly <- right_join(emd, flow_df, by=c("EMD_CD" = "name"))
         #bm_poly <- sf::st_as_sf( bm_poly )
         
         flow <- ggplot(bm_poly) + 
@@ -77,9 +76,9 @@ evaluate_NFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line
           #                       style = north_arrow_fancy_orienteering)+
           scale_fill_viridis_c(direction = -1,  alpha = .7)
         
-      }else if(nchar(flow_df$grpby[1]) == 5){
+      }else if(nchar(flow_df$name[1]) == 5){
         
-        bm_poly <- right_join(sgg, flow_df, by=c("SIG_CD" = "grpby"))
+        bm_poly <- right_join(sgg, flow_df, by=c("SIG_CD" = "name"))
         #bm_poly <- sf::st_as_sf( bm_poly )
         
         flow <- ggplot(bm_poly) + 
@@ -96,7 +95,7 @@ evaluate_NFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line
         
       }else{
         
-        bm_poly <- right_join(do, flow_df, by=c("CTPRVN_CD" = "grpby"))
+        bm_poly <- right_join(do, flow_df, by=c("CTPRVN_CD" = "name"))
         #bm_poly <- sf::st_as_sf( bm_poly )
         
         flow <- ggplot(bm_poly) + 
@@ -113,6 +112,8 @@ evaluate_NFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line
       }
       
     }else if(output =="line"){
+      
+      flow_df$name <- flow_df$grpby
       
       flow <- ggplot(flow_df) + 
         geom_line(aes(x=year, y=!!y, group = name, color = reorder(name, -!!y)), size = 1.1)+ 
