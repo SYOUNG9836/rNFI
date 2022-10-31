@@ -21,7 +21,8 @@ summary_NFI<- function(data, grpby=NULL){
     
     data_temp <- data_temp %>%
       group_by(data_temp$'조사차기', data_temp[,grpby]) %>%
-      summarise(num_tree = n(), num_species= n_distinct(get('수종명')),  mean_DBH = mean(get('흉고직경'), na.rm=TRUE), 
+      summarise(num_plot= n_distinct(get('표본점번호')),
+                num_tree = n(), num_species= n_distinct(get('수종명')),  mean_DBH = mean(get('흉고직경'), na.rm=TRUE), 
                 mean_H = mean(get('추정수고'), na.rm=TRUE),
                 mean_dominant_H = mean(get('추정수고')[get('수관급')=="우세목"], na.rm=TRUE),
                 mean_basal= mean(basal, na.rm=TRUE),
