@@ -129,7 +129,7 @@ biomass_NFI <- function(data, byplot= TRUE, grpby=NULL){
                     co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),.groups = 'drop')
         
         
-        condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomasS_ton","carbon_stock_tC","co2_stock_tCO2"))
+        condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomass_ton","carbon_stock_tC","co2_stock_tCO2"))
         bm_temp[condition] <- lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, 
                                                                             x/(bm_temp$largetree_area),
                                                                             x/(bm_temp$tree_area)))
@@ -172,7 +172,7 @@ biomass_NFI <- function(data, byplot= TRUE, grpby=NULL){
                     co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),.groups = 'drop')
         
         
-        condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomasS_ton","carbon_stock_tC","co2_stock_tCO2"))
+        condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomass_ton","carbon_stock_tC","co2_stock_tCO2"))
         bm_temp[condition] <- lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1,
                                                                             x/(bm_temp$largetree_area),
                                                                             x/(bm_temp$tree_area)))
@@ -211,7 +211,7 @@ biomass_NFI <- function(data, byplot= TRUE, grpby=NULL){
                   co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),.groups = 'drop')
       
       
-      condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomasS_ton","carbon_stock_tC","co2_stock_tCO2"))
+      condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomass_ton","carbon_stock_tC","co2_stock_tCO2"))
       bm_temp[condition] <- 
         lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, 
                                                       x/(bm_temp$largetree_area),
@@ -315,7 +315,7 @@ biomass_NFI <- function(data, byplot= TRUE, grpby=NULL){
                   co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),.groups = 'drop')
       
       
-      condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomasS_ton","carbon_stock_tC","co2_stock_tCO2"))
+      condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomass_ton","carbon_stock_tC","co2_stock_tCO2"))
       bm_temp[condition] <- 
         lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, 
                                                       x/(bm_temp$largetree_area),
