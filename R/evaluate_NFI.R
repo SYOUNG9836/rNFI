@@ -6,7 +6,7 @@
 #' @param y : y
 #' @param type : biomass; iv
 #' @param output : poly; line 
-#' @return merge data
+#' @return plot data
 #' @export
 
 
@@ -28,7 +28,7 @@ evaluate_NFI <- function(data, grpby="", y=NULL, type = "biomass", output ="line
     
     
     if(type == "biomass"){
-      flow_list[[i]] <- biomass_NFI(data_temp, byplot = FALSE, grpby = grpby )
+      flow_list[[i]] <- biomass_evaluate(data_temp, byplot = FALSE, grpby = grpby )
       flow_list[[i]]$year <- e_year
     }else if(type == "iv"){
       flow_list[[i]] <- importancevalue_evaluate(data_temp)

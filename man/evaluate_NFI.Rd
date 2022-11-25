@@ -18,7 +18,7 @@ evaluate_NFI(data, grpby = "", y = NULL, type = "biomass", output = "line")
 \item{output}{: poly; line}
 }
 \value{
-merge data
+plot data
 }
 \description{
 This function loop function

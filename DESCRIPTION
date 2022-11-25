@@ -25,7 +25,9 @@ Imports:
     BiodiversityR,
     data.table,
     ggplot2,
-    sf
+    sf,
+    plotrix,
+    rlang
 Depends: 
     R (>= 2.10)
 Suggests: 
