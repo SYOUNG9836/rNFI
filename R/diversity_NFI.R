@@ -18,9 +18,14 @@
 
 ##  
 
-diversity_NFI <- function(data, grpby=NULL, byplot= FALSE,  basal=TRUE, clusterplot=TRUE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
+diversity_NFI <- function(data, grpby=NULL, byplot= FALSE,  basal=TRUE, clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
   
   
+  if(clusterplot){
+    plot_id <- c('집락번호')
+  }else{
+    plot_id <- c('표본점번호')
+  }
   
   
   if (!is.null(grpby)){
@@ -67,12 +72,7 @@ diversity_NFI <- function(data, grpby=NULL, byplot= FALSE,  basal=TRUE, clusterp
     data <- data %>% filter(data$'대경목조사원내존재여부' == 0)
   }
   
-  if(clusterplot){
-    plot_id <- c('집락번호')
-  }else{
-    plot_id <- c('표본점번호')
-  }
-
+  
   plot_id  <- rlang::sym(plot_id)
   grpby  <- rlang::syms(grpby)
   

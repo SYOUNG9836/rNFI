@@ -6,7 +6,6 @@
 \usage{
 biomass_evaluate(
   data,
-  byplot = FALSE,
   grpby = NULL,
   strat = "stand",
   clusterplot = FALSE,
@@ -17,8 +16,6 @@ biomass_evaluate(
 }
 \arguments{
 \item{data}{: data}
-
-\item{byplot}{: byplot}
 
 \item{grpby}{: grpby}
 

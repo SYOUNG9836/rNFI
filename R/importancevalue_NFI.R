@@ -142,6 +142,8 @@ importancevalue_evaluate <- function(data, frequency=TRUE , clusterplot=TRUE, la
   }else{
     
     data_iv_result$importance.value <- (data_iv_result$density.percent + data_iv_result$dominance.percent)/2
+    data_iv_result$frequency <- NULL
+    data_iv_result$frequency.percent <- NULL
   }
   
   

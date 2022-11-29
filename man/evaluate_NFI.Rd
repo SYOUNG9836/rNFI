@@ -4,7 +4,19 @@
 \alias{evaluate_NFI}
 \title{evaluate_NFI() Function}
 \usage{
-evaluate_NFI(data, grpby = "", y = NULL, type = "biomass", output = "line")
+evaluate_NFI(
+  data,
+  grpby = NULL,
+  y = NULL,
+  type = "biomass",
+  output = "line",
+  strat = "stand",
+  clusterplot = FALSE,
+  largetreearea = TRUE,
+  Stockedland = TRUE,
+  talltree = TRUE,
+  frequency = TRUE
+)
 }
 \arguments{
 \item{data}{: data}

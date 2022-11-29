@@ -8,7 +8,7 @@ summary_NFI(
   data,
   grpby = NULL,
   byplot = FALSE,
-  clusterplot = TRUE,
+  clusterplot = FALSE,
   largetreearea = TRUE,
   Stockedland = TRUE,
   talltree = TRUE

@@ -17,7 +17,13 @@
 
 ##
 
-summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=TRUE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
+summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
+  
+  if(clusterplot){
+    plot_id <- c('집락번호')
+  }else{
+    plot_id <- c('표본점번호')
+  }
   
   if (!is.null(grpby)){
     
@@ -72,12 +78,6 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=TRUE, larget
   
   data$tree_area <- 0.04 - ((data$'기본조사원 비산림면적'*10)/10000)
   
-  
-  if(clusterplot){
-    plot_id <- c('집락번호')
-  }else{
-    plot_id <- c('표본점번호')
-  }
   
   plot_id  <- rlang::sym(plot_id)
   grpby  <- rlang::syms(grpby)
@@ -201,9 +201,9 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=TRUE, larget
       
       stat_ha <- stat_ha %>% 
         group_by(order, year, !!plot_id, !!!grpby) %>% 
-        summarise(tree_n_ha = sum(tree_n_ha, na.rm=TRUE),
-                  basal_m2_ha = sum(basal_m2_ha, na.rm=TRUE),
-                  volume_m3_ha = sum(volume_m3_ha, na.rm=TRUE),.groups = 'drop')
+        summarise(tree_n_ha = sum(tree_temp, na.rm=TRUE),
+                  basal_m2_ha = sum(basal_temp, na.rm=TRUE),
+                  volume_m3_ha = sum(volume_temp, na.rm=TRUE),.groups = 'drop')
     }
     
     
@@ -234,9 +234,9 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=TRUE, larget
       
       stat_ha <- stat_ha %>% 
         group_by(order, year, !!plot_id, !!!grpby) %>% 
-        summarise(tree_n_ha = sum(tree_n_ha, na.rm=TRUE),
-                  basal_m2_ha = sum(basal_m2_ha, na.rm=TRUE),
-                  volume_m3_ha = sum(volume_m3_ha, na.rm=TRUE),.groups = 'drop')
+        summarise(tree_n_ha = sum(tree_temp, na.rm=TRUE),
+                  basal_m2_ha = sum(basal_temp, na.rm=TRUE),
+                  volume_m3_ha = sum(volume_temp, na.rm=TRUE),.groups = 'drop')
     }
     
   }
