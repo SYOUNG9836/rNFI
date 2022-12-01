@@ -189,9 +189,23 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
     
     if(!largetreearea){
       
-      stat_ha[condition] <- stat_ha[condition]/stat_ha$tree_area
+
+      condition_ha <- c("tree_n_ha","basal_m2_ha","volume_m3_ha")
+      stat_ha[condition_ha] <-  NA
+      stat_ha <- as.data.frame(stat_ha)
+      
+      condition_ha <- (names(stat_ha) %in% c("tree_n_ha","basal_m2_ha","volume_m3_ha"))
+      
+      stat_ha[condition_ha] <- 
+        lapply(stat_ha[condition], function(x) (x/stat_ha$tree_area))
+      
+      
       stat_ha$tree_area <- NULL
       stat_ha$largetreearea <- NULL
+      stat_ha[condition] <- NULL
+      
+      
+      
       
     }else{
       
@@ -222,9 +236,20 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
     
     if(!largetreearea){
       
-      stat_ha[condition] <- stat_ha[condition]/stat_ha$tree_area
+      condition_ha <- c("tree_n_ha","basal_m2_ha","volume_m3_ha")
+      stat_ha[condition_ha] <-  NA
+      stat_ha <- as.data.frame(stat_ha)
+      
+      condition_ha <- (names(stat_ha) %in% c("tree_n_ha","basal_m2_ha","volume_m3_ha"))
+      
+      stat_ha[condition_ha] <- 
+        lapply(stat_ha[condition], function(x) (x/stat_ha$tree_area))
+      
+      
       stat_ha$tree_area <- NULL
       stat_ha$largetreearea <- NULL
+      stat_ha[condition] <- NULL
+      
       
     }else{
       

@@ -23,7 +23,7 @@ evaluate_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="li
   theme_update(text = element_text(size=13))
   
   
-  if(type == "biomass" & output != "table"){
+  if(type != "iv" & output != "table"){
     
     if(is.null(y)){
       stop("param 'y' is a required parameter")
@@ -33,17 +33,15 @@ evaluate_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="li
         stop("param 'y' must be 'character'")
       }
       
+      y  <- rlang::sym(y)
+      
       
     }
-    
-    
-    
-    
     
   }
   
   
-  if(type == "biomass" & output == "poly"){
+  if(type != "iv" & output == "poly"){
     
     if(!stringr::str_detect(grpby,'_CD$')){
       
@@ -52,8 +50,11 @@ evaluate_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="li
   }
   
   
+  if(type == "iv" & output == "poly"){
+    
+    stop("Importance value cannot be visualized by poly")
+  }
   
-  y  <- rlang::sym(y)
   
   flow_list <- vector("list", length = (length(unique(data$"조사연도"))-4))
   
@@ -65,7 +66,11 @@ evaluate_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="li
     
     
     if(type == "biomass"){
-      flow_list[[i]] <- biomass_evaluate(data_temp, byplot = FALSE, grpby = grpby, strat = strat, clusterplot = clusterplot,
+      flow_list[[i]] <- biomass_evaluate(data_temp, grpby = grpby, strat = strat, clusterplot = clusterplot,
+                                         largetreearea = largetreearea, Stockedland = Stockedland, talltree = talltree)
+      flow_list[[i]]$year <- e_year
+    }else if(type == "cwd"){
+      flow_list[[i]] <- cwd_biomass_evaluate(data_temp, grpby = grpby, strat = strat, clusterplot = clusterplot,
                                          largetreearea = largetreearea, Stockedland = Stockedland, talltree = talltree)
       flow_list[[i]]$year <- e_year
     }else if(type == "iv"){
@@ -88,7 +93,7 @@ evaluate_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="li
   
 
   
-  if(type =="biomass"){
+  if(type =="biomass" | type =="cwd"){
     
     if(output =="table"){
       
