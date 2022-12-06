@@ -39,7 +39,7 @@ read_NFI <- function(dir, district=NULL){
       
       
       ## 비산림면적 sheet 불러오기--------------------------------------------------------------
-      Non_forest <- dareadxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "비산림면적",
+      Non_forest <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "비산림면적",
                                        col_names = TRUE, col_types = "text")
       
       
