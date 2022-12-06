@@ -163,7 +163,18 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand", clusterp
   
   if(clusterplot){
     
-    data_area <- data[-which(duplicated(data$'표본점번호')),c('조사차기', '조사연도', '집락번호', '표본점번호', 'largetree_area', 'tree_area')]
+    data_area <- data[-which(duplicated(data[c('표본점번호', '조사차기')])),c('조사차기', '조사연도', '집락번호', '표본점번호', 'largetree_area', 'tree_area')]
+    
+    # data_area_temp <- data %>% 
+    #   group_by(data$'조사차기', data$'표본점번호', data$'조사연도') %>% 
+    #   summarise(largetree  = sum(largetree, na.rm=TRUE),.groups = 'drop')
+    # 
+    # data_area_temp <- data_area_temp %>% rename('조사차기' = "data$조사차기", '표본점번호' = "data$표본점번호", "조사연도"= "data$조사연도") 
+    # 
+    # 
+    # data_area <- left_join(data_area, data_area_temp, by = c("조사차기", "조사연도", "표본점번호"))
+    # 
+    # data_area[data_area$largetree == 0, 'largetree_area'] <- 0
     
     data_area <- data_area %>%
       group_by(data_area$'조사차기', !!plot_id,  data_area$'조사연도') %>%
@@ -203,10 +214,13 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand", clusterp
       bm_temp[condition_ha] <- 
         lapply(bm_temp[condition], function(x) (x/bm_temp$tree_area))
       
+      condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomass_ton","carbon_stock_tC","co2_stock_tCO2"))
       
+      
+      bm_temp[condition] <- NULL
       bm_temp$tree_area <- NULL
       bm_temp$largetreearea <- NULL
-      bm_temp[condition] <- NULL
+
       
     }else{
       
@@ -256,10 +270,13 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand", clusterp
       bm_temp[condition_ha] <- 
         lapply(bm_temp[condition], function(x) (x/bm_temp$tree_area))
       
+      condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomass_ton","carbon_stock_tC","co2_stock_tCO2"))
       
+      
+      bm_temp[condition] <- NULL
       bm_temp$tree_area <- NULL
       bm_temp$largetreearea <- NULL
-      bm_temp[condition] <- NULL
+      
       
       
     }else{
@@ -517,7 +534,7 @@ biomass_evaluate <- function(data, grpby=NULL, strat="stand", clusterplot=FALSE,
   
   if(clusterplot){
     
-    data_area <- data[-which(duplicated(data$'표본점번호')),c('조사차기', '조사연도', '집락번호', '표본점번호', 'largetree_area', 'tree_area')]
+    data_area <- data[-which(duplicated(data[c('표본점번호', '조사차기')])),c('조사차기', '조사연도', '집락번호', '표본점번호', 'largetree_area', 'tree_area')]
     
     data_area <- data_area %>%
       group_by(data_area$'조사차기', !!plot_id,  data_area$'조사연도') %>%
@@ -557,10 +574,12 @@ biomass_evaluate <- function(data, grpby=NULL, strat="stand", clusterplot=FALSE,
       bm_temp[condition_ha] <- 
         lapply(bm_temp[condition], function(x) (x/bm_temp$tree_area))
       
+      condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomass_ton","carbon_stock_tC","co2_stock_tCO2"))
       
+      
+      bm_temp[condition] <- NULL
       bm_temp$tree_area <- NULL
       bm_temp$largetreearea <- NULL
-      bm_temp[condition] <- NULL
       
       
     }else{
@@ -613,9 +632,12 @@ biomass_evaluate <- function(data, grpby=NULL, strat="stand", clusterplot=FALSE,
         lapply(bm_temp[condition], function(x) (x/bm_temp$tree_area))
       
       
+      condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomass_ton","carbon_stock_tC","co2_stock_tCO2"))
+      
+      
+      bm_temp[condition] <- NULL
       bm_temp$tree_area <- NULL
       bm_temp$largetreearea <- NULL
-      bm_temp[condition] <- NULL
       
       
     }else{

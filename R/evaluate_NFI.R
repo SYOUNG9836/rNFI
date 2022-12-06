@@ -70,8 +70,7 @@ evaluate_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="li
                                          largetreearea = largetreearea, Stockedland = Stockedland, talltree = talltree)
       flow_list[[i]]$year <- e_year
     }else if(type == "cwd"){
-      flow_list[[i]] <- cwd_biomass_evaluate(data_temp, grpby = grpby, strat = strat, clusterplot = clusterplot,
-                                         largetreearea = largetreearea, Stockedland = Stockedland, talltree = talltree)
+      flow_list[[i]] <- cwd_biomass_evaluate(data_temp, grpby = grpby, strat = strat, Stockedland = Stockedland)
       flow_list[[i]]$year <- e_year
     }else if(type == "iv"){
       flow_list[[i]] <- importancevalue_evaluate(data_temp, frequency = frequency, clusterplot = clusterplot,

@@ -131,9 +131,12 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand", Stoc
     lapply(bm_temp[condition], function(x) (x/bm_temp$tree_area))
   
   
+  condition <- (names(bm_temp) %in% c("volume_m3","cwd_carbon_stock_tC"))
+  
+  bm_temp[condition] <- NULL
   bm_temp$tree_area <- NULL
   bm_temp$largetreearea <- NULL
-  bm_temp[condition] <- NULL
+  
   
  
   if(!byplot){
@@ -335,10 +338,12 @@ cwd_biomass_evaluate <- function(data, grpby=NULL, strat="stand", Stockedland=TR
   bm_temp[condition_ha] <- 
     lapply(bm_temp[condition], function(x) (x/bm_temp$tree_area))
   
+  condition <- (names(bm_temp) %in% c("volume_m3","cwd_carbon_stock_tC"))
   
+  bm_temp[condition] <- NULL
   bm_temp$tree_area <- NULL
   bm_temp$largetreearea <- NULL
-  bm_temp[condition] <- NULL
+  
   
   
   weight_grpby <- bm_temp %>% 

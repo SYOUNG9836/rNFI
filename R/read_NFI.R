@@ -39,7 +39,7 @@ read_NFI <- function(dir, district=NULL){
       
       
       ## 비산림면적 sheet 불러오기--------------------------------------------------------------
-      Non_forest <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "비산림면적",
+      Non_forest <- dareadxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "비산림면적",
                                        col_names = TRUE, col_types = "text")
       
       
@@ -58,12 +58,12 @@ read_NFI <- function(dir, district=NULL){
       data_merge <- left_join(x=Tree_inve, y=Stand_inve, 
                           by=c('집락번호', '표본점번호', '조사차기'))
       
-      ## point DB
+      ## plot point DB
       data_merge$"표본점번호" <- (gsub("-", "", data_merge$"표본점번호"))
       
       data_merge <- left_join(data_merge, NFI_plot_DB, by=c('표본점번호'))
       
-           ## 지역별 filitering--------------------------------------------------------------
+      ## 지역별 filitering--------------------------------------------------------------
       if(!is.null(district)){
         
         if(!is.character(district)) {
