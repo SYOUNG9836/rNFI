@@ -37,7 +37,7 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
   df <- left_join(data$tree[, c('집락번호', '표본점번호',"조사차기", '수목형태구분','수관급', '수종명', 
                                 '흉고직경', 'basal_area', '추정수고', '추정간재적', '대경목조사원내존재여부')], 
                   data$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도', 
-                                           "토지이용",'대경목조사원 비산림면적', '기본조사원 비산림면적', grpby)], 
+                                "토지이용",'대경목조사원 비산림면적', '기본조사원 비산림면적', grpby)], 
                   by = c("집락번호", "표본점번호", "조사차기"))
   
   

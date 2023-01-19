@@ -116,7 +116,7 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_sub", clus
   
   df <- left_join(data$tree[,c('집락번호', '표본점번호',"조사차기", '수목형태구분','수종명', 
                                 'type_leaf', 'type_ever_g', '흉고직경', '추정간재적',  '대경목조사원내존재여부')], 
-                  data$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도', 
+                  data$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도', '토지이용',
                                '기본조사원 비산림면적', '대경목조사원 비산림면적', strat, grpby)],
                   by = c("집락번호", "표본점번호", "조사차기"))
   
