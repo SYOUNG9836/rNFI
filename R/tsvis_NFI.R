@@ -1,4 +1,4 @@
-#' evaluate_NFI() Function
+#' tsvis_NFI() Function
 #'
 #' This function loop function
 #' @param data : data 
@@ -16,7 +16,7 @@
 #' @export
 
 
-evaluate_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line", strat="stand", 
+tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line", strat="stand", 
                          clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE, frequency= TRUE){
   
   theme_set(theme_bw())
@@ -55,27 +55,28 @@ evaluate_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="li
     stop("Importance value cannot be visualized by poly")
   }
   
+
+  tsvis_list <- vector("list", length = (length(unique(data$plot$"조사연도"))-4))
   
-  flow_list <- vector("list", length = (length(unique(data$"조사연도"))-4))
-  
-  for(i in 1:(length(unique(data$"조사연도"))-4)){ 
-  
-    s_year <- min(data$"조사연도")+i-1
-    e_year <- min(data$"조사연도")+i-1+4
-    data_temp <- data %>% filter(data$"조사연도" >= s_year & data$"조사연도" <= e_year)
+  for(i in 1:(length(unique(data$plot$"조사연도"))-4)){ 
+    
+    s_year <- min(data$plot$"조사연도")+i-1
+    e_year <- min(data$plot$"조사연도")+i-1+4
+    
+    data_temp <- lapply(data, function(x) x %>% filter(x$"조사연도"  >= s_year & x$"조사연도" <= e_year))
     
     
     if(type == "biomass"){
-      flow_list[[i]] <- biomass_evaluate(data_temp, grpby = grpby, strat = strat, clusterplot = clusterplot,
+      tsvis_list[[i]] <- biomass_tsvis(data_temp, grpby = grpby, strat = strat, clusterplot = clusterplot,
                                          largetreearea = largetreearea, Stockedland = Stockedland, talltree = talltree)
-      flow_list[[i]]$year <- e_year
+      tsvis_list[[i]]$year <- e_year
     }else if(type == "cwd"){
-      flow_list[[i]] <- cwd_biomass_evaluate(data_temp, grpby = grpby, strat = strat, Stockedland = Stockedland)
-      flow_list[[i]]$year <- e_year
+      tsvis_list[[i]] <- cwd_biomass_tsvis(data_temp, grpby = grpby, strat = strat, Stockedland = Stockedland)
+      tsvis_list[[i]]$year <- e_year
     }else if(type == "iv"){
-      flow_list[[i]] <- importancevalue_evaluate(data_temp, frequency = frequency, clusterplot = clusterplot,
+      tsvis_list[[i]] <- iv_tsvis(data_temp, frequency = frequency, clusterplot = clusterplot,
                                                  largetreearea = largetreearea, Stockedland = Stockedland, talltree = talltree)
-      flow_list[[i]]$year <- e_year
+      tsvis_list[[i]]$year <- e_year
     }else{
       stop(paste( type, ' does not exist.'))
     }
@@ -83,36 +84,33 @@ evaluate_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="li
   
   
   
-  flow_df <- data.table::rbindlist(flow_list, fill=TRUE, use.names=TRUE)
-  flow_df <- as.data.frame(flow_df)
-  flow_df$year <- as.character(flow_df$year)
+  tsvis_df <- data.table::rbindlist(tsvis_list, fill=TRUE, use.names=TRUE)
+  tsvis_df <- as.data.frame(tsvis_df)
+  tsvis_df$year <- as.character(tsvis_df$year)
   
   
-  
-  
-
   
   if(type =="biomass" | type =="cwd"){
     
     if(output =="table"){
       
-      flow <- flow_df
+      tsvis <- tsvis_df
       
     }else if(output =="poly"){
       
       
       
       district_code[,1] <- (gsub("-", "", district_code[,1]))
-      flow_df$name <- unlist(lapply(flow_df[, grpby], 
+      tsvis_df$name <- unlist(lapply(tsvis_df[, grpby], 
                                     FUN=function(x){district_code$"법정동명"[which(x==district_code$"법정동코드")]}))
       
       
-      if(nchar(flow_df[, grpby][1]) == 10){
+      if(nchar(tsvis_df[, grpby][1]) == 10){
         
-        bm_poly <- right_join(emd, flow_df, by=c("EMD_CD" = quo_name(grpby)))
+        bm_poly <- right_join(emd, tsvis_df, by=c("EMD_CD" = quo_name(grpby)))
         #bm_poly <- sf::st_as_sf( bm_poly )
         
-        flow <- ggplot(bm_poly) + 
+        tsvis <- ggplot(bm_poly) + 
           geom_sf(aes(fill = !!y , geometry = geometry))+
           coord_sf(expand = FALSE, lims_method = "geometry_bbox")+
           #scale_x_discrete(guide = guide_axis(check.overlap = TRUE))+
@@ -124,12 +122,12 @@ evaluate_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="li
           #                       style = north_arrow_fancy_orienteering)+
           scale_fill_viridis_c(direction = -1,  alpha = .7)
         
-      }else if(nchar(flow_df[,grpby][1]) == 5){
+      }else if(nchar(tsvis_df[,grpby][1]) == 5){
         
-        bm_poly <- right_join(sgg, flow_df, by=c("SIG_CD" = quo_name(grpby)))
+        bm_poly <- right_join(sgg, tsvis_df, by=c("SIG_CD" = quo_name(grpby)))
         #bm_poly <- sf::st_as_sf( bm_poly )
         
-        flow <- ggplot(bm_poly) + 
+        tsvis <- ggplot(bm_poly) + 
           geom_sf( aes(fill = !!y , geometry = geometry))+
           coord_sf(expand = FALSE, lims_method = "geometry_bbox")+
           #scale_x_discrete(guide = guide_axis(check.overlap = TRUE))+
@@ -143,10 +141,10 @@ evaluate_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="li
         
       }else{
         
-        bm_poly <- right_join(do, flow_df, by=c("CTPRVN_CD" = quo_name(grpby)))
+        bm_poly <- right_join(do, tsvis_df, by=c("CTPRVN_CD" = quo_name(grpby)))
         #bm_poly <- sf::st_as_sf( bm_poly )
         
-        flow <- ggplot(bm_poly) + 
+        tsvis <- ggplot(bm_poly) + 
           geom_sf(aes(fill = !!y , geometry = geometry))+
           coord_sf(expand = FALSE, lims_method = "geometry_bbox")+
           facet_wrap(~year)+
@@ -161,9 +159,9 @@ evaluate_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="li
       
     }else if(output =="line"){
       
-      flow_df$name <- flow_df[,grpby]
+      tsvis_df$name <- tsvis_df[,grpby]
       
-      flow <- ggplot(flow_df) + 
+      tsvis <- ggplot(tsvis_df) + 
         geom_line(aes(x=year, y=!!y, group = name, color = reorder(name, -!!y)), size = 1.1)+ 
         theme(axis.title.x = element_text(vjust=-1.5),
               axis.title.y = element_text(vjust=4))+
@@ -179,11 +177,11 @@ evaluate_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="li
     
     if(output =="table"){
       
-      flow <- flow_df
+      tsvis <- tsvis_df
       
     } else if(output =="line"){
       
-      flow <- flow_df %>% 
+      tsvis <- tsvis_df %>% 
         filter(species %in% reorder(species, importance.value)[1:20]) %>%
         ggplot() + 
         geom_line(aes(x=year, y=importance.value, group = species, color = reorder(species, -importance.value)), size = 1.1)+ 
@@ -192,7 +190,7 @@ evaluate_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="li
         theme(plot.margin = unit(c(0.3,0.1,0.5,0.6), "cm"), legend.title = element_blank()) + 
         guides(fill = guide_legend(reverse = TRUE))
       
-
+      
     } else{
       
       stop(paste( output, ' does not exist.'))
@@ -200,17 +198,17 @@ evaluate_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="li
     }
     
     
-   
+    
     
   }
   
-  return(flow)
-    
+  return(tsvis)
+  
 }
 
-  
 
-  
+
+
 
 
 

@@ -1,4 +1,4 @@
-#'Descriptive_statistics Function
+#' summary_NFI Function
 #'
 #' This function 
 #' @param data : data
@@ -25,20 +25,32 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
     plot_id <- c('표본점번호')
   }
   
+  
   if (!is.null(grpby)){
     
     if(!is.character(grpby)) {
       stop("param 'grpby' must be 'character'")
-    }
-    #if(byplot){
-    #  warning("param 'grpby' has priority over param 'byplot'")
-    #}
+    }}
+  
+  
+  
+  df <- left_join(data$tree[, c('집락번호', '표본점번호',"조사차기", '수목형태구분','수관급', '수종명', 
+                                '흉고직경', 'basal_area', '추정수고', '추정간재적', '대경목조사원내존재여부')], 
+                  data$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도', 
+                                           "토지이용",'대경목조사원 비산림면적', '기본조사원 비산림면적', grpby)])
+  
+  
+  plot_id  <- rlang::sym(plot_id)
+  grpby  <- rlang::syms(grpby)
+
+  
+  if (!is.null(grpby)){
     
-    temp_grpby <- data %>%
-      group_by(data$'조사차기', !!!grpby) %>%
+    temp_grpby <- df %>%
+      group_by(df$'조사차기', !!!grpby) %>%
       summarise(num_clusterplot = n_distinct(!!plot_id), .groups = "keep")
     
-    temp_grpby <- temp_grpby %>% rename("order"= "data$조사차기")
+    temp_grpby <- temp_grpby %>% rename("order"= "df$조사차기")
     
     
     temp_grpby <- temp_grpby %>%
@@ -46,8 +58,8 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
       summarise(num_clusterplot = sum(num_clusterplot))
     
     
-    temp_all <- data %>%
-      group_by(data$'조사차기') %>%
+    temp_all <- df %>%
+      group_by(df$'조사차기') %>%
       summarise(num_clusterplot = n_distinct(!!plot_id))
     
     
@@ -60,27 +72,25 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
   
   
   if (Stockedland){
-    data <- data %>% filter(data$'토지이용' == "임목지")
+    df <- df %>% filter(df$'토지이용' == "임목지")
   }
   
   if(talltree){
-    data <- data %>% filter(data$'수목형태구분' == "교목")
+    df <- df %>% filter(df$'수목형태구분' == "교목")
   }
   
   if(largetreearea){
-    data$largetree_area <- 0.08 - ((data$'대경목조사원 비산림면적'*10)/10000)
-    data$largetree <- ifelse(data$'흉고직경'>=30, 1, 0)
+    df$largetree_area <- 0.08 - ((df$'대경목조사원 비산림면적'*10)/10000)
+    df$largetree <- ifelse(df$'흉고직경'>=30, 1, 0)
     
   }else{
     
-    data <- data %>% filter(data$'대경목조사원내존재여부' == 0)
+    df <- df %>% filter(df$'대경목조사원내존재여부' == 0)
   }
   
-  data$tree_area <- 0.04 - ((data$'기본조사원 비산림면적'*10)/10000)
+  df$tree_area <- 0.04 - ((df$'기본조사원 비산림면적'*10)/10000)
   
-  
-  plot_id  <- rlang::sym(plot_id)
-  grpby  <- rlang::syms(grpby)
+
   
   if(!largetreearea){
     largetree <- NULL
@@ -91,8 +101,8 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
   if(!byplot){
     
     
-    stat_num <- data %>%
-      group_by(data$'조사차기', !!!grpby) %>%
+    stat_num <- df %>%
+      group_by(df$'조사차기', !!!grpby) %>%
       summarise(num_clusterplot= n_distinct(get('집락번호')),
                 num_subplot= n_distinct(get('표본점번호')),
                 num_largetree_subplot= n_distinct(get('표본점번호')[get('대경목조사원내존재여부')==1]),
@@ -102,18 +112,18 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
                 num_dominanttree = sum(get('수관급')=="우세목", na.rm=TRUE), 
                 num_species= n_distinct(get('수종명')), .groups = 'drop')
     
-    stat_num <- stat_num %>% rename("order"= "data$조사차기")
+    stat_num <- stat_num %>% rename("order"= "df$조사차기")
     
     
     
-    stat_mean <- data %>% 
-      group_by(data$'조사차기', !!plot_id, data$'조사연도', !!!grpby) %>% 
+    stat_mean <- df %>% 
+      group_by(df$'조사차기', !!plot_id, df$'조사연도', !!!grpby) %>% 
       summarise(mean_DBH_temp = mean(get('흉고직경'), na.rm=TRUE), 
                 mean_H_temp = mean(get('추정수고'), na.rm=TRUE),
                 mean_dominant_H_temp = mean(get('추정수고')[get('수관급')=="우세목"], na.rm=TRUE),
                 .groups = 'drop')
     
-    stat_mean <- stat_mean %>% rename("order"= "data$조사차기", "year"= "data$조사연도")
+    stat_mean <- stat_mean %>% rename("order"= "df$조사차기", "year"= "df$조사연도")
     
     
     stat_mean <- stat_mean %>% 
@@ -132,56 +142,56 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
     
   }else{
     
-    stat_num <- data %>%
-      group_by(data$'조사차기', !!plot_id, data$'조사연도', !!!grpby) %>%
+    stat_num <- df %>%
+      group_by(df$'조사차기', !!plot_id, df$'조사연도', !!!grpby) %>%
       summarise(num_tree = n(),
                 num_largetree = sum(largetree, na.rm=TRUE),
                 num_dominanttree = sum(get('수관급')=="우세목", na.rm=TRUE), 
                 num_species= n_distinct(get('수종명')), .groups = 'drop')
     
-    stat_num <- stat_num %>% rename("order"= "data$조사차기",  "year"= "data$조사연도")
+    stat_num <- stat_num %>% rename("order"= "df$조사차기",  "year"= "df$조사연도")
     
     
     
-    stat_mean <- data %>% 
-      group_by(data$'조사차기', !!plot_id, data$'조사연도', !!!grpby) %>% 
+    stat_mean <- df %>% 
+      group_by(df$'조사차기', !!plot_id, df$'조사연도', !!!grpby) %>% 
       summarise(mean_DBH = mean(get('흉고직경'), na.rm=TRUE), 
                 mean_H = mean(get('추정수고'), na.rm=TRUE),
                 mean_dominant_H = mean(get('추정수고')[get('수관급')=="우세목"], na.rm=TRUE),
                 .groups = 'drop')
     
-    stat_mean <- stat_mean %>% rename("order"= "data$조사차기",  "year"= "data$조사연도")
+    stat_mean <- stat_mean %>% rename("order"= "df$조사차기",  "year"= "df$조사연도")
     
     
     stat_temp <- full_join(stat_num, stat_mean, by=c('order', quo_name(plot_id), 'year')) ##grpby 확인
     
   }
-
+  
   
   if(clusterplot){
     
     
-    data_area <- data[-which(duplicated(data$'표본점번호')),c('조사차기', '조사연도', '집락번호', '표본점번호', 'largetree_area', 'tree_area')]
+    plot_area <- df[-which(duplicated(df$'표본점번호')),c('조사차기', '조사연도', '집락번호', '표본점번호', 'largetree_area', 'tree_area')]
     
-    data_area <- data_area %>%
-      group_by(data_area$'조사차기', !!plot_id,  data_area$'조사연도') %>%
+    plot_area <- plot_area %>%
+      group_by(plot_area$'조사차기', !!plot_id,  plot_area$'조사연도') %>%
       summarise(largetree_area = sum(largetree_area, na.rm=TRUE),
                 tree_area= sum(tree_area, na.rm=TRUE),.groups = 'drop')
     
     
-    data_area <- data_area %>% rename('order' = "data_area$조사차기",  "year"= "data_area$조사연도") 
+    plot_area <- plot_area %>% rename('order' = "plot_area$조사차기",  "year"= "plot_area$조사연도") 
     
-    stat_ha <- data %>% 
-      group_by(data$'조사차기', !!plot_id, data$'조사연도', largetree, !!!grpby) %>% 
+    stat_ha <- df %>% 
+      group_by(df$'조사차기', !!plot_id, df$'조사연도', largetree, !!!grpby) %>% 
       summarise(tree_temp = n(), 
                 basal_temp= sum(basal_area, na.rm=TRUE),
                 volume_temp= sum(get('추정간재적'), na.rm=TRUE),
                 .groups = 'drop')
     
-    stat_ha <- stat_ha %>% rename('order' = "data$조사차기",  "year"= "data$조사연도")  
+    stat_ha <- stat_ha %>% rename('order' = "df$조사차기",  "year"= "df$조사연도")  
     
     
-    stat_ha <- full_join(stat_ha, data_area, by=c('order', 'year', quo_name(plot_id)))
+    stat_ha <- full_join(stat_ha, plot_area, by=c('order', 'year', quo_name(plot_id)))
     
     condition <- (names(stat_ha) %in% c("tree_temp","basal_temp","volume_temp"))
     
@@ -189,7 +199,7 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
     
     if(!largetreearea){
       
-
+      
       condition_ha <- c("tree_n_ha","basal_m2_ha","volume_m3_ha")
       stat_ha[condition_ha] <-  NA
       stat_ha <- as.data.frame(stat_ha)
@@ -223,14 +233,14 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
     
   }else{ 
     
-    stat_ha <- data %>% 
-      group_by(data$'조사차기', !!plot_id, data$'조사연도', largetree, largetree_area, tree_area, !!!grpby) %>% 
+    stat_ha <- df %>% 
+      group_by(df$'조사차기', !!plot_id, df$'조사연도', largetree, largetree_area, tree_area, !!!grpby) %>% 
       summarise(tree_temp = n(), 
                 basal_temp= sum(basal_area, na.rm=TRUE),
                 volume_temp= sum(get('추정간재적'), na.rm=TRUE),
                 .groups = 'drop')
-
-    stat_ha <- stat_ha %>% rename('order' = "data$조사차기",  "year"= "data$조사연도")
+    
+    stat_ha <- stat_ha %>% rename('order' = "df$조사차기",  "year"= "df$조사연도")
     condition <- (names(stat_ha) %in% c("tree_temp","basal_temp","volume_temp"))
     
     
@@ -269,10 +279,10 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
   
   
   
-
- 
-
-
+  
+  
+  
+  
   if(!byplot){
     
     stat_ha <- stat_ha %>% 
@@ -291,13 +301,13 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
     
     stat_data <- full_join(stat_temp, stat_ha, by=c('order', quo_name(plot_id), 'year')) ##grpby 확인
   }
-    
-  
- 
   
   
   
-
+  
+  
+  
+  
   return(stat_data)
   
 } 

@@ -113,33 +113,41 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand", clusterp
     
   }
   
+  
+  df <- left_join(data$tree[, c('집락번호', '표본점번호',"조사차기", '수목형태구분','수종명', 
+                                'type_leaf', 'type_ever_g', '흉고직경', '추정간재적',  '대경목조사원내존재여부')], 
+                  data$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도', 
+                               '기본조사원 비산림면적', '대경목조사원 비산림면적', strat, grpby)])
+  
+  
+  
   ## 추정간재적 type이 num이 아닌 경우 as.numeric--------------------------------------------------------------
-  if (!is.numeric(data$'추정간재적')){
-    data$'추정간재적' <- as.numeric(data$'추정간재적')
+  if (!is.numeric(df$'추정간재적')){
+    df$'추정간재적' <- as.numeric(df$'추정간재적')
   } 
   
   
   if (Stockedland){
-    data <- data %>% filter(data$'토지이용' == "임목지")
+    df <- df %>% filter(df$'토지이용' == "임목지")
   }
   
   if(talltree){
-    data <- data %>% filter(data$'수목형태구분' == "교목")
+    df <- df %>% filter(df$'수목형태구분' == "교목")
   }
   
   if(!largetreearea){
-    data <- data %>% filter(data$'대경목조사원내존재여부' == 0)
+    df <- df %>% filter(df$'대경목조사원내존재여부' == 0)
   }else{
-    data$largetree <- ifelse(data$'흉고직경'>=30, 1, 0)
-    data$largetree_area <- 0.08 - ((data$'대경목조사원 비산림면적'*10)/10000) # 단위 m2/10
+    df$largetree <- ifelse(df$'흉고직경'>=30, 1, 0)
+    df$largetree_area <- 0.08 - ((df$'대경목조사원 비산림면적'*10)/10000) # 단위 m2/10
   }
   
   
   
   
-  data$tree_area <- 0.04 - ((data$'기본조사원 비산림면적'*10)/10000)
+  df$tree_area <- 0.04 - ((df$'기본조사원 비산림면적'*10)/10000)
   
-  data <- bm_df(data)
+  df <- bm_df(df)
   
   if(clusterplot){
     plot_id <- '집락번호'
@@ -163,42 +171,42 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand", clusterp
   
   if(clusterplot){
     
-    data_area <- data[-which(duplicated(data[c('표본점번호', '조사차기')])),c('조사차기', '조사연도', '집락번호', '표본점번호', 'largetree_area', 'tree_area')]
+    plot_area <- df[-which(duplicated(df[c('표본점번호', '조사차기')])),c('조사차기', '조사연도', '집락번호', '표본점번호', 'largetree_area', 'tree_area')]
     
-    # data_area_temp <- data %>% 
-    #   group_by(data$'조사차기', data$'표본점번호', data$'조사연도') %>% 
+    # plot_area_temp <- df %>% 
+    #   group_by(df$'조사차기', df$'표본점번호', df$'조사연도') %>% 
     #   summarise(largetree  = sum(largetree, na.rm=TRUE),.groups = 'drop')
     # 
-    # data_area_temp <- data_area_temp %>% rename('조사차기' = "data$조사차기", '표본점번호' = "data$표본점번호", "조사연도"= "data$조사연도") 
+    # plot_area_temp <- plot_area_temp %>% rename('조사차기' = "df$조사차기", '표본점번호' = "df$표본점번호", "조사연도"= "df$조사연도") 
     # 
     # 
-    # data_area <- left_join(data_area, data_area_temp, by = c("조사차기", "조사연도", "표본점번호"))
+    # plot_area <- left_join(plot_area, plot_area_temp, by = c("조사차기", "조사연도", "표본점번호"))
     # 
-    # data_area[data_area$largetree == 0, 'largetree_area'] <- 0
+    # plot_area[plot_area$largetree == 0, 'largetree_area'] <- 0
     
-    data_area <- data_area %>%
-      group_by(data_area$'조사차기', !!plot_id,  data_area$'조사연도') %>%
+    plot_area <- plot_area %>%
+      group_by(plot_area$'조사차기', !!plot_id,  plot_area$'조사연도') %>%
       summarise(largetree_area = sum(largetree_area, na.rm=TRUE),
                 tree_area= sum(tree_area, na.rm=TRUE),.groups = 'drop')
     
     
-    data_area <- data_area %>% rename('order' = "data_area$조사차기",  "year"= "data_area$조사연도") 
+    plot_area <- plot_area %>% rename('order' = "plot_area$조사차기",  "year"= "plot_area$조사연도") 
     
     
     
     # 대경목 조사원 + 집락
-    bm_temp <- data %>% 
-      group_by(data$'조사차기', !!plot_id, data$'조사연도', largetree, !!!grpby, !!strat) %>% 
+    bm_temp <- df %>% 
+      group_by(df$'조사차기', !!plot_id, df$'조사연도', largetree, !!!grpby, !!strat) %>% 
       summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
-                biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
-                AG_biomass_ton = sum(.data$AG_biomass, na.rm=TRUE),
-                carbon_stock_tC = sum(.data$carbon_stock, na.rm=TRUE),
-                co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),.groups = 'drop')
+                biomass_ton = sum(.df$T_biomass, na.rm=TRUE),
+                AG_biomass_ton = sum(.df$AG_biomass, na.rm=TRUE),
+                carbon_stock_tC = sum(.df$carbon_stock, na.rm=TRUE),
+                co2_stock_tCO2 = sum(.df$co2_stock, na.rm=TRUE),.groups = 'drop')
     
     
-    bm_temp <- bm_temp %>% rename('order' = "data$조사차기",  "year"= "data$조사연도")
+    bm_temp <- bm_temp %>% rename('order' = "df$조사차기",  "year"= "df$조사연도")
     
-    bm_temp <- full_join(bm_temp, data_area, by=c('order', 'year', quo_name(plot_id)))
+    bm_temp <- full_join(bm_temp, plot_area, by=c('order', 'year', quo_name(plot_id)))
     
     condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomass_ton","carbon_stock_tC","co2_stock_tCO2"))
     
@@ -220,7 +228,7 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand", clusterp
       bm_temp[condition] <- NULL
       bm_temp$tree_area <- NULL
       bm_temp$largetreearea <- NULL
-
+      
       
     }else{
       
@@ -247,15 +255,15 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand", clusterp
     
     
     # 대경목 조사원 (0.08ha + 0.04ha)
-    bm_temp <- data %>% 
-      group_by(data$'조사차기', !!plot_id, data$'조사연도', !!strat, largetree, !!!grpby, largetree_area, tree_area) %>% 
+    bm_temp <- df %>% 
+      group_by(df$'조사차기', !!plot_id, df$'조사연도', !!strat, largetree, !!!grpby, largetree_area, tree_area) %>% 
       summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
                 biomass_ton = sum(T_biomass, na.rm=TRUE),
                 AG_biomass_ton = sum(AG_biomass, na.rm=TRUE),
                 carbon_stock_tC = sum(carbon_stock, na.rm=TRUE),
                 co2_stock_tCO2 = sum(co2_stock, na.rm=TRUE),.groups = 'drop')
     
-    bm_temp <- bm_temp %>% rename('order' = "data$조사차기", "year"= "data$조사연도")
+    bm_temp <- bm_temp %>% rename('order' = "df$조사차기", "year"= "df$조사연도")
     
     condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomass_ton","carbon_stock_tC","co2_stock_tCO2"))
     
@@ -456,7 +464,7 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand", clusterp
 
 
 
-#' biomass_evaluate() Function
+#' biomass_tsvis() Function
 #'
 #' This function 
 #' @param data : data
@@ -469,7 +477,7 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand", clusterp
 #' @keywords biomass
 
 
-biomass_evaluate <- function(data, grpby=NULL, strat="stand", clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
+biomass_tsvis <- function(data, grpby=NULL, strat="stand", clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
   
   
   if (!is.null(grpby)){
@@ -489,33 +497,41 @@ biomass_evaluate <- function(data, grpby=NULL, strat="stand", clusterplot=FALSE,
     
   }
   
+  
+  df <- left_join(data$tree[, c('집락번호', '표본점번호',"조사차기", '수목형태구분','수종명', 
+                                'type_leaf', 'type_ever_g', '흉고직경', '추정간재적',  '대경목조사원내존재여부')], 
+                  data$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도', 
+                               '기본조사원 비산림면적', '대경목조사원 비산림면적', strat, grpby)])
+  
+  
+  
   ## 추정간재적 type이 num이 아닌 경우 as.numeric--------------------------------------------------------------
-  if (!is.numeric(data$'추정간재적')){
-    data$'추정간재적' <- as.numeric(data$'추정간재적')
+  if (!is.numeric(df$'추정간재적')){
+    df$'추정간재적' <- as.numeric(df$'추정간재적')
   } 
   
   
   if (Stockedland){
-    data <- data %>% filter(data$'토지이용' == "임목지")
+    df <- df %>% filter(df$'토지이용' == "임목지")
   }
   
   if(talltree){
-    data <- data %>% filter(data$'수목형태구분' == "교목")
+    df <- df %>% filter(df$'수목형태구분' == "교목")
   }
   
   if(!largetreearea){
-    data <- data %>% filter(data$'대경목조사원내존재여부' == 0)
+    df <- df %>% filter(df$'대경목조사원내존재여부' == 0)
   }else{
-    data$largetree <- ifelse(data$'흉고직경'>=30, 1, 0)
-    data$largetree_area <- 0.08 - ((data$'대경목조사원 비산림면적'*10)/10000) # 단위 m2/10
+    df$largetree <- ifelse(df$'흉고직경'>=30, 1, 0)
+    df$largetree_area <- 0.08 - ((df$'대경목조사원 비산림면적'*10)/10000) # 단위 m2/10
   }
   
   
   
   
-  data$tree_area <- 0.04 - ((data$'기본조사원 비산림면적'*10)/10000)
+  df$tree_area <- 0.04 - ((df$'기본조사원 비산림면적'*10)/10000)
   
-  data <- bm_df(data)
+  df <- bm_df(df)
   
   if(clusterplot){
     plot_id <- '집락번호'
@@ -534,31 +550,31 @@ biomass_evaluate <- function(data, grpby=NULL, strat="stand", clusterplot=FALSE,
   
   if(clusterplot){
     
-    data_area <- data[-which(duplicated(data[c('표본점번호', '조사차기')])),c('조사차기', '조사연도', '집락번호', '표본점번호', 'largetree_area', 'tree_area')]
+    plot_area <- df[-which(duplicated(df[c('표본점번호', '조사차기')])),c('조사차기', '조사연도', '집락번호', '표본점번호', 'largetree_area', 'tree_area')]
     
-    data_area <- data_area %>%
-      group_by(data_area$'조사차기', !!plot_id,  data_area$'조사연도') %>%
+    plot_area <- plot_area %>%
+      group_by(plot_area$'조사차기', !!plot_id,  plot_area$'조사연도') %>%
       summarise(largetree_area = sum(largetree_area, na.rm=TRUE),
                 tree_area= sum(tree_area, na.rm=TRUE),.groups = 'drop')
     
     
-    data_area <- data_area %>% rename('order' = "data_area$조사차기",  "year"= "data_area$조사연도") 
+    plot_area <- plot_area %>% rename('order' = "plot_area$조사차기",  "year"= "plot_area$조사연도") 
     
     
     
     # 대경목 조사원 + 집락
-    bm_temp <- data %>% 
-      group_by(data$'조사차기', !!plot_id, data$'조사연도', largetree, !!!grpby, !!strat) %>% 
+    bm_temp <- df %>% 
+      group_by(df$'조사차기', !!plot_id, df$'조사연도', largetree, !!!grpby, !!strat) %>% 
       summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
-                biomass_ton = sum(.data$T_biomass, na.rm=TRUE),
-                AG_biomass_ton = sum(.data$AG_biomass, na.rm=TRUE),
-                carbon_stock_tC = sum(.data$carbon_stock, na.rm=TRUE),
-                co2_stock_tCO2 = sum(.data$co2_stock, na.rm=TRUE),.groups = 'drop')
+                biomass_ton = sum(.df$T_biomass, na.rm=TRUE),
+                AG_biomass_ton = sum(.df$AG_biomass, na.rm=TRUE),
+                carbon_stock_tC = sum(.df$carbon_stock, na.rm=TRUE),
+                co2_stock_tCO2 = sum(.df$co2_stock, na.rm=TRUE),.groups = 'drop')
     
     
-    bm_temp <- bm_temp %>% rename('order' = "data$조사차기",  "year"= "data$조사연도")
+    bm_temp <- bm_temp %>% rename('order' = "df$조사차기",  "year"= "df$조사연도")
     
-    bm_temp <- full_join(bm_temp, data_area, by=c('order', 'year', quo_name(plot_id)))
+    bm_temp <- full_join(bm_temp, plot_area, by=c('order', 'year', quo_name(plot_id)))
     
     condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomass_ton","carbon_stock_tC","co2_stock_tCO2"))
     
@@ -607,15 +623,15 @@ biomass_evaluate <- function(data, grpby=NULL, strat="stand", clusterplot=FALSE,
     
     
     # 대경목 조사원 (0.08ha + 0.04ha)
-    bm_temp <- data %>% 
-      group_by(data$'조사차기', !!plot_id, data$'조사연도', !!strat, largetree, !!!grpby, largetree_area, tree_area) %>% 
+    bm_temp <- df %>% 
+      group_by(df$'조사차기', !!plot_id, df$'조사연도', !!strat, largetree, !!!grpby, largetree_area, tree_area) %>% 
       summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
                 biomass_ton = sum(T_biomass, na.rm=TRUE),
                 AG_biomass_ton = sum(AG_biomass, na.rm=TRUE),
                 carbon_stock_tC = sum(carbon_stock, na.rm=TRUE),
                 co2_stock_tCO2 = sum(co2_stock, na.rm=TRUE),.groups = 'drop')
     
-    bm_temp <- bm_temp %>% rename('order' = "data$조사차기", "year"= "data$조사연도")
+    bm_temp <- bm_temp %>% rename('order' = "df$조사차기", "year"= "df$조사연도")
     
     condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomass_ton","carbon_stock_tC","co2_stock_tCO2"))
     

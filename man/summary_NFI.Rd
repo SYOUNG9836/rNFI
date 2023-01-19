@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary_NFI.R
 \name{summary_NFI}
 \alias{summary_NFI}
-\title{Descriptive_statistics Function}
+\title{summary_NFI Function}
 \usage{
 summary_NFI(
   data,

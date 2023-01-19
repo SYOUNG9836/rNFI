@@ -27,11 +27,11 @@ Imports:
     ggplot2,
     sf,
     plotrix,
-    rlang
+    rlang,
+    cellranger
 Depends: 
     R (>= 2.10)
 Suggests: 
     rgdal,
     sp,
     raster
-    

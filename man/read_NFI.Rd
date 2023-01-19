@@ -4,12 +4,14 @@
 \alias{read_NFI}
 \title{read_NFI() Function}
 \usage{
-read_NFI(dir, district = NULL)
+read_NFI(dir, district = NULL, cwd = TRUE)
 }
 \arguments{
 \item{dir}{: dir}
 
 \item{district}{: district}
+
+\item{cwd}{: dead tree}
 }
 \value{
 merge data nfi
