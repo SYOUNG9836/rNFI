@@ -87,7 +87,7 @@ bm_df <- function(data){
 #' @export 
 
 
-biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_sub", clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
+biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_subplot", clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
   
   
   if (!is.null(grpby)){
@@ -478,7 +478,7 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_sub", clus
 #' @keywords biomass
 
 
-biomass_tsvis <- function(data, grpby=NULL, strat="stand", clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
+biomass_tsvis <- function(data, grpby=NULL, strat="stand_subplot", clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
   
   
   if (!is.null(grpby)){

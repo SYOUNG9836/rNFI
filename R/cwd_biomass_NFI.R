@@ -58,7 +58,7 @@ cwd_bm_df <- function(data){
 #' @export 
 
 
-cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand", Stockedland=TRUE){
+cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_subplot", Stockedland=TRUE){
   
   
   if (!is.null(grpby)){
@@ -85,7 +85,7 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand", Stoc
   }
   
   
-  df <- left_join(data$cwd[, c('집락번호', '표본점번호',"조사차기", '수종명', 
+  df <- left_join(data$cwd[, c('집락번호', '표본점번호',"조사차기", '수종명', '부후도코드', 
                                 'type_leaf', '재적')], 
                   data$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도', '토지이용',
                                '기본조사원 비산림면적', strat, grpby)],
@@ -289,7 +289,7 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand", Stoc
 #' @keywords biomass
 
 
-cwd_biomass_tsvis <- function(data, grpby=NULL, strat="stand", Stockedland=TRUE){
+cwd_biomass_tsvis <- function(data, grpby=NULL, strat="stand_subplot", Stockedland=TRUE){
   
   
   if (!is.null(grpby)){
@@ -310,10 +310,12 @@ cwd_biomass_tsvis <- function(data, grpby=NULL, strat="stand", Stockedland=TRUE)
   }
   
   
-  df <- left_join(data$cwd[, c('집락번호', '표본점번호',"조사차기", '수종명', 
+  df <- left_join(data$cwd[, c('집락번호', '표본점번호',"조사차기", '수종명', '부후도코드', 
                                'type_leaf', '재적')], 
-                  data$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도', 
-                               '기본조사원 비산림면적', strat, grpby)])
+                  data$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도', '토지이용',
+                               '기본조사원 비산림면적', strat, grpby)],
+                  by = c("집락번호", "표본점번호", "조사차기"))
+  
   
   
   ## 추정간재적 type이 num이 아닌 경우 as.numeric--------------------------------------------------------------
