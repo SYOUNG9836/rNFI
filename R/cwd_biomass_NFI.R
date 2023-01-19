@@ -88,7 +88,8 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand", Stoc
   df <- left_join(data$cwd[, c('집락번호', '표본점번호',"조사차기", '수종명', 
                                 'type_leaf', '재적')], 
                   data$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도', 
-                               '기본조사원 비산림면적', strat, grpby)])
+                               '기본조사원 비산림면적', strat, grpby)],
+                  by = c("집락번호", "표본점번호", "조사차기"))
   
   
   

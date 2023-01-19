@@ -20,7 +20,8 @@ iv_NFI <- function(data, frequency=TRUE , clusterplot=TRUE, largetreearea=TRUE, 
   
   df <- left_join(data$tree[, c('집락번호', '표본점번호',"조사차기", '수목형태구분','수종명', 
                                 'basal_area', '대경목조사원내존재여부')], 
-                  data$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도', grpby)])
+                  data$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도')],
+                  by = c("집락번호", "표본점번호", "조사차기"))
   
   
   

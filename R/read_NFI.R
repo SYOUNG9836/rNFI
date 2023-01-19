@@ -150,8 +150,10 @@ read_NFI <- function(dir, district=NULL, cwd=TRUE){
     
     }
   
-  NFI$tree <- left_join(NFI$tree, NFI$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도')])
-  NFI$cwd <- left_join(NFI$cwd, NFI$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도')])
+  NFI$tree <- left_join(NFI$tree, NFI$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도')], 
+                        by = c("집락번호", "표본점번호", "조사차기"))
+  NFI$cwd <- left_join(NFI$cwd, NFI$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도')], 
+                       by = c("집락번호", "표본점번호", "조사차기"))
   
   
   ## column 속성 맞추기
@@ -204,7 +206,7 @@ read_NFI <- function(dir, district=NULL, cwd=TRUE){
   
   stand_sub <- stand_sub %>% rename("표본점번호"= "NFI$tree$표본점번호", "조사차기"= "NFI$tree$조사차기")
   
-  condition <- (names(stand_sub) %in% c("표본점번호","조사차기", "stand_sub"))
+  condition <- (names(stand_sub) %in% c("표본점번호","조사차기", "stand_subplot"))
   NFI$plot <- left_join(NFI$plot, stand_sub[condition], by= c("표본점번호","조사차기"))
   
   
@@ -222,6 +224,7 @@ read_NFI <- function(dir, district=NULL, cwd=TRUE){
   
   
   stand_clust <- stand_clust %>% rename("집락번호"= "NFI$tree$집락번호", "조사차기"= "NFI$tree$조사차기")
+  condition <- (names(stand_sub) %in% c("표본점번호","조사차기", "stand_clusterplot"))
   
   NFI$plot <- left_join(NFI$plot, stand_clust[condition], by= c("집락번호","조사차기"))
   
