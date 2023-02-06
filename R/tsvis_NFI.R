@@ -159,7 +159,6 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
       tsvis_se <- ggplot(bm_map)+ 
         geom_sf(aes(fill = !!se , geometry = geometry))+
         coord_sf(expand = FALSE, lims_method = "geometry_bbox")+
-        #scale_x_discrete(guide = guide_axis(check.overlap = TRUE))+
         facet_wrap(~year)+
         theme(axis.text.x = element_text(angle =90, vjust = 1))+
         #ggspatial::annotation_scale(location = "bl", width_hint = 0.1) +
@@ -169,7 +168,7 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
         scale_fill_viridis_c(direction = -1,  alpha = .7, option="magma")+
         labs(fill=paste0("RSE (%)", paste(rep(" ", nchar(value)-1), collapse = "")))
       
-      tsvis <- cowplot::plot_grid(tsvis_value, tsvis_se, ncol = 1)
+      tsvis <- cowplot::plot_grid(tsvis_value, tsvis_se)
       
     }else if(output =="line"){
       
