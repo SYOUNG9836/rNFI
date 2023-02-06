@@ -7,7 +7,7 @@
 biomass_tsvis(
   data,
   grpby = NULL,
-  strat = "stand",
+  strat = "stand_subplot",
   clusterplot = FALSE,
   largetreearea = TRUE,
   Stockedland = TRUE,

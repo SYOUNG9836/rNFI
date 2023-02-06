@@ -123,25 +123,25 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_subplo
   
   bm_temp <- df %>% 
     group_by(df$'조사차기', !!plot_id, df$'조사연도', !!strat, !!!grpby, tree_area) %>% 
-    summarise(volume_m3 = sum(get('재적'), na.rm=TRUE),
+    summarise(cwd_volume_m3 = sum(get('재적'), na.rm=TRUE),
               cwd_carbon_stock_tC = sum(carbon_stock, na.rm=TRUE),.groups = 'drop')
   
   bm_temp <- bm_temp %>% rename('order' = "df$조사차기", "year"= "df$조사연도")
   
   
   
-  condition_ha <- c("volume_m3_ha","cwd_carbon_stock_tC_ha")
+  condition_ha <- c("cwd_volume_m3_ha","cwd_carbon_stock_tC_ha")
   bm_temp[condition_ha] <-  NA
   bm_temp <- as.data.frame(bm_temp)
   
-  condition_ha <- (names(bm_temp) %in% c("volume_m3_ha","cwd_carbon_stock_tC_ha"))
-  condition <- (names(bm_temp) %in% c("volume_m3","cwd_carbon_stock_tC"))
+  condition_ha <- (names(bm_temp) %in% c("cwd_volume_m3_ha","cwd_carbon_stock_tC_ha"))
+  condition <- (names(bm_temp) %in% c("cwd_volume_m3","cwd_carbon_stock_tC"))
   
   bm_temp[condition_ha] <- 
     lapply(bm_temp[condition], function(x) (x/bm_temp$tree_area))
   
   
-  condition <- (names(bm_temp) %in% c("volume_m3","cwd_carbon_stock_tC"))
+  condition <- (names(bm_temp) %in% c("cwd_volume_m3","cwd_carbon_stock_tC"))
   
   bm_temp[condition] <- NULL
   bm_temp$tree_area <- NULL
@@ -174,37 +174,37 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_subplo
     # 기본계획구(p)내 표본층(h)의 ha당 평균 임목자원량
     bm_temp_DSS <- bm_temp %>% 
       group_by(order, year, !!strat, !!!grpby) %>% 
-      summarise(var_volume_m3_ha =  var(volume_m3_ha, na.rm=TRUE),
-                volume_m3_ha = sum(volume_m3_ha, na.rm=TRUE),
+      summarise(var_cwd_volume_m3_ha =  var(cwd_volume_m3_ha, na.rm=TRUE),
+                cwd_volume_m3_ha = sum(cwd_volume_m3_ha, na.rm=TRUE),
                 var_cwd_carbon_stock_tC_ha =  var(cwd_carbon_stock_tC_ha, na.rm=TRUE),
                 cwd_carbon_stock_tC_ha = sum(cwd_carbon_stock_tC_ha, na.rm=TRUE), .groups = 'drop')
     
     
-    bm_temp_DSS <- full_join(bm_temp_DSS, weight_DSS, by =c("order", "year", quo_name(strat))) #, "부후도코드"
+    bm_temp_DSS <- full_join(bm_temp_DSS, weight_DSS, by =c("order", "year", quo_name(strat), as.character(unlist(lapply(grpby, quo_name)))))
     
     
-    condition_DSS <- c("w_volume_m3_ha","w_cwd_carbon_stock_tC_ha")
+    condition_DSS <- c("w_cwd_volume_m3_ha","w_cwd_carbon_stock_tC_ha")
     bm_temp_DSS[condition_DSS] <-  NA
     bm_temp_DSS <- as.data.frame(bm_temp_DSS)
     
-    condition <- (names(bm_temp_DSS) %in% c("volume_m3_ha","cwd_carbon_stock_tC_ha"))
+    condition <- (names(bm_temp_DSS) %in% c("cwd_volume_m3_ha","cwd_carbon_stock_tC_ha"))
     
     bm_temp_DSS[condition] <- 
       lapply(bm_temp_DSS[condition], function(x) ((x/bm_temp_DSS$plot_num_stand)))
     
-    condition_DSS <- (names(bm_temp_DSS) %in% c("w_volume_m3_ha","w_cwd_carbon_stock_tC_ha"))
+    condition_DSS <- (names(bm_temp_DSS) %in% c("w_cwd_volume_m3_ha","w_cwd_carbon_stock_tC_ha"))
     bm_temp_DSS[condition_DSS] <- 
       lapply(bm_temp_DSS[condition], function(x) (x*bm_temp_DSS$weight_DSS))
     
     
-    condition_var <- (names(bm_temp_DSS) %in% c("var_volume_m3_ha","var_cwd_carbon_stock_tC_ha"))
+    condition_var <- (names(bm_temp_DSS) %in% c("var_cwd_volume_m3_ha","var_cwd_carbon_stock_tC_ha"))
     bm_temp_DSS[condition_var] <- 
       lapply(bm_temp_DSS[condition_var], function(x) ((bm_temp_DSS$weight_DSS)^2*(x/bm_temp_DSS$plot_num_stand)))
     
     
     bm_temp_WMA <- bm_temp_DSS %>% 
       group_by(order, year, !!!grpby) %>% 
-      summarise(w_volume_m3_ha = sum(w_volume_m3_ha, na.rm=TRUE),
+      summarise(w_cwd_volume_m3_ha = sum(w_cwd_volume_m3_ha, na.rm=TRUE),
                 w_cwd_carbon_stock_tC_ha = sum(w_cwd_carbon_stock_tC_ha, na.rm=TRUE), .groups = 'drop')
     
     bm_temp_DSS[condition_DSS] <-  NULL
@@ -214,11 +214,11 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_subplo
     
     ## na <- 0 ????
     
-    bm_temp_DSS$var_volume_m3_ha <- bm_temp_DSS$var_volume_m3_ha + (bm_temp_DSS$weight_DSS*(bm_temp_DSS$volume_m3_ha-bm_temp_DSS$w_volume_m3_ha)^2/bm_temp_DSS$plot_num_year)
+    bm_temp_DSS$var_cwd_volume_m3_ha <- bm_temp_DSS$var_cwd_volume_m3_ha + (bm_temp_DSS$weight_DSS*(bm_temp_DSS$cwd_volume_m3_ha-bm_temp_DSS$w_cwd_volume_m3_ha)^2/bm_temp_DSS$plot_num_year)
     bm_temp_DSS$var_cwd_carbon_stock_tC_ha <- bm_temp_DSS$var_cwd_carbon_stock_tC_ha + (bm_temp_DSS$weight_DSS*(bm_temp_DSS$cwd_carbon_stock_tC_ha-bm_temp_DSS$w_cwd_carbon_stock_tC_ha)^2/bm_temp_DSS$plot_num_year)
     
-    condition <- (names(bm_temp_DSS) %in% c("volume_m3_ha","cwd_carbon_stock_tC_ha"))
-    condition_DSS <- (names(bm_temp_DSS) %in% c("w_volume_m3_ha","w_cwd_carbon_stock_tC_ha"))
+    condition <- (names(bm_temp_DSS) %in% c("cwd_volume_m3_ha","cwd_carbon_stock_tC_ha"))
+    condition_DSS <- (names(bm_temp_DSS) %in% c("w_cwd_volume_m3_ha","w_cwd_carbon_stock_tC_ha"))
     
     bm_temp_DSS[condition_DSS] <- 
       lapply(bm_temp_DSS[condition], function(x) (x*bm_temp_DSS$weight_DSS))
@@ -226,8 +226,8 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_subplo
     
     bm_temp_WMA <- bm_temp_DSS %>% 
       group_by(order, year, !!!grpby) %>% 
-      summarise(volume_m3_ha = sum(w_volume_m3_ha, na.rm=TRUE),
-                var_volume_m3_ha = sum(var_volume_m3_ha, na.rm=TRUE),
+      summarise(cwd_volume_m3_ha = sum(w_cwd_volume_m3_ha, na.rm=TRUE),
+                var_cwd_volume_m3_ha = sum(var_cwd_volume_m3_ha, na.rm=TRUE),
                 cwd_carbon_stock_tC_ha = sum(w_cwd_carbon_stock_tC_ha, na.rm=TRUE),
                 var_cwd_carbon_stock_tC_ha = sum(var_cwd_carbon_stock_tC_ha, na.rm=TRUE), .groups = 'drop')
     
@@ -239,7 +239,7 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_subplo
     
     bm_temp_WMA <- full_join(bm_temp_WMA, weight_WMA, by =c("order","year")) #, "부후도코드"
     
-    condition <- (names(bm_temp_WMA) %in% c("volume_m3_ha","cwd_carbon_stock_tC_ha"))
+    condition <- (names(bm_temp_WMA) %in% c("cwd_volume_m3_ha","cwd_carbon_stock_tC_ha"))
     
     
     bm_temp_WMA[condition] <- 
@@ -248,10 +248,10 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_subplo
     
     bm <- bm_temp_WMA %>% 
       group_by(order, !!!grpby) %>% 
-      summarise(volume_m3_ha = sum(volume_m3_ha, na.rm=TRUE),
-                var_volume_m3_ha = sum(weight_WMA^2*var_volume_m3_ha, na.rm=TRUE),
-                se_volume_m3_ha = sqrt(var_volume_m3_ha),
-                rse_volume_m3_ha = se_volume_m3_ha/volume_m3_ha*100,
+      summarise(cwd_volume_m3_ha = sum(cwd_volume_m3_ha, na.rm=TRUE),
+                var_cwd_volume_m3_ha = sum(weight_WMA^2*var_cwd_volume_m3_ha, na.rm=TRUE),
+                se_cwd_volume_m3_ha = sqrt(var_cwd_volume_m3_ha),
+                rse_cwd_volume_m3_ha = se_cwd_volume_m3_ha/cwd_volume_m3_ha*100,
                 cwd_carbon_stock_tC_ha = sum(cwd_carbon_stock_tC_ha, na.rm=TRUE),
                 var_cwd_carbon_stock_tC_ha = sum(weight_WMA^2*var_cwd_carbon_stock_tC_ha, na.rm=TRUE),
                 se_cwd_carbon_stock_tC_ha = sqrt(var_cwd_carbon_stock_tC_ha),
@@ -344,23 +344,23 @@ cwd_biomass_tsvis <- function(data, grpby=NULL, strat="stand_subplot", Stockedla
   
   bm_temp <- df %>% 
     group_by(df$'조사차기', !!plot_id, df$'조사연도', !!strat, !!!grpby, tree_area) %>% 
-    summarise(volume_m3 = sum(get('재적'), na.rm=TRUE),
+    summarise(cwd_volume_m3 = sum(get('재적'), na.rm=TRUE),
               cwd_carbon_stock_tC = sum(carbon_stock, na.rm=TRUE), .groups = 'drop')
   
   bm_temp <- bm_temp %>% rename('order' = "df$조사차기", "year"= "df$조사연도")
   
-  condition <- (names(bm_temp) %in% c("volume_m3","cwd_carbon_stock_tC"))
+  condition <- (names(bm_temp) %in% c("cwd_volume_m3","cwd_carbon_stock_tC"))
   
-  condition_ha <- c("volume_m3_ha","cwd_carbon_stock_tC_ha")
+  condition_ha <- c("cwd_volume_m3_ha","cwd_carbon_stock_tC_ha")
   bm_temp[condition_ha] <-  NA
   bm_temp <- as.data.frame(bm_temp)
   
-  condition_ha <- (names(bm_temp) %in% c("volume_m3_ha","cwd_carbon_stock_tC_ha"))
+  condition_ha <- (names(bm_temp) %in% c("cwd_volume_m3_ha","cwd_carbon_stock_tC_ha"))
   
   bm_temp[condition_ha] <- 
     lapply(bm_temp[condition], function(x) (x/bm_temp$tree_area))
   
-  condition <- (names(bm_temp) %in% c("volume_m3","cwd_carbon_stock_tC"))
+  condition <- (names(bm_temp) %in% c("cwd_volume_m3","cwd_carbon_stock_tC"))
   
   bm_temp[condition] <- NULL
   bm_temp$tree_area <- NULL
@@ -391,8 +391,8 @@ cwd_biomass_tsvis <- function(data, grpby=NULL, strat="stand_subplot", Stockedla
   # 기본계획구(p)내 표본층(h)의 ha당 평균 임목자원량
   bm_temp_DSS <- bm_temp %>% 
     group_by(order, year, !!strat, !!!grpby) %>% 
-    summarise(var_volume_m3_ha =  var(volume_m3_ha, na.rm=TRUE),
-              volume_m3_ha = sum(volume_m3_ha, na.rm=TRUE),
+    summarise(var_cwd_volume_m3_ha =  var(cwd_volume_m3_ha, na.rm=TRUE),
+              cwd_volume_m3_ha = sum(cwd_volume_m3_ha, na.rm=TRUE),
               var_cwd_carbon_stock_tC_ha =  var(cwd_carbon_stock_tC_ha, na.rm=TRUE),
               cwd_carbon_stock_tC_ha = sum(cwd_carbon_stock_tC_ha, na.rm=TRUE), .groups = 'drop')
   
@@ -400,35 +400,35 @@ cwd_biomass_tsvis <- function(data, grpby=NULL, strat="stand_subplot", Stockedla
   bm_temp_DSS <- full_join(bm_temp_DSS, weight_DSS, by =c("order", "year", quo_name(strat), as.character(unlist(lapply(grpby, quo_name)))))
   
   
-  condition_DSS <- c("w_volume_m3_ha","w_cwd_carbon_stock_tC_ha")
+  condition_DSS <- c("w_cwd_volume_m3_ha","w_cwd_carbon_stock_tC_ha")
   bm_temp_DSS[condition_DSS] <-  NA
   bm_temp_DSS <- as.data.frame(bm_temp_DSS)
   
-  condition <- (names(bm_temp_DSS) %in% c("volume_m3_ha","cwd_carbon_stock_tC_ha"))
+  condition <- (names(bm_temp_DSS) %in% c("cwd_volume_m3_ha","cwd_carbon_stock_tC_ha"))
   
   bm_temp_DSS[condition] <- 
     lapply(bm_temp_DSS[condition], function(x) ((x/bm_temp_DSS$plot_num_stand)))
   
-  condition_DSS <- (names(bm_temp_DSS) %in% c("w_volume_m3_ha","w_cwd_carbon_stock_tC_ha"))
+  condition_DSS <- (names(bm_temp_DSS) %in% c("w_cwd_volume_m3_ha","w_cwd_carbon_stock_tC_ha"))
   bm_temp_DSS[condition_DSS] <- 
     lapply(bm_temp_DSS[condition], function(x) (x*bm_temp_DSS$weight_DSS))
   
   
-  condition_var <- (names(bm_temp_DSS) %in% c("var_volume_m3_ha","var_cwd_carbon_stock_tC_ha"))
+  condition_var <- (names(bm_temp_DSS) %in% c("var_cwd_volume_m3_ha","var_cwd_carbon_stock_tC_ha"))
   bm_temp_DSS[condition_var] <- 
     lapply(bm_temp_DSS[condition_var], function(x) ((bm_temp_DSS$weight_DSS)^2*(x/bm_temp_DSS$plot_num_stand)))
   
   
   bm_temp_WMA <- bm_temp_DSS %>% 
     group_by(order, year, !!!grpby) %>% 
-    summarise(w_volume_m3_ha = sum(w_volume_m3_ha, na.rm=TRUE),
+    summarise(w_cwd_volume_m3_ha = sum(w_cwd_volume_m3_ha, na.rm=TRUE),
               w_cwd_carbon_stock_tC_ha = sum(w_cwd_carbon_stock_tC_ha, na.rm=TRUE), .groups = 'drop')
   
   bm_temp_DSS[condition_DSS] <-  NULL
   bm_temp_DSS <- left_join(bm_temp_DSS, bm_temp_WMA, by =c("order", "year", as.character(unlist(lapply(grpby, quo_name)))))
   
   
-  bm_temp_DSS$var_volume_m3_ha <- bm_temp_DSS$var_volume_m3_ha + (bm_temp_DSS$weight_DSS*(bm_temp_DSS$volume_m3_ha-bm_temp_DSS$w_volume_m3_ha)^2/bm_temp_DSS$plot_num_year)
+  bm_temp_DSS$var_cwd_volume_m3_ha <- bm_temp_DSS$var_cwd_volume_m3_ha + (bm_temp_DSS$weight_DSS*(bm_temp_DSS$cwd_volume_m3_ha-bm_temp_DSS$w_cwd_volume_m3_ha)^2/bm_temp_DSS$plot_num_year)
   bm_temp_DSS$var_cwd_carbon_stock_tC_ha <- bm_temp_DSS$var_cwd_carbon_stock_tC_ha + (bm_temp_DSS$weight_DSS*(bm_temp_DSS$cwd_carbon_stock_tC_ha-bm_temp_DSS$w_cwd_carbon_stock_tC_ha)^2/bm_temp_DSS$plot_num_year)
   
   bm_temp_DSS[condition_DSS] <- 
@@ -437,8 +437,8 @@ cwd_biomass_tsvis <- function(data, grpby=NULL, strat="stand_subplot", Stockedla
   
   bm_temp_WMA <- bm_temp_DSS %>% 
     group_by(order, year, !!!grpby) %>% 
-    summarise(volume_m3_ha = sum(w_volume_m3_ha, na.rm=TRUE),
-              var_volume_m3_ha = sum(var_volume_m3_ha, na.rm=TRUE),
+    summarise(cwd_volume_m3_ha = sum(w_cwd_volume_m3_ha, na.rm=TRUE),
+              var_cwd_volume_m3_ha = sum(var_cwd_volume_m3_ha, na.rm=TRUE),
               cwd_carbon_stock_tC_ha = sum(w_cwd_carbon_stock_tC_ha, na.rm=TRUE),
               var_cwd_carbon_stock_tC_ha = sum(var_cwd_carbon_stock_tC_ha, na.rm=TRUE), .groups = 'drop')
   
@@ -450,7 +450,7 @@ cwd_biomass_tsvis <- function(data, grpby=NULL, strat="stand_subplot", Stockedla
   
   bm_temp_WMA <- full_join(bm_temp_WMA, weight_WMA, by =c("order","year", as.character(unlist(lapply(grpby, quo_name)))))
   
-  condition <- (names(bm_temp_WMA) %in% c("volume_m3_ha","cwd_carbon_stock_tC_ha"))
+  condition <- (names(bm_temp_WMA) %in% c("cwd_volume_m3_ha","cwd_carbon_stock_tC_ha"))
   
   
   bm_temp_WMA[condition] <- 
@@ -459,10 +459,10 @@ cwd_biomass_tsvis <- function(data, grpby=NULL, strat="stand_subplot", Stockedla
   
   bm <- bm_temp_WMA %>% 
     group_by(!!!grpby) %>% 
-    summarise(volume_m3_ha = sum(volume_m3_ha, na.rm=TRUE),
-              var_volume_m3_ha = sum(weight_WMA^2*var_volume_m3_ha, na.rm=TRUE),
-              se_volume_m3_ha = sqrt(var_volume_m3_ha),
-              rse_volume_m3_ha = se_volume_m3_ha/volume_m3_ha*100,
+    summarise(cwd_volume_m3_ha = sum(cwd_volume_m3_ha, na.rm=TRUE),
+              var_cwd_volume_m3_ha = sum(weight_WMA^2*var_cwd_volume_m3_ha, na.rm=TRUE),
+              se_cwd_volume_m3_ha = sqrt(var_cwd_volume_m3_ha),
+              rse_cwd_volume_m3_ha = se_cwd_volume_m3_ha/cwd_volume_m3_ha*100,
               cwd_carbon_stock_tC_ha = sum(cwd_carbon_stock_tC_ha, na.rm=TRUE),
               var_cwd_carbon_stock_tC_ha = sum(weight_WMA^2*var_cwd_carbon_stock_tC_ha, na.rm=TRUE),
               se_cwd_carbon_stock_tC_ha = sqrt(var_cwd_carbon_stock_tC_ha),

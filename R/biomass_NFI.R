@@ -199,10 +199,10 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_subplot", 
     bm_temp <- df %>% 
       group_by(df$'조사차기', !!plot_id, df$'조사연도', largetree, !!!grpby, !!strat) %>% 
       summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
-                biomass_ton = sum(.df$T_biomass, na.rm=TRUE),
-                AG_biomass_ton = sum(.df$AG_biomass, na.rm=TRUE),
-                carbon_stock_tC = sum(.df$carbon_stock, na.rm=TRUE),
-                co2_stock_tCO2 = sum(.df$co2_stock, na.rm=TRUE),.groups = 'drop')
+                biomass_ton = sum(T_biomass, na.rm=TRUE),
+                AG_biomass_ton = sum(AG_biomass, na.rm=TRUE),
+                carbon_stock_tC = sum(carbon_stock, na.rm=TRUE),
+                co2_stock_tCO2 = sum(co2_stock, na.rm=TRUE),.groups = 'drop')
     
     
     bm_temp <- bm_temp %>% rename('order' = "df$조사차기",  "year"= "df$조사연도")
@@ -567,10 +567,10 @@ biomass_tsvis <- function(data, grpby=NULL, strat="stand_subplot", clusterplot=F
     bm_temp <- df %>% 
       group_by(df$'조사차기', !!plot_id, df$'조사연도', largetree, !!!grpby, !!strat) %>% 
       summarise(volume_m3 = sum(get('추정간재적'), na.rm=TRUE),
-                biomass_ton = sum(.df$T_biomass, na.rm=TRUE),
-                AG_biomass_ton = sum(.df$AG_biomass, na.rm=TRUE),
-                carbon_stock_tC = sum(.df$carbon_stock, na.rm=TRUE),
-                co2_stock_tCO2 = sum(.df$co2_stock, na.rm=TRUE),.groups = 'drop')
+                biomass_ton = sum(T_biomass, na.rm=TRUE),
+                AG_biomass_ton = sum(AG_biomass, na.rm=TRUE),
+                carbon_stock_tC = sum(carbon_stock, na.rm=TRUE),
+                co2_stock_tCO2 = sum(co2_stock, na.rm=TRUE),.groups = 'drop')
     
     
     bm_temp <- bm_temp %>% rename('order' = "df$조사차기",  "year"= "df$조사연도")

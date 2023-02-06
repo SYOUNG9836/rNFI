@@ -5,6 +5,7 @@
 #' @import plotrix
 #' @import rlang
 #' @importFrom magrittr %>%
+#' @importFrom stats var
 NULL
 
 

@@ -8,7 +8,7 @@ cwd_biomass_NFI(
   data,
   byplot = FALSE,
   grpby = NULL,
-  strat = "stand",
+  strat = "stand_subplot",
   Stockedland = TRUE
 )
 }

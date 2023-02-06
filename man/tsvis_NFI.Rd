@@ -10,7 +10,7 @@ tsvis_NFI(
   y = NULL,
   type = "biomass",
   output = "line",
-  strat = "stand",
+  strat = "stand_subplot",
   clusterplot = FALSE,
   largetreearea = TRUE,
   Stockedland = TRUE,
@@ -27,7 +27,7 @@ tsvis_NFI(
 
 \item{type}{: biomass; iv}
 
-\item{output}{: poly; line}
+\item{output}{: map; line}
 
 \item{strat}{: 흉고단면적/개체수}
 

@@ -8,7 +8,7 @@ biomass_NFI(
   data,
   byplot = FALSE,
   grpby = NULL,
-  strat = "stand",
+  strat = "stand_subplot",
   clusterplot = FALSE,
   largetreearea = TRUE,
   Stockedland = TRUE,
