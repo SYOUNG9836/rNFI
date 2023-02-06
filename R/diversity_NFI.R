@@ -129,6 +129,8 @@ diversity_NFI <- function(data, grpby=NULL, byplot= FALSE,  basal=TRUE, clusterp
     
   }
   
+  indices <- indices %>% rename("조사차기"= "order")
+  
   
   return(indices)
   

@@ -19,7 +19,7 @@
 tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line", strat="stand_subplot", 
                          clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE, frequency= TRUE){
   
-  theme_set(theme_bw())
+  theme_set(theme_classic())
   theme_update(text = element_text(size=13))
   
   
@@ -133,12 +133,12 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
       se  <- rlang::sym(se)
       
       ylab <- case_when(
-        y == "volume" ~ "Volume (m3/ha)",
-        y == "biomass" ~ "Biomass (ton/ha)",
-        y == "AG_biomass" ~ "AG biomass (ton/ha)",
-        y == "carbon" ~ "Carbon stock (tC/ha)",
-        y == "co2" ~ "CO2 stock (tCO2/ha)",
-        TRUE ~ NA_character_
+        y == "volume" ~ expression(paste("Volume (", m^{3}, ")")),
+        y == "biomass" ~ expression(paste("Biomass (ton/ha)")),
+        y == "AG_biomass" ~ expression(paste("AG biomass (ton/ha)")),
+        y == "carbon" ~ expression(paste("Carbon stock (tC/ha)")),
+        y == "co2" ~ expression(paste(CO[2]," stock (t", CO[2], "/ha)")),
+        TRUE ~ expression(0)
         
       )
       
@@ -168,7 +168,7 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
         scale_fill_viridis_c(direction = -1,  alpha = .7, option="magma")+
         labs(fill=paste0("RSE (%)", paste(rep(" ", nchar(value)-1), collapse = "")))
       
-      tsvis <- cowplot::plot_grid(tsvis_value, tsvis_se)
+      tsvis <- cowplot::plot_grid(tsvis_value, tsvis_se, ncol = 2)
       
     }else if(output =="line"){
       
@@ -184,7 +184,7 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
         geom_line(aes(y=!!value, group = name, color = reorder(name, -!!value)), size = 1.1)+ 
         geom_point(aes(y=!!value, group = name, color = reorder(name, -!!value)), size = 3)+ 
         geom_errorbar(aes(ymin=!!value-!!se, ymax=!!value+!!se, color = reorder(name, -!!value)),
-                      position=position_dodge(0.9),width=0.2, size=0.8)+ 
+                      width=0.2, size=0.8)+ 
         theme(axis.title.x = element_text(vjust=-1.5),
               axis.title.y = element_text(vjust=4),
               plot.margin = unit(c(0.3,0.1,0.5,0.6), "cm"), 

@@ -304,7 +304,7 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
   }
   
   
-  
+  stat_data <- stat_data %>% rename("조사차기"= "order")
   
   
   
