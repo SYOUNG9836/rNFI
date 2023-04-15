@@ -17,7 +17,7 @@
 
 ##
 
-summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
+summary_NFI<- function(data, grpby=NULL, grpby2= NULL, byplot= FALSE, clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
   
   if(clusterplot){
     plot_id <- c('집락번호')
@@ -33,9 +33,16 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
     }}
   
   
+  if (!is.null(grpby2)){
+    
+    if(!is.character(grpby2)) {
+      stop("param 'grpby2' must be 'character'")
+    }}
+  
+  
   
   df <- left_join(data$tree[, c('집락번호', '표본점번호',"조사차기", '수목형태구분','수관급', '수종명', 
-                                '흉고직경', 'basal_area', '추정수고', '추정간재적', '대경목조사원내존재여부')], 
+                                '흉고직경', 'basal_area', '추정수고', '추정간재적', '대경목조사원내존재여부', grpby2)], 
                   data$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도', 
                                 "토지이용",'대경목조사원 비산림면적', '기본조사원 비산림면적', grpby)], 
                   by = c("집락번호", "표본점번호", "조사차기"))
@@ -43,6 +50,7 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
   
   plot_id  <- rlang::sym(plot_id)
   grpby  <- rlang::syms(grpby)
+  grpby2  <- rlang::syms(grpby2)
 
   
   if (!is.null(grpby)){
@@ -103,7 +111,7 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
     
     
     stat_num <- df %>%
-      group_by(df$'조사차기', !!!grpby) %>%
+      group_by(df$'조사차기', !!!grpby, !!!grpby2) %>%
       summarise(num_clusterplot= n_distinct(get('집락번호')),
                 num_subplot= n_distinct(get('표본점번호')),
                 num_largetree_subplot= n_distinct(get('표본점번호')[get('대경목조사원내존재여부')==1]),
@@ -118,7 +126,7 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
     
     
     stat_mean <- df %>% 
-      group_by(df$'조사차기', !!plot_id, df$'조사연도', !!!grpby) %>% 
+      group_by(df$'조사차기', !!plot_id, df$'조사연도', !!!grpby, !!!grpby2) %>% 
       summarise(mean_DBH_temp = mean(get('흉고직경'), na.rm=TRUE), 
                 mean_H_temp = mean(get('추정수고'), na.rm=TRUE),
                 mean_dominant_H_temp = mean(get('추정수고')[get('수관급')=="우세목"], na.rm=TRUE),
@@ -128,7 +136,7 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
     
     
     stat_mean <- stat_mean %>% 
-      group_by(order, !!!grpby) %>% 
+      group_by(order, !!!grpby, , !!!grpby2) %>% 
       summarise(mean_DBH = mean(mean_DBH_temp, na.rm=TRUE), 
                 se_DBH =  plotrix::std.error(mean_DBH_temp, na.rm=TRUE),
                 mean_H = mean(mean_H_temp, na.rm=TRUE),
@@ -144,7 +152,7 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
   }else{
     
     stat_num <- df %>%
-      group_by(df$'조사차기', !!plot_id, df$'조사연도', !!!grpby) %>%
+      group_by(df$'조사차기', !!plot_id, df$'조사연도', !!!grpby, !!!grpby2) %>%
       summarise(num_tree = n(),
                 num_largetree = sum(largetree, na.rm=TRUE),
                 num_dominanttree = sum(get('수관급')=="우세목", na.rm=TRUE), 
@@ -155,7 +163,7 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
     
     
     stat_mean <- df %>% 
-      group_by(df$'조사차기', !!plot_id, df$'조사연도', !!!grpby) %>% 
+      group_by(df$'조사차기', !!plot_id, df$'조사연도', !!!grpby, !!!grpby2) %>% 
       summarise(mean_DBH = mean(get('흉고직경'), na.rm=TRUE), 
                 mean_H = mean(get('추정수고'), na.rm=TRUE),
                 mean_dominant_H = mean(get('추정수고')[get('수관급')=="우세목"], na.rm=TRUE),
@@ -183,7 +191,7 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
     plot_area <- plot_area %>% rename('order' = "plot_area$조사차기",  "year"= "plot_area$조사연도") 
     
     stat_ha <- df %>% 
-      group_by(df$'조사차기', !!plot_id, df$'조사연도', largetree, !!!grpby) %>% 
+      group_by(df$'조사차기', !!plot_id, df$'조사연도', largetree, !!!grpby, !!!grpby2) %>% 
       summarise(tree_temp = n(), 
                 basal_temp= sum(basal_area, na.rm=TRUE),
                 volume_temp= sum(get('추정간재적'), na.rm=TRUE),
@@ -225,7 +233,7 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
                                                                           x/(stat_ha$tree_area)))
       
       stat_ha <- stat_ha %>% 
-        group_by(order, year, !!plot_id, !!!grpby) %>% 
+        group_by(order, year, !!plot_id, !!!grpby, !!!grpby2) %>% 
         summarise(tree_n_ha = sum(tree_temp, na.rm=TRUE),
                   basal_m2_ha = sum(basal_temp, na.rm=TRUE),
                   volume_m3_ha = sum(volume_temp, na.rm=TRUE),.groups = 'drop')
@@ -235,7 +243,7 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
   }else{ 
     
     stat_ha <- df %>% 
-      group_by(df$'조사차기', !!plot_id, df$'조사연도', largetree, largetree_area, tree_area, !!!grpby) %>% 
+      group_by(df$'조사차기', !!plot_id, df$'조사연도', largetree, largetree_area, tree_area, !!!grpby, !!!grpby2) %>% 
       summarise(tree_temp = n(), 
                 basal_temp= sum(basal_area, na.rm=TRUE),
                 volume_temp= sum(get('추정간재적'), na.rm=TRUE),
@@ -269,7 +277,7 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
                                                                           x/(stat_ha$tree_area)))
       
       stat_ha <- stat_ha %>% 
-        group_by(order, year, !!plot_id, !!!grpby) %>% 
+        group_by(order, year, !!plot_id, !!!grpby, !!!grpby2) %>% 
         summarise(tree_n_ha = sum(tree_temp, na.rm=TRUE),
                   basal_m2_ha = sum(basal_temp, na.rm=TRUE),
                   volume_m3_ha = sum(volume_temp, na.rm=TRUE),.groups = 'drop')
@@ -287,7 +295,7 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
   if(!byplot){
     
     stat_ha <- stat_ha %>% 
-      group_by(order, !!!grpby) %>% 
+      group_by(order, !!!grpby, !!!grpby2) %>% 
       summarise(mean_tree_n_ha = mean(tree_n_ha, na.rm=TRUE),
                 se_tree_n_ha =  plotrix::std.error(tree_n_ha, na.rm=TRUE),
                 mean_basal_m2_ha = mean(basal_m2_ha, na.rm=TRUE),
@@ -295,7 +303,8 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
                 mean_volume_m3_ha = mean(volume_m3_ha, na.rm=TRUE),
                 se_volume_m3_ha =  plotrix::std.error(volume_m3_ha, na.rm=TRUE),.groups = 'drop')
     
-    stat_data <- full_join(stat_temp, stat_ha, by=c('order', as.character(unlist(lapply(grpby, quo_name)))))
+    stat_data <- full_join(stat_temp, stat_ha, by=c('order', as.character(unlist(lapply(grpby, quo_name))), 
+                                                    as.character(unlist(lapply(grpby2, quo_name)))))
     
     
   }else{

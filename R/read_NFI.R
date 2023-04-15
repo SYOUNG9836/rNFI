@@ -10,7 +10,7 @@
 #' @export
 
 
-read_NFI <- function(dir, district=NULL, cwd=TRUE){
+read_NFI <- function(dir, district=NULL, tree= TRUE, cwd=TRUE, veg= TRUE){
   
   
   ## 경로에 있는 .xlsx 파일 리스트 불러오기--------------------------------------------------
@@ -21,6 +21,7 @@ read_NFI <- function(dir, district=NULL, cwd=TRUE){
   plot_list <- vector("list", length = length(filenames))
   tree_list <- vector("list", length = length(filenames))
   cwd_list <- vector("list", length = length(filenames))
+  veg_list <- vector("list", length = length(filenames))
   
   
   
@@ -107,10 +108,14 @@ read_NFI <- function(dir, district=NULL, cwd=TRUE){
     plot_all <- unique(plot_list[[i]]$"표본점번호")
     
     ## 임목조사표 sheet 불러오기--------------------------------------------------------------
-    tree_list[[i]] <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "임목조사표",
-                                    col_names = TRUE, col_types = "text")
-    tree_list[[i]]$"표본점번호" <- (gsub("-", "", tree_list[[i]]$"표본점번호"))
-    tree_list[[i]] <- tree_list[[i]][tree_list[[i]]$"표본점번호" %in% plot_all,]
+    if(tree){
+      tree_list[[i]] <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "임목조사표",
+                                           col_names = TRUE, col_types = "text")
+      tree_list[[i]]$"표본점번호" <- (gsub("-", "", tree_list[[i]]$"표본점번호"))
+      tree_list[[i]] <- tree_list[[i]][tree_list[[i]]$"표본점번호" %in% plot_all,]
+      
+    }
+    
     
     if(cwd){
       
@@ -124,6 +129,17 @@ read_NFI <- function(dir, district=NULL, cwd=TRUE){
     }
     
     
+    if(veg){
+      
+      ## 식생 sheet 불러오기--------------------------------------------------------------
+      veg_list[[i]] <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "산림식생조사표", range = cellranger::cell_cols("A:J"),
+                                          col_names = TRUE, col_types = "text")
+      
+      veg_list[[i]]$"표본점번호" <- (gsub("-", "", veg_list[[i]]$"표본점번호"))
+      veg_list[[i]] <- veg_list[[i]][veg_list[[i]]$"표본점번호" %in% plot_all,]
+      
+    }
+    
   }
   
   
@@ -132,27 +148,40 @@ read_NFI <- function(dir, district=NULL, cwd=TRUE){
   plot_df <- as.data.frame(plot_df)
   plot_df$"집락번호" <- (gsub("-", "", plot_df$"집락번호"))
   
-  
-  tree_df <- data.table::rbindlist(tree_list, fill=TRUE, use.names=TRUE)
-  tree_df <- as.data.frame(tree_df)
-  tree_df$"집락번호" <- (gsub("-", "", tree_df$"집락번호"))
-  
+  if(tree){
+    
+    tree_df <- data.table::rbindlist(tree_list, fill=TRUE, use.names=TRUE)
+    tree_df <- as.data.frame(tree_df)
+    tree_df$"집락번호" <- (gsub("-", "", tree_df$"집락번호"))
+    
+    
+  }
   
   if(cwd){
     cwd_df <- data.table::rbindlist(cwd_list, fill=TRUE, use.names=TRUE)
     cwd_df <- as.data.frame(cwd_df)
     cwd_df$"집락번호" <- (gsub("-", "", cwd_df$"집락번호"))
-    NFI <- list(plot = plot_df, tree = tree_df, cwd = cwd_df)
     
-  }else{
-      
-    NFI <- list(plot = plot_df, tree = tree_df)
     
-    }
+  }
+  
+  if(veg){
+    veg_df <- data.table::rbindlist(veg_list, fill=TRUE, use.names=TRUE)
+    veg_df <- as.data.frame(veg_df)
+    veg_df$"집락번호" <- (gsub("-", "", veg_df$"집락번호"))
+    
+    
+  }
+  
+  
+  NFI <- list(plot = plot_df, tree = tree_df, cwd = cwd_df, cwd = veg_df)
   
   NFI$tree <- left_join(NFI$tree, NFI$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도')], 
                         by = c("집락번호", "표본점번호", "조사차기"))
   NFI$cwd <- left_join(NFI$cwd, NFI$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도')], 
+                       by = c("집락번호", "표본점번호", "조사차기"))
+  
+  NFI$veg <- left_join(NFI$veg, NFI$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도')], 
                        by = c("집락번호", "표본점번호", "조사차기"))
   
   
