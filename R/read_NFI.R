@@ -1,28 +1,29 @@
-#' read_NFI() Function
+#' read_NFI()
 #'
-#' This function read NFI data
-#' @param dir : dir
-#' @param district : district 
-#' @param cwd : dead tree 
-#' @return merge data nfi
+#' read_NFI() is a function that reads Korean National Forest Inventory.
+#' Loads the annual National Forest Inventory file downloaded from "https://kfss.forest.go.kr/stat/ " from the local computer.
+#' And change the data to an easy-to-analyze format and perform integrity verification.
+#' @param dir : Directory of NFI files
+#' @param district : District name in sido, sigungu, or eupmyondong.
+#' @param tree : a logical value indicating whether to load a standing tree survey table. 
+#' @param cwd : a logical value indicating whether to load a standing tree survey table.
+#' @param stump : a logical value indicating wether to load a standing tree survey table. 
+#' @param sapling : a logical value indicating whether to load a standing tree survey table.
+#' @param veg : a logical value indicating whether to load a standing tree survey table.
+#' @param herb : a logical value indicating whether to load a standing tree survey table.
+#' @param soil : a logical value indicating whether to load a standing tree survey table.
+#' @return dataframe
 #' @examples
-#' read_NFI("D:/y2021/y202101/rNFI/NFI/NFI7/", district = "\uc804\ub77c\ub0a8\ub3c4") 
+#' read_NFI("D:/y2021/y202101/rNFI/NFI/NFI7/", district = "\uc804\ub77c\ub0a8\ub3c4", tree= TRUE) 
 #' @export
 
 
-read_NFI <- function(dir, district=NULL, tree= TRUE, cwd=TRUE, veg= TRUE){
+read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapling=FALSE, veg=FALSE, herb=FALSE, soil=FALSE ){
   
   
   ## 경로에 있는 .xlsx 파일 리스트 불러오기--------------------------------------------------
   if (stringr::str_sub(dir,-1) != '/'){
     dir <- paste(dir, '/', sep = "")} 
-  
-  filenames <- list.files(path=dir, pattern="xlsx")
-  plot_list <- vector("list", length = length(filenames))
-  tree_list <- vector("list", length = length(filenames))
-  cwd_list <- vector("list", length = length(filenames))
-  veg_list <- vector("list", length = length(filenames))
-  
   
   
   ## error message--------------------------------------------------------------
@@ -30,33 +31,55 @@ read_NFI <- function(dir, district=NULL, tree= TRUE, cwd=TRUE, veg= TRUE){
     stop(paste('Directory ', dir, ' does not exist.'))
   }
   
+  
+  filenames <- list.files(path=dir, pattern="xlsx")
+  
+  plot_list <- vector("list", length = length(filenames))
+  tree_list <- vector("list", length = length(filenames))
+  cwd_list <- vector("list", length = length(filenames))
+  stump_list <- vector("list", length = length(filenames))
+  sapling_list <- vector("list", length = length(filenames))
+  veg_list <- vector("list", length = length(filenames))
+  herb_list <- vector("list", length = length(filenames))
+  soil_list <- vector("list", length = length(filenames))
+  
 
   for(i in 1:length(filenames)){
     
-    
     ## 일반정보 sheet 불러오기--------------------------------------------------------------
-    General_info <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "일반정보", 
+    General_info <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = Sheet_name[1,1], 
                                        col_names = TRUE, col_types = "text")
     
-    General_info <- General_info[(names(General_info) != c("조사일자"))]
+    colnames(General_info) <- gsub("\\s+", " ", gsub("[`]", "", colnames(General_info)))
+    new_names <- setNames(col_name$Column_Name, col_name$Korean_Column_Name)
+    General_info <- setNames(General_info, new_names[names(General_info)])
+    
+    General_info <- General_info[(names(General_info) != c("CREATED_DATE"))]
     
     
     
     ## 비산림면적 sheet 불러오기--------------------------------------------------------------
-    Non_forest <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "비산림면적",
+    Non_forest <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = Sheet_name[2,1],
                                      col_names = TRUE, col_types = "text")
+    colnames(Non_forest) <- gsub("\\s+", " ", gsub("[`]", "", colnames(Non_forest)))
+    new_names <- setNames(col_name$Column_Name, col_name$Korean_Column_Name)
+    Non_forest <- setNames(Non_forest, new_names[names(Non_forest)])
     
     
     
     ## 임분조사표 sheet 불러오기--------------------------------------------------------------
-    Stand_inve <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "임분조사표",
+    Stand_inve <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = Sheet_name[3,1],
                                      col_names = TRUE, col_types = "text")
+    colnames(Stand_inve) <- gsub("\\s+", " ", gsub("[`]", "", colnames(Stand_inve)))
+    new_names <- setNames(col_name$Column_Name, col_name$Korean_Column_Name)
+    Stand_inve <- setNames(Stand_inve, new_names[names(Stand_inve)])
+    
     
     ## NFI_plot_DB 행정구역 DB
-    Stand_inve$"표본점번호" <- (gsub("-", "", Stand_inve$"표본점번호"))
-    Stand_inve <- left_join(Stand_inve, NFI_plot_DB, by=c('표본점번호'))
+    Stand_inve <- Stand_inve[!(names(Stand_inve) %in% c("SIDO_CD", "SGG_CD", "EMD_CD", "SIDO", "SGG", "EMD"))]
+    Stand_inve <- left_join(Stand_inve, NFI_plot_DB, by=c('SUB_PLOT'))
     
-  
+    
     ## 지역별 filitering--------------------------------------------------------------
     if(!is.null(district)){
       
@@ -75,134 +98,226 @@ read_NFI <- function(dir, district=NULL, tree= TRUE, cwd=TRUE, veg= TRUE){
       
       if(nchar(site_code) == 10){
         Stand_inve <- Stand_inve %>% 
-          filter(Stand_inve$EMD_CD == substr(site_code,1,8))}
-      
-      else if(nchar(site_code) == 5){
-        Stand_inve <- Stand_inve %>% filter(Stand_inve$SIG_CD == site_code)}
-      
-      else{
-        Stand_inve <- Stand_inve %>% filter(Stand_inve$CTPRVN_CD == site_code)}
+          filter(Stand_inve$EMD_CD == substr(site_code,1,8))
+      }else if(nchar(site_code) == 5){
+        Stand_inve <- Stand_inve %>% filter(Stand_inve$SGG_CD == site_code)
+      }else{
+        Stand_inve <- Stand_inve %>% filter(Stand_inve$SIDO_CD == site_code)
+      }
       
       
       ## NFI 자료가 없는 지역구 error-----------------------------------------------------------
-      if(nrow(Stand_inve) == 0) {
+      if(nrow(Stand_inve) == 0){
         stop(paste('NFI data in ',district ,' does not exist.'))}
+      
     }
     
-    General_info$"표본점번호" <- (gsub("-", "", General_info$"표본점번호"))
-    Non_forest$"표본점번호" <- (gsub("-", "", Non_forest$"표본점번호"))
+    
     
     
     ## 일반정보, 비산림면적을 임분자료 기준으로 merge----------------------------------------------
     Stand_inve <- left_join(x=Stand_inve, y=General_info, 
-                            by=c('집락번호', '표본점번호', '조사차기',  '조사연도', '임상코드', '임상'))
+                            by=c('CLST_PLOT', 'SUB_PLOT', 'CYCLE',  'INVYR', 'FORTYPCD', 'FORTYP'))
     
     Stand_inve <- left_join(x=Stand_inve, y=Non_forest, 
-                            by=c('집락번호', '표본점번호', '조사차기', '조사연도'))
+                            by=c('CLST_PLOT', 'SUB_PLOT', 'CYCLE',  'INVYR'))
     
     
-    ## .xlsx별(연도별) 데이터 plot_list[[i]]에 기록------------------------------------------
+    ## .xlsx별(연도별) 표본점 데이터 plot_list[[i]]에 기록------------------------------------------
     plot_list[[i]] <- Stand_inve
+    plot_all <- unique(plot_list[[i]]$SUB_PLOT)
     
-    
-    plot_all <- unique(plot_list[[i]]$"표본점번호")
     
     ## 임목조사표 sheet 불러오기--------------------------------------------------------------
     if(tree){
-      tree_list[[i]] <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "임목조사표",
+      tree_list[[i]] <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = Sheet_name[4,1],
                                            col_names = TRUE, col_types = "text")
-      tree_list[[i]]$"표본점번호" <- (gsub("-", "", tree_list[[i]]$"표본점번호"))
-      tree_list[[i]] <- tree_list[[i]][tree_list[[i]]$"표본점번호" %in% plot_all,]
       
+      colnames(tree_list[[i]]) <- gsub("\\s+", " ", gsub("[`]", "", colnames(tree_list[[i]])))
+      new_names <- setNames(col_name$Column_Name, col_name$Korean_Column_Name)
+      tree_list[[i]] <- setNames(tree_list[[i]], new_names[names(tree_list[[i]])])
+      
+      
+      tree_list[[i]] <- tree_list[[i]][tree_list[[i]]$SUB_PLOT %in% plot_all,]
     }
     
     
     if(cwd){
-      
       ## 고사목조사표 sheet 불러오기--------------------------------------------------------------
-      cwd_list[[i]] <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "고사목조사표", range = cellranger::cell_cols("A:M"),
+      cwd_list[[i]] <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = Sheet_name[5,1], range = cellranger::cell_cols("A:M"),
                                           col_names = TRUE, col_types = "text")
       
-      cwd_list[[i]]$"표본점번호" <- (gsub("-", "", cwd_list[[i]]$"표본점번호"))
-      cwd_list[[i]] <- cwd_list[[i]][cwd_list[[i]]$"표본점번호" %in% plot_all,]
+      colnames(cwd_list[[i]]) <- gsub("\\s+", " ", gsub("[`]", "", colnames(cwd_list[[i]])))
+      new_names <- setNames(col_name$Column_Name, col_name$Korean_Column_Name)
+      cwd_list[[i]] <- setNames(cwd_list[[i]], new_names[names(cwd_list[[i]])])
+      
+      cwd_list[[i]] <- cwd_list[[i]][cwd_list[[i]]$SUB_PLOT %in% plot_all,]
+    }
+    
+    
+    if(stump){
+      ## 벌근 sheet 불러오기--------------------------------------------------------------
+      stump_list[[i]] <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = Sheet_name[6,1], 
+                                            col_names = TRUE, col_types = "text")
+      
+      colnames(stump_list[[i]]) <- gsub("\\s+", " ", gsub("[`]", "", colnames(stump_list[[i]])))
+      new_names <- setNames(col_name$Column_Name, col_name$Korean_Column_Name)
+      stump_list[[i]] <- setNames(stump_list[[i]], new_names[names(stump_list[[i]])])
+      
+      stump_list[[i]] <- stump_list[[i]][stump_list[[i]]$SUB_PLOT %in% plot_all,]
+    }
+    
+    
+    if(sapling){
+      ## 치수 sheet 불러오기--------------------------------------------------------------
+      sapling_list[[i]] <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = Sheet_name[7,1], 
+                                              col_names = TRUE, col_types = "text")
+      
+      colnames(sapling_list[[i]]) <- gsub("\\s+", " ", gsub("[`]", "", colnames(sapling_list[[i]])))
+      new_names <- setNames(col_name$Column_Name, col_name$Korean_Column_Name)
+      sapling_list[[i]] <- setNames(sapling_list[[i]], new_names[names(sapling_list[[i]])])
+      
+      sapling_list[[i]] <- sapling_list[[i]][sapling_list[[i]]$SUB_PLOT %in% plot_all,]
       
     }
     
     
     if(veg){
-      
       ## 식생 sheet 불러오기--------------------------------------------------------------
-      veg_list[[i]] <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = "산림식생조사표", range = cellranger::cell_cols("A:J"),
+      veg_list[[i]] <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = Sheet_name[8,1], 
                                           col_names = TRUE, col_types = "text")
       
-      veg_list[[i]]$"표본점번호" <- (gsub("-", "", veg_list[[i]]$"표본점번호"))
-      veg_list[[i]] <- veg_list[[i]][veg_list[[i]]$"표본점번호" %in% plot_all,]
+      colnames(veg_list[[i]]) <- gsub("\\s+", " ", gsub("[`]", "", colnames(veg_list[[i]])))
+      new_names <- setNames(col_name$Column_Name, col_name$Korean_Column_Name)
+      veg_list[[i]] <- setNames(veg_list[[i]], new_names[names(veg_list[[i]])])
       
+      veg_list[[i]] <- veg_list[[i]][veg_list[[i]]$SUB_PLOT %in% plot_all,]
     }
     
-  }
-  
-  
+    
+    
+    if(herb){
+      ## 초본 sheet 불러오기--------------------------------------------------------------
+      herb_list[[i]] <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = Sheet_name[9,1], 
+                                           col_names = TRUE, col_types = "text")
+      
+      colnames(herb_list[[i]]) <- gsub("\\s+", " ", gsub("[`]", "", colnames(herb_list[[i]])))
+      new_names <- setNames(col_name$Column_Name, col_name$Korean_Column_Name)
+      herb_list[[i]] <- setNames(herb_list[[i]], new_names[names(herb_list[[i]])])
+      
+      herb_list[[i]] <- herb_list[[i]][herb_list[[i]]$SUB_PLOT %in% plot_all,]
+    }
+    
+    
+    if(soil){
+      ## 토양 sheet 불러오기--------------------------------------------------------------
+      soil_list[[i]] <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = Sheet_name[10,1], 
+                                           col_names = TRUE, col_types = "text")
+      
+      colnames(soil_list[[i]]) <- gsub("\\s+", " ", gsub("[`]", "", colnames(soil_list[[i]])))
+      new_names <- setNames(col_name$Column_Name, col_name$Korean_Column_Name)
+      soil_list[[i]] <- setNames(soil_list[[i]], new_names[names(soil_list[[i]])])
+      
+      soil_list[[i]] <- soil_list[[i]][soil_list[[i]]$SUB_PLOT %in% plot_all,]
+    }
+    
+    
+  }  
+
   ## .xlsx별(연도별) 데이터 합치기--------------------------------------------------------------
   plot_df <- data.table::rbindlist(plot_list, fill=TRUE, use.names=TRUE)
   plot_df <- as.data.frame(plot_df)
-  plot_df$"집락번호" <- (gsub("-", "", plot_df$"집락번호"))
+  
+  
+  NFI <- list(plot = plot_df)
+  plot_subset <- NFI$plot[,c('CLST_PLOT', 'SUB_PLOT', 'CYCLE', 'INVYR'), drop = FALSE]
   
   if(tree){
-    
     tree_df <- data.table::rbindlist(tree_list, fill=TRUE, use.names=TRUE)
     tree_df <- as.data.frame(tree_df)
-    tree_df$"집락번호" <- (gsub("-", "", tree_df$"집락번호"))
     
-    
+    NFI$tree <- tree_df
+    NFI$tree <- left_join(NFI$tree, plot_subset,
+                          by = c('CLST_PLOT', 'SUB_PLOT', 'CYCLE'))
   }
+  
   
   if(cwd){
     cwd_df <- data.table::rbindlist(cwd_list, fill=TRUE, use.names=TRUE)
     cwd_df <- as.data.frame(cwd_df)
-    cwd_df$"집락번호" <- (gsub("-", "", cwd_df$"집락번호"))
     
-    
+    NFI$cwd <- cwd_df
+    NFI$cwd <- left_join(NFI$cwd, plot_subset, 
+                         by = c('CLST_PLOT', 'SUB_PLOT', 'CYCLE'))
   }
+  
+  
+  if(stump){
+    stump_df <- data.table::rbindlist(stump_list, fill=TRUE, use.names=TRUE)
+    stump_df <- as.data.frame(stump_df)
+    
+    NFI$stump <- stump_df
+    NFI$stump <- left_join(NFI$stump, plot_subset, 
+                           by = c('CLST_PLOT', 'SUB_PLOT', 'CYCLE'))
+  }
+  
+  
+  if(sapling){
+    sapling_df <- data.table::rbindlist(sapling_list, fill=TRUE, use.names=TRUE)
+    sapling_df <- as.data.frame(sapling_df)
+    
+    NFI$sapling <- sapling_df
+    NFI$sapling <- left_join(NFI$sapling, plot_subset, 
+                             by = c('CLST_PLOT', 'SUB_PLOT', 'CYCLE'))
+  }
+  
   
   if(veg){
     veg_df <- data.table::rbindlist(veg_list, fill=TRUE, use.names=TRUE)
     veg_df <- as.data.frame(veg_df)
-    veg_df$"집락번호" <- (gsub("-", "", veg_df$"집락번호"))
     
-    
+    NFI$veg <- veg_df
+    NFI$veg <- left_join(NFI$veg, plot_subset, 
+                         by = c('CLST_PLOT', 'SUB_PLOT', 'CYCLE'))
   }
   
+  if(herb){
+    herb_df <- data.table::rbindlist(herb_list, fill=TRUE, use.names=TRUE)
+    herb_df <- as.data.frame(herb_df)
+    
+    NFI$herb <- herb_df
+    NFI$herb <- left_join(NFI$herb, plot_subset, 
+                          by = c('CLST_PLOT', 'SUB_PLOT', 'CYCLE'))
+  }
   
-  NFI <- list(plot = plot_df, tree = tree_df, cwd = cwd_df, cwd = veg_df)
-  
-  NFI$tree <- left_join(NFI$tree, NFI$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도')], 
-                        by = c("집락번호", "표본점번호", "조사차기"))
-  NFI$cwd <- left_join(NFI$cwd, NFI$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도')], 
-                       by = c("집락번호", "표본점번호", "조사차기"))
-  
-  NFI$veg <- left_join(NFI$veg, NFI$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도')], 
-                       by = c("집락번호", "표본점번호", "조사차기"))
-  
-  
+  if(soil){
+    soil_df <- data.table::rbindlist(soil_list, fill=TRUE, use.names=TRUE)
+    soil_df <- as.data.frame(soil_df)
+    
+    NFI$soil <- soil_df
+    NFI$soil <- left_join(NFI$soil, plot_subset, 
+                          by = c('CLST_PLOT', 'SUB_PLOT', 'CYCLE'))
+  }
+
+
   ## column 속성 맞추기
-  log_col <- c("산림여부", "조사가능여부")
+  log_col <- c("FORCD", "SVYCD")
   NFI$plot[ , colnames(NFI$plot) %in% log_col ] <- lapply(lapply(NFI$plot[ , colnames(NFI$plot) %in% log_col ], as.numeric), as.logical)
   
   
-  fac_col <- c("토지이용코드", "토지이용","임상코드","임상", "부후도코드")
+  fac_col <- c("LAND_USECD", "LAND_USE","FORTYPCD","FORTYP", "DECAYCD")
   NFI$plot[ , colnames(NFI$plot) %in% fac_col ] <- lapply(NFI$plot[ , colnames(NFI$plot) %in% fac_col ], as.factor)
   
   
-  num_col <- c("기본조사원 비산림면적", "대경목조사원 비산림면적","도로로부터의거리", "해발고","경사",
-               "방위","중심수관밀도",	"0도수관밀도","120도수관밀도",	"240도수관밀도", "수관밀도평균",
-               "흉고직경", "지하고", "수고", "거리(m)", "방위각(º)", "수령",	"수길이",	"생장량",
-               "수피",	"비율", "표준목간재적",	"추정수고",	"추정간재적", "조사연도", "재적", "길이", "직경")
+  num_col <- c("NONFR_INCL_AREA_SUBP", "NONFR_INCL_AREA_LARGEP","RDDIST", "ELEV","SLOPE",
+               "ASPCT",
+               "DBH", "BOLE_HT", "HT", "DIST", "AZIMUTH", "TOTAGE",	"PITH_BARK_LEN",	"TRG_5YRS",
+               "BARK_THICK",	"STD_DIAM_PROP", "ACTUALVOL",	"HT_EST",	"VOL_EST", "INVYR", "VOL", "HT", "DIA")
   NFI$plot[ , colnames(NFI$plot) %in% num_col ] <- lapply(NFI$plot[ , colnames(NFI$plot) %in% num_col ], as.numeric)
   NFI$tree[ , colnames(NFI$tree) %in% num_col ] <- lapply(NFI$tree[ , colnames(NFI$tree) %in% num_col ], as.numeric)
   
   
-  char_col <- c("표본점번호", "집락번호", "조사일자", "CTPRVN_CD","SIG_CD", "EMD_CD")
+  char_col <- c("SUB_PLOT", "CLST_PLOT", "CREATED_DATE", "CTPRVN_CD","SIG_CD", "EMD_CD")
   NFI$plot[ , colnames(NFI$plot) %in% char_col ] <- lapply(NFI$plot[ , colnames(NFI$plot) %in% char_col ], as.character)
   NFI$tree[ , colnames(NFI$tree) %in% char_col ] <- lapply(NFI$tree[ , colnames(NFI$tree) %in% char_col ], as.character)
   
@@ -210,64 +325,101 @@ read_NFI <- function(dir, district=NULL, tree= TRUE, cwd=TRUE, veg= TRUE){
   if(cwd){
     NFI$cwd[ , colnames(NFI$cwd) %in% num_col ] <- lapply(NFI$cwd[ , colnames(NFI$cwd) %in% num_col ], as.numeric)
     NFI$cwd[ , colnames(NFI$cwd) %in% char_col ] <- lapply(NFI$cwd[ , colnames(NFI$cwd) %in% char_col ], as.character)
-    NFI$cwd <- left_join(NFI$cwd, Species_DB, by= c("수종명" ="species") )
+    NFI$cwd <- left_join(NFI$cwd, Species_DB, by= c("SP") )
   }
   
-
-  ##  수종 db 가져오기
-  NFI$tree <- left_join(NFI$tree, Species_DB, by= c("수종명" ="species") )
   
-  
-  # 흉고단면적 기준 임상구분 부표본점 단위
-  NFI$tree$basal_area <- (pi*(NFI$tree$'흉고직경'/2)^2)/10000
- 
-  stand_sub <- NFI$tree %>% 
-    mutate(deciduous_ba = ifelse(NFI$tree$type_leaf == "활엽수",  basal_area, 0)) %>%
-    group_by(NFI$tree$'표본점번호', NFI$tree$'조사차기') %>% 
-    summarise(all_ba = sum(basal_area), 
-              deciduous_ba = sum(deciduous_ba),
-              .groups = 'drop')
-  
-  stand_sub$percent <- (stand_sub$deciduous_ba/stand_sub$all_ba) *100
-  stand_sub$stand_subplot <- ifelse(stand_sub$percent>=75, "Deciduous", 
-                             ifelse(stand_sub$percent>25, "Mixed", "Coniferous"))
-  
-  
-  stand_sub <- stand_sub %>% rename("표본점번호"= "NFI$tree$표본점번호", "조사차기"= "NFI$tree$조사차기")
-  
-  condition <- (names(stand_sub) %in% c("표본점번호","조사차기", "stand_subplot"))
-  NFI$plot <- left_join(NFI$plot, stand_sub[condition], by= c("표본점번호","조사차기"))
-  
-  
-  # 흉고단면적 기준 임상구분 부표본점 단위
-  stand_clust <- NFI$tree %>% 
-    mutate(deciduous_ba = ifelse(NFI$tree$type_leaf == "활엽수",  basal_area, 0)) %>%
-    group_by(NFI$tree$'집락번호', NFI$tree$'조사차기') %>% 
-    summarise(all_ba = sum(basal_area), 
-              deciduous_ba = sum(deciduous_ba),
-              .groups = 'drop')
-  
-  stand_clust$percent <- (stand_clust$deciduous_ba/stand_clust$all_ba) *100
-  stand_clust$stand_clusterplot <- ifelse(stand_clust$percent>=75, "Deciduous", 
-                                    ifelse(stand_clust$percent>25, "Mixed", "Coniferous"))
-  
-  
-  stand_clust <- stand_clust %>% rename("집락번호"= "NFI$tree$집락번호", "조사차기"= "NFI$tree$조사차기")
-  condition <- (names(stand_sub) %in% c("표본점번호","조사차기", "stand_clusterplot"))
-  
-  NFI$plot <- left_join(NFI$plot, stand_clust[condition], by= c("집락번호","조사차기"))
+  if(stump){
+    NFI$stump[ , colnames(NFI$stump) %in% num_col ] <- lapply(NFI$stump[ , colnames(NFI$stump) %in% num_col ], as.numeric)
+    NFI$stump[ , colnames(NFI$stump) %in% char_col ] <- lapply(NFI$stump[ , colnames(NFI$stump) %in% char_col ], as.character)
+    NFI$stump <- left_join(NFI$stump, Species_DB, by= c("SP") )
+  }
   
   
   
-  # 불필요한 열 제거 
-  NFI$plot <- NFI$plot[!(names(NFI$plot) %in% c("시도코드", "시도", "시군구코드", "시군구", "읍면동코드", "읍면동",
-                                 "도엽번호", "입력자", "조사N", "조사E", "조사자1", "조사자2", "조사자3", "조사자4"))]
-  
+  if(tree){
+    
+    NFI$tree <- NFI$tree[!(names(NFI$tree) %in% c("CONDEC_CLASS", "WDY_PLNTS_TYP"))]
+    
+    ##  수종 db 가져오기
+    NFI$tree <- left_join(NFI$tree, Species_DB, by= c("SP") )
+    
+    # 흉고단면적 기준 임상구분 부표본점 단위
+    NFI$tree$basal_area <- (pi*(NFI$tree$DBH/2)^2)/10000
+    
+    stand_sub <- NFI$tree %>% filter(SUBPTYP == 0) 
+    stand_sub <- stand_sub %>%  
+      mutate(deciduous_ba = ifelse(CONDEC_CLASS_CD == 1,  basal_area, 0)) %>% # deciduous
+      group_by(SUB_PLOT, CYCLE) %>% 
+      summarise(all_ba = sum(basal_area), 
+                deciduous_ba = sum(deciduous_ba),
+                .groups = 'drop')
+    
+    stand_sub$percent <- (stand_sub$deciduous_ba/stand_sub$all_ba) *100
+    stand_sub$FORTYP_SUB <- ifelse(stand_sub$percent>=75, "Deciduous", 
+                                   ifelse(stand_sub$percent>25, "Mixed", "Coniferous"))
+    
+    
+    domin <- NFI$tree %>% filter(SUBPTYP ==0) 
+    domin <- domin %>%
+      group_by(SUB_PLOT, CYCLE,  SP) %>%
+      summarise(domin_ba = sum(basal_area), .groups = 'drop') %>%
+      group_by(SUB_PLOT, CYCLE) %>%
+      arrange(desc(domin_ba)) %>%
+      slice(1) %>%
+      ungroup()
+    
+    
+    stand_sub <- left_join(stand_sub, domin, by= c("SUB_PLOT","CYCLE"))
+    stand_sub$DOMIN_PERCNT_SUB <- (stand_sub$domin_ba/stand_sub$all_ba) *100
+    stand_sub$DOMIN_SP_SUB <- stand_sub$SP
+    
+    condition <- (names(stand_sub) %in% c("SUB_PLOT","CYCLE", "FORTYP_SUB", "DOMIN_SP_SUB", "DOMIN_PERCNT_SUB"))
+    NFI$plot <- left_join(NFI$plot, stand_sub[condition], by= c("SUB_PLOT","CYCLE"))
+    
+    
+    # 흉고단면적 기준 임상구분 집락표본점 단위
+    stand_clust <- NFI$tree %>% filter(SUBPTYP == 0) 
+    stand_clust <- stand_clust %>%
+      mutate(deciduous_ba = ifelse(CONDEC_CLASS_CD == 1,  basal_area, 0)) %>%
+      group_by(CLST_PLOT, CYCLE) %>% 
+      summarise(all_ba = sum(basal_area), 
+                deciduous_ba = sum(deciduous_ba),
+                .groups = 'drop')
+    
+    stand_clust$percent <- (stand_clust$deciduous_ba/stand_clust$all_ba) *100
+    stand_clust$FORTYP_CLST <- ifelse(stand_clust$percent>=75, "Deciduous", 
+                                      ifelse(stand_clust$percent>25, "Mixed", "Coniferous"))
+    
+    
+    domin <- NFI$tree %>% filter(SUBPTYP == 0) 
+    domin <- domin %>%
+      group_by(CLST_PLOT, CYCLE,  SP) %>%
+      summarise(domin_ba = sum(basal_area), .groups = 'drop') %>%
+      group_by(CLST_PLOT, CYCLE) %>%
+      arrange(desc(domin_ba)) %>%
+      slice(1) %>%
+      ungroup()
+    
+    stand_clust <- left_join(stand_clust, domin, by= c("CLST_PLOT","CYCLE"))
+    stand_clust$DOMIN_PERCNT_CLST <- (stand_clust$domin_ba/stand_clust$all_ba) *100
+    stand_clust$DOMIN_SP_CLST <- stand_clust$SP
+    
+    condition <- (names(stand_clust) %in% c("CLST_PLOT","CYCLE", "FORTYP_CLST", "DOMIN_SP_CLST", "DOMIN_PERCNT_CLST"))
+    
+    
+    
+    NFI$plot <- left_join(NFI$plot, stand_clust[condition], by= c("CLST_PLOT","CYCLE"))
+    
+  }
   
   
   return(NFI) 
   
   
 }
+
+# 중복 표본점 전처리 
+# 표본점 임상 db화 하여 결합
 
 

@@ -22,9 +22,8 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
   theme_set(theme_classic())
   theme_update(text = element_text(size=13))
   
-  
+  # 경고
   if(type != "iv" & output != "table"){
-    
     if(is.null(y)){
       stop("param 'y' is a required parameter")
     }else{
@@ -38,38 +37,29 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
       }else{
         stop("param 'y' must be one of 'volume', 'biomass', 'AG_biomass', 'carbon', 'co2'")
       }
-      
-      
-      
-      
     }
-    
   }
   
-  
   if(type != "iv" & output == "map"){
-    
     if(!stringr::str_detect(grpby,'_CD$')){
-      
       stop("param 'grpby' must be in administrative district code")
     }
   }
   
-  
   if(type == "iv" & output == "map"){
-    
     stop("Importance value cannot be visualized by map")
   }
   
 
-  tsvis_list <- vector("list", length = (length(unique(data$plot$"조사연도"))-4))
+  # 전처리
+  tsvis_list <- vector("list", length = (length(unique(data$plot$INVYR)-4))
   
-  for(i in 1:(length(unique(data$plot$"조사연도"))-4)){ 
+  for(i in 1:(length(unique(data$plot$INVYR))-4)){ 
     
-    s_year <- min(data$plot$"조사연도")+i-1
-    e_year <- min(data$plot$"조사연도")+i-1+4
+    s_year <- min(data$plot$INVYR)+i-1
+    e_year <- min(data$plot$INVYR)+i-1+4
     
-    data_temp <- lapply(data, function(x) x %>% filter(x$"조사연도"  >= s_year & x$"조사연도" <= e_year))
+    data_temp <- lapply(data, function(x) x %>% filter(x$INVYR  >= s_year & x$INVYR <= e_year))
     
     
     if(type == "biomass"){
@@ -89,12 +79,12 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
   }
   
   
-  
   tsvis_df <- data.table::rbindlist(tsvis_list, fill=TRUE, use.names=TRUE)
   tsvis_df <- as.data.frame(tsvis_df)
   tsvis_df$year <- as.character(tsvis_df$year)
   
   
+  # 생물량 및 고사량 계산
   if(type =="biomass" | type =="cwd"){
     
     if(output =="table"){
@@ -102,7 +92,6 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
       tsvis <- tsvis_df
       
     }else if(output =="map"){
-      
       
       
       district_code[,1] <- (gsub("-", "", district_code[,1]))
@@ -220,7 +209,7 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
       stop(paste( output, ' does not exist.'))
       
     }
-  }else if(type=="iv"){
+  }else if(type=="iv"){ # 중요도 계산
     
     if(output =="table"){
       

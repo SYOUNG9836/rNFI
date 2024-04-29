@@ -10,18 +10,17 @@ cwd_bm_df <- function(data){
     ## 출처 : "탄소배출계수를 활용한 국가 온실가스 통계 작성", 
     ## "NIFoS 산림정책이슈 제129호 : 주요 산림수종의 표준 탄소흡수량(ver.1.2)"
     
-    ## 강원지방소나무--------------------------------------------------------------
-    data$'수종명' =="소나무" ~ "소나무",
-    data$'수종명' =="일본잎갈나무" ~ "일본잎갈나무" ,
-    data$'수종명' =="리기다소나무" ~ "리기다소나무",
-    data$'수종명' =="잣나무" ~ "잣나무",
-    data$'수종명' =="굴참나무" ~ "굴참나무" ,
-    data$'수종명' =="신갈나무" ~ "신갈나무" ,
-    data$'수종명' =="상수리나무" ~ "상수리나무" ,
+
+    data$SPCD =="14994" ~ "14994", #소나무
+    data$SPCD =="14964" ~ "14964" , #일본잎갈나무
+    data$SPCD =="14987" ~ "14987", #리기다나무
+    data$SPCD =="14973" ~ "14973", #잣나무
+    data$SPCD =="6617" ~ "6617" , #굴참나무
+    data$SPCD =="6556" ~ "6556" , #신갈나무
+    data$SPCD =="6512" ~ "6512" , #상수리나무
     
-    ## 기타 활엽수 및 기타 침엽수--------------------------------------------------------------
-    (data$type_leaf =="활엽수") ~ "기타 활엽수" ,
-    (data$type_leaf =="침엽수") ~ "기타 침엽수",
+    (data$CONDEC_CLASS_CD ==1) ~ "OTHER_DEC" , # 기타활엽수
+    (data$CONDEC_CLASS_CD ==0) ~ "OTHER_CON",  #기타 침엽수
     TRUE ~ as.character(NA)
     
   ))
@@ -29,11 +28,11 @@ cwd_bm_df <- function(data){
   ## bio_coeff = 국가고유배출계수, 
   ## 출처 : "탄소배출계수를 활용한 국가 온실가스 통계 작성", 
   ## "NIFoS 산림정책이슈 제129호 : 주요 산림수종의 표준 탄소흡수량(ver.1.2)"
-  output <- left_join(output, cwd_bio_coeff, by= c("species_bm" ="수종", "부후도코드" = "부후등급"))
+  output <- left_join(output, cwd_bio_coeff, by= c("species_bm" ="SPCD", "DECAYCD" = "decay_class"))
   
   ## 지상부 biomass 구하기--------------------------------------------------------------
   ## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)-------------------------------
-  output$carbon_stock <- (output$'재적')*(output$"목재기본밀도_값")*(output$"탄소전환계수")
+  output$carbon_stock <- (output$VOL)*(output$wood_density)*(output$cf)
   
   return(output)
   
@@ -51,6 +50,7 @@ cwd_bm_df <- function(data){
 #' @param data : data
 #' @param byplot : byplot
 #' @param grpby : grpby
+#' @param grpby2 : grpby2
 #' @param strat : 흉고단면적/개체수
 #' @param Stockedland : 임목지
 #' @keywords cwd tree biomass
@@ -58,8 +58,16 @@ cwd_bm_df <- function(data){
 #' @export 
 
 
-cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_subplot", Stockedland=TRUE){
+cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", Stockedland=TRUE){
   
+  
+  #경고
+  required_names <- c("plot", "cwd")
+  
+  if (!all(required_names %in% names(data))) {
+    missing_dfs <- required_names[!required_names %in% names(data)]
+    stop("Missing required data frames in the list: ", paste(missing_dfs, collapse = ", "), call. = FALSE)
+  }
   
   if (!is.null(grpby)){
     if(grpby==strat){
@@ -68,10 +76,15 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_subplo
     if(!is.character(grpby)) {
       stop("param 'grpby' must be 'character'")
     }
-    #if(byplot){
+    # if(byplot){
     #  warning("param 'grpby' has priority over param 'byplot'")
-    #}
-    
+    # }
+  }
+  
+  if (!is.null(grpby2)){
+    if(!is.character(grpby2)) {
+      stop("param 'grpby' must be 'character'")
+    }
   }
   
   if (!is.null(strat)){
@@ -85,34 +98,36 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_subplo
   }
   
   
-  df <- left_join(data$cwd[, c('집락번호', '표본점번호',"조사차기", '수종명', '부후도코드', 
-                                'type_leaf', '재적')], 
-                  data$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도', '토지이용',
-                               '기본조사원 비산림면적', strat, grpby)],
-                  by = c("집락번호", "표본점번호", "조사차기"))
+  # 전처리
+  if (Stockedland){ #임목지
+    data <- filter_NFI(data, c("plot$LAND_USECD == 1"))
+  }
+
+  df <- left_join(data$cwd[, c('CLST_PLOT', 'SUB_PLOT',"CYCLE", 'SP', 'SPCD','DECAYCD', 
+                                'CONDEC_CLASS_CD', 'VOL', grpby2)], 
+                  data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR', 'LAND_USECD',
+                               'NONFR_INCL_AREA_SUBP', strat, grpby)],
+                  by = c("CLST_PLOT", "SUB_PLOT", "CYCLE"))
+  
+  
+
   
   
   
   ## 추정간재적 type이 num이 아닌 경우 as.numeric--------------------------------------------------------------
-  if (!is.numeric(df$'재적')){
-    df$'재적' <- as.numeric(df$'재적')
+  if (!is.numeric(df$VOL)){
+    df$VOL <- as.numeric(df$VOL)
   } 
+
   
   
-  if (Stockedland){
-    df <- df %>% filter(df$'토지이용' == "임목지")
-  }
-  
-  
-  df$tree_area <- 0.04 - ((df$'기본조사원 비산림면적'*10)/10000)
-  
+  plot_id <- 'SUB_PLOT'
+  df$tree_area <- 0.04 - ((df$NONFR_INCL_AREA_SUBP*10)/10000)
   df <- cwd_bm_df(df)
-  
-  plot_id <- '표본점번호'
-  
   
   plot_id  <- rlang::sym(plot_id)
   grpby  <- rlang::syms(grpby)
+  grpby2  <- rlang::syms(grpby2)
   strat<- rlang::sym(strat)
   
   
@@ -121,15 +136,13 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_subplo
   }
   
   
+  # 표본점별 고사량 계산
   bm_temp <- df %>% 
-    group_by(df$'조사차기', !!plot_id, df$'조사연도', !!strat, !!!grpby, tree_area) %>% 
-    summarise(cwd_volume_m3 = sum(get('재적'), na.rm=TRUE),
+    group_by(CYCLE, !!plot_id, INVYR, !!strat, !!!grpby, !!!grpby2, tree_area) %>% 
+    summarise(cwd_volume_m3 = sum(VOL, na.rm=TRUE),
               cwd_carbon_stock_tC = sum(carbon_stock, na.rm=TRUE),.groups = 'drop')
   
-  bm_temp <- bm_temp %>% rename('order' = "df$조사차기", "year"= "df$조사연도")
-  
-  
-  
+
   condition_ha <- c("cwd_volume_m3_ha","cwd_carbon_stock_tC_ha")
   bm_temp[condition_ha] <-  NA
   bm_temp <- as.data.frame(bm_temp)
@@ -149,38 +162,39 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_subplo
   
   
   
-  if(!byplot){
+  if(!byplot){ # 사후층화이중추출법 및 가중이동평균 고사량 계산
     
-    weight_grpby <- bm_temp %>% 
-      group_by(order, !!!grpby) %>% 
+    # Double sampling for post-strat(forest stand)
+    weight_grpby <- data$plot %>% 
+      group_by(CYCLE, !!!grpby) %>% 
       summarise(plot_num_all = n(),.groups = 'drop')
     
     
-    weight_year <- bm_temp %>% 
-      group_by(order, year, !!!grpby) %>% 
+    weight_year <- data$plot %>% 
+      group_by(CYCLE, INVYR, !!!grpby) %>% 
       summarise(plot_num_year = n(),.groups = 'drop')
     
     
-    weight_stand <- bm_temp %>% 
-      group_by(order, year, !!strat, !!!grpby) %>% 
+    weight_stand <- data$plot %>% 
+      group_by(CYCLE, INVYR, !!strat, !!!grpby) %>% 
       summarise(plot_num_stand = n(),.groups = 'drop')
     
     
-    # Double sampling for post-strat(forest stand)
-    weight_DSS <- full_join(weight_stand, weight_year, by =c("order", "year", as.character(unlist(lapply(grpby, quo_name)))))
+    
+    weight_DSS <- full_join(weight_stand, weight_year, by =c("CYCLE", "INVYR", as.character(unlist(lapply(grpby, quo_name)))))
     weight_DSS$weight_DSS <- weight_DSS$plot_num_stand/weight_DSS$plot_num_year
     
     
-    # 기본계획구(p)내 표본층(h)의 ha당 평균 임목자원량
+    # plot to stand 고사량 계산
     bm_temp_DSS <- bm_temp %>% 
-      group_by(order, year, !!strat, !!!grpby) %>% 
+      group_by(CYCLE, INVYR, !!strat, !!!grpby, !!!grpby2) %>% 
       summarise(var_cwd_volume_m3_ha =  var(cwd_volume_m3_ha, na.rm=TRUE),
                 cwd_volume_m3_ha = sum(cwd_volume_m3_ha, na.rm=TRUE),
                 var_cwd_carbon_stock_tC_ha =  var(cwd_carbon_stock_tC_ha, na.rm=TRUE),
                 cwd_carbon_stock_tC_ha = sum(cwd_carbon_stock_tC_ha, na.rm=TRUE), .groups = 'drop')
     
     
-    bm_temp_DSS <- full_join(bm_temp_DSS, weight_DSS, by =c("order", "year", quo_name(strat), as.character(unlist(lapply(grpby, quo_name)))))
+    bm_temp_DSS <- full_join(bm_temp_DSS, weight_DSS, by =c("CYCLE", "INVYR", quo_name(strat), as.character(unlist(lapply(grpby, quo_name)))))
     
     
     condition_DSS <- c("w_cwd_volume_m3_ha","w_cwd_carbon_stock_tC_ha")
@@ -203,17 +217,16 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_subplo
     
     
     bm_temp_WMA <- bm_temp_DSS %>% 
-      group_by(order, year, !!!grpby) %>% 
+      group_by(CYCLE, INVYR, !!!grpby, !!!grpby2) %>% 
       summarise(w_cwd_volume_m3_ha = sum(w_cwd_volume_m3_ha, na.rm=TRUE),
                 w_cwd_carbon_stock_tC_ha = sum(w_cwd_carbon_stock_tC_ha, na.rm=TRUE), .groups = 'drop')
     
+    
+    # stand to study area 생물량 계산
     bm_temp_DSS[condition_DSS] <-  NULL
-    bm_temp_DSS <- left_join(bm_temp_DSS, bm_temp_WMA, by =c("order", "year", as.character(unlist(lapply(grpby, quo_name)))))
-    
-    
-    
-    ## na <- 0 ????
-    
+    bm_temp_DSS <- left_join(bm_temp_DSS, bm_temp_WMA, by =c("CYCLE", "INVYR", as.character(unlist(lapply(grpby, quo_name))),
+                                                             as.character(unlist(lapply(grpby2, quo_name)))))
+
     bm_temp_DSS$var_cwd_volume_m3_ha <- bm_temp_DSS$var_cwd_volume_m3_ha + (bm_temp_DSS$weight_DSS*(bm_temp_DSS$cwd_volume_m3_ha-bm_temp_DSS$w_cwd_volume_m3_ha)^2/bm_temp_DSS$plot_num_year)
     bm_temp_DSS$var_cwd_carbon_stock_tC_ha <- bm_temp_DSS$var_cwd_carbon_stock_tC_ha + (bm_temp_DSS$weight_DSS*(bm_temp_DSS$cwd_carbon_stock_tC_ha-bm_temp_DSS$w_cwd_carbon_stock_tC_ha)^2/bm_temp_DSS$plot_num_year)
     
@@ -225,7 +238,7 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_subplo
     
     
     bm_temp_WMA <- bm_temp_DSS %>% 
-      group_by(order, year, !!!grpby) %>% 
+      group_by(CYCLE, INVYR, !!!grpby, !!!grpby2) %>% 
       summarise(cwd_volume_m3_ha = sum(w_cwd_volume_m3_ha, na.rm=TRUE),
                 var_cwd_volume_m3_ha = sum(var_cwd_volume_m3_ha, na.rm=TRUE),
                 cwd_carbon_stock_tC_ha = sum(w_cwd_carbon_stock_tC_ha, na.rm=TRUE),
@@ -233,11 +246,11 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_subplo
     
     
     # Weighted Moving Average(to combine annual inventory field data)
-    weight_WMA <- full_join(weight_year, weight_grpby, by =c("order")) #, "부후도코드"
+    weight_WMA <- full_join(weight_year, weight_grpby, by =c("CYCLE", as.character(unlist(lapply(grpby, quo_name))))) 
     weight_WMA$weight_WMA <- weight_WMA$plot_num_year/weight_WMA$plot_num_all
     
     
-    bm_temp_WMA <- full_join(bm_temp_WMA, weight_WMA, by =c("order","year")) #, "부후도코드"
+    bm_temp_WMA <- full_join(bm_temp_WMA, weight_WMA, by =c("CYCLE","INVYR", as.character(unlist(lapply(grpby, quo_name)))))
     
     condition <- (names(bm_temp_WMA) %in% c("cwd_volume_m3_ha","cwd_carbon_stock_tC_ha"))
     
@@ -247,7 +260,7 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_subplo
     
     
     bm <- bm_temp_WMA %>% 
-      group_by(order, !!!grpby) %>% 
+      group_by(CYCLE, !!!grpby, !!!grpby2) %>% 
       summarise(cwd_volume_m3_ha = sum(cwd_volume_m3_ha, na.rm=TRUE),
                 var_cwd_volume_m3_ha = sum(weight_WMA^2*var_cwd_volume_m3_ha, na.rm=TRUE),
                 se_cwd_volume_m3_ha = sqrt(var_cwd_volume_m3_ha),
@@ -261,7 +274,7 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_subplo
     
     
     
-  }else{
+  }else{ # 표본점별 고사량 계산
     
     bm <- bm_temp
     
@@ -289,8 +302,17 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, strat="stand_subplo
 #' @keywords biomass
 
 
-cwd_biomass_tsvis <- function(data, grpby=NULL, strat="stand_subplot", Stockedland=TRUE){
+cwd_biomass_tsvis <- function(data, grpby=NULL, strat="FORTYP_SUB", Stockedland=TRUE){
   
+  
+  # 경고
+  
+  required_names <- c("plot", "cwd")
+  
+  if (!all(required_names %in% names(data))) {
+    missing_dfs <- required_names[!required_names %in% names(data)]
+    stop("Missing required data frames in the list: ", paste(missing_dfs, collapse = ", "), call. = FALSE)
+  }
   
   if (!is.null(grpby)){
     if(grpby==strat){
@@ -299,8 +321,12 @@ cwd_biomass_tsvis <- function(data, grpby=NULL, strat="stand_subplot", Stockedla
     if(!is.character(grpby)) {
       stop("param 'grpby' must be 'character'")
     }
-    
-    
+  }
+  
+  if (!is.null(grpby2)){
+    if(!is.character(grpby2)) {
+      stop("param 'grpby' must be 'character'")
+    }
   }
   
   if (!is.null(strat)){
@@ -310,44 +336,40 @@ cwd_biomass_tsvis <- function(data, grpby=NULL, strat="stand_subplot", Stockedla
   }
   
   
-  df <- left_join(data$cwd[, c('집락번호', '표본점번호',"조사차기", '수종명', '부후도코드', 
-                               'type_leaf', '재적')], 
-                  data$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도', '토지이용',
-                               '기본조사원 비산림면적', strat, grpby)],
-                  by = c("집락번호", "표본점번호", "조사차기"))
+  # 전처리
   
-  
-  
-  ## 추정간재적 type이 num이 아닌 경우 as.numeric--------------------------------------------------------------
-  if (!is.numeric(df$'재적')){
-    df$'재적' <- as.numeric(df$'재적')
-  } 
-  
-  
-  if (Stockedland){
-    df <- df %>% filter(df$'토지이용' == "임목지")
+  if (Stockedland){ #임목지
+    data <- filter_NFI(data, c("plot$LAND_USECD == 1"))
   }
   
+  df <- left_join(data$cwd[, c('CLST_PLOT', 'SUB_PLOT',"CYCLE", 'SP', 'SPCD', 'DECAYCD', 
+                               'CONDEC_CLASS_CD', 'VOL', grpby2)], 
+                  data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR', 'LAND_USECD',
+                               'NONFR_INCL_AREA_SUBP', strat, grpby)],
+                  by = c("CLST_PLOT", "SUB_PLOT", "CYCLE"))
   
-  df$tree_area <- 0.04 - ((df$'기본조사원 비산림면적'*10)/10000)
   
+
+  if (!is.numeric(df$VOL)){
+    df$VOL <- as.numeric(df$VOL)
+  } 
+
+  
+  plot_id <- 'SUB_PLOT'
+  df$tree_area <- 0.04 - ((df$NONFR_INCL_AREA_SUBP*10)/10000)
   df <- cwd_bm_df(df)
-  
-  plot_id <- '표본점번호'
-  
   
   plot_id  <- rlang::sym(plot_id)
   grpby  <- rlang::syms(grpby)
+  grpby2  <- rlang::syms(grpby2)
   strat<- rlang::sym(strat)
   
   
-  
+  # 표본점별 고사량 계산
   bm_temp <- df %>% 
-    group_by(df$'조사차기', !!plot_id, df$'조사연도', !!strat, !!!grpby, tree_area) %>% 
-    summarise(cwd_volume_m3 = sum(get('재적'), na.rm=TRUE),
+    group_by(CYCLE, !!plot_id, INVYR, !!strat, !!!grpby, !!!grpby2, tree_area) %>% 
+    summarise(cwd_volume_m3 = sum(VOL, na.rm=TRUE),
               cwd_carbon_stock_tC = sum(carbon_stock, na.rm=TRUE), .groups = 'drop')
-  
-  bm_temp <- bm_temp %>% rename('order' = "df$조사차기", "year"= "df$조사연도")
   
   condition <- (names(bm_temp) %in% c("cwd_volume_m3","cwd_carbon_stock_tC"))
   
@@ -367,37 +389,36 @@ cwd_biomass_tsvis <- function(data, grpby=NULL, strat="stand_subplot", Stockedla
   bm_temp$largetreearea <- NULL
   
   
-  
-  weight_grpby <- bm_temp %>% 
+  # 사후층화이중추출법 및 가중이동평균 고사량 계산
+  # Double sampling for post-strat(forest stand)
+  weight_grpby <- data$plot %>% 
     group_by(!!!grpby) %>% 
     summarise(plot_num_all = n(),.groups = 'drop')
   
   
-  weight_year <- bm_temp %>% 
-    group_by(order, year, !!!grpby) %>% 
+  weight_year <- data$plot %>% 
+    group_by(CYCLE, INVYR, !!!grpby) %>% 
     summarise(plot_num_year = n(),.groups = 'drop')
   
   
-  weight_stand <- bm_temp %>% 
-    group_by(order, year, !!strat, !!!grpby) %>% 
+  weight_stand <- data$plot %>% 
+    group_by(CYCLE, INVYR, !!strat, !!!grpby) %>% 
     summarise(plot_num_stand = n(),.groups = 'drop')
   
-  
-  # Double sampling for post-strat(forest stand)
-  weight_DSS <- full_join(weight_stand, weight_year, by =c("order", "year", as.character(unlist(lapply(grpby, quo_name)))))
+  weight_DSS <- full_join(weight_stand, weight_year, by =c("CYCLE", "INVYR", as.character(unlist(lapply(grpby, quo_name)))))
   weight_DSS$weight_DSS <- weight_DSS$plot_num_stand/weight_DSS$plot_num_year
   
   
-  # 기본계획구(p)내 표본층(h)의 ha당 평균 임목자원량
+  # plot to stand 고사량 계산
   bm_temp_DSS <- bm_temp %>% 
-    group_by(order, year, !!strat, !!!grpby) %>% 
+    group_by(CYCLE, INVYR, !!strat, !!!grpby, !!!grpby2) %>% 
     summarise(var_cwd_volume_m3_ha =  var(cwd_volume_m3_ha, na.rm=TRUE),
               cwd_volume_m3_ha = sum(cwd_volume_m3_ha, na.rm=TRUE),
               var_cwd_carbon_stock_tC_ha =  var(cwd_carbon_stock_tC_ha, na.rm=TRUE),
               cwd_carbon_stock_tC_ha = sum(cwd_carbon_stock_tC_ha, na.rm=TRUE), .groups = 'drop')
   
   
-  bm_temp_DSS <- full_join(bm_temp_DSS, weight_DSS, by =c("order", "year", quo_name(strat), as.character(unlist(lapply(grpby, quo_name)))))
+  bm_temp_DSS <- full_join(bm_temp_DSS, weight_DSS, by =c("CYCLE", "INVYR", quo_name(strat), as.character(unlist(lapply(grpby, quo_name)))))
   
   
   condition_DSS <- c("w_cwd_volume_m3_ha","w_cwd_carbon_stock_tC_ha")
@@ -420,12 +441,14 @@ cwd_biomass_tsvis <- function(data, grpby=NULL, strat="stand_subplot", Stockedla
   
   
   bm_temp_WMA <- bm_temp_DSS %>% 
-    group_by(order, year, !!!grpby) %>% 
+    group_by(CYCLE, INVYR, !!!grpby, !!!grpby2) %>% 
     summarise(w_cwd_volume_m3_ha = sum(w_cwd_volume_m3_ha, na.rm=TRUE),
               w_cwd_carbon_stock_tC_ha = sum(w_cwd_carbon_stock_tC_ha, na.rm=TRUE), .groups = 'drop')
   
+  # stand to study area 고사량 계산
   bm_temp_DSS[condition_DSS] <-  NULL
-  bm_temp_DSS <- left_join(bm_temp_DSS, bm_temp_WMA, by =c("order", "year", as.character(unlist(lapply(grpby, quo_name)))))
+  bm_temp_DSS <- left_join(bm_temp_DSS, bm_temp_WMA, by =c("CYCLE", "INVYR", as.character(unlist(lapply(grpby, quo_name))),
+                                                           as.character(unlist(lapply(grpby2, quo_name)))))
   
   
   bm_temp_DSS$var_cwd_volume_m3_ha <- bm_temp_DSS$var_cwd_volume_m3_ha + (bm_temp_DSS$weight_DSS*(bm_temp_DSS$cwd_volume_m3_ha-bm_temp_DSS$w_cwd_volume_m3_ha)^2/bm_temp_DSS$plot_num_year)
@@ -436,7 +459,7 @@ cwd_biomass_tsvis <- function(data, grpby=NULL, strat="stand_subplot", Stockedla
   
   
   bm_temp_WMA <- bm_temp_DSS %>% 
-    group_by(order, year, !!!grpby) %>% 
+    group_by(CYCLE, INVYR, !!!grpby, !!!grpby2) %>% 
     summarise(cwd_volume_m3_ha = sum(w_cwd_volume_m3_ha, na.rm=TRUE),
               var_cwd_volume_m3_ha = sum(var_cwd_volume_m3_ha, na.rm=TRUE),
               cwd_carbon_stock_tC_ha = sum(w_cwd_carbon_stock_tC_ha, na.rm=TRUE),
@@ -448,7 +471,7 @@ cwd_biomass_tsvis <- function(data, grpby=NULL, strat="stand_subplot", Stockedla
   weight_WMA$weight_WMA <- weight_WMA$plot_num_year/weight_WMA$plot_num_all
   
   
-  bm_temp_WMA <- full_join(bm_temp_WMA, weight_WMA, by =c("order","year", as.character(unlist(lapply(grpby, quo_name)))))
+  bm_temp_WMA <- full_join(bm_temp_WMA, weight_WMA, by =c("CYCLE","INVYR", as.character(unlist(lapply(grpby, quo_name)))))
   
   condition <- (names(bm_temp_WMA) %in% c("cwd_volume_m3_ha","cwd_carbon_stock_tC_ha"))
   
@@ -458,7 +481,7 @@ cwd_biomass_tsvis <- function(data, grpby=NULL, strat="stand_subplot", Stockedla
   
   
   bm <- bm_temp_WMA %>% 
-    group_by(!!!grpby) %>% 
+    group_by(!!!grpby, !!!grpby2) %>% 
     summarise(cwd_volume_m3_ha = sum(cwd_volume_m3_ha, na.rm=TRUE),
               var_cwd_volume_m3_ha = sum(weight_WMA^2*var_cwd_volume_m3_ha, na.rm=TRUE),
               se_cwd_volume_m3_ha = sqrt(var_cwd_volume_m3_ha),
@@ -468,14 +491,7 @@ cwd_biomass_tsvis <- function(data, grpby=NULL, strat="stand_subplot", Stockedla
               se_cwd_carbon_stock_tC_ha = sqrt(var_cwd_carbon_stock_tC_ha),
               rse_cwd_carbon_stock_tC_ha = se_cwd_carbon_stock_tC_ha/cwd_carbon_stock_tC_ha*100,.groups = 'drop')
   
-  
-  
-  
-  
-  
-  
-  
-  
+
   return(bm)
   
 }

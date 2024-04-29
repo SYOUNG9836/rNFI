@@ -18,51 +18,64 @@
 
 iv_NFI <- function(data, frequency=TRUE , clusterplot=TRUE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
   
-  df <- left_join(data$tree[, c('집락번호', '표본점번호',"조사차기", '수목형태구분','수종명', 
-                                'basal_area', '대경목조사원내존재여부')], 
-                  data$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도','토지이용')],
-                  by = c("집락번호", "표본점번호", "조사차기"))
+  ##경고 
+  required_names <- c("plot", "tree")
   
-  
-  
-  if (Stockedland){
-    df <- df %>% filter(df$'토지이용' == "임목지")
+  if (!all(required_names %in% names(data))) {
+    missing_dfs <- required_names[!required_names %in% names(data)]
+    stop("Missing required data frames in the list: ", paste(missing_dfs, collapse = ", "), call. = FALSE)
   }
   
-  if(talltree){
-    df <- df %>% filter(df$'수목형태구분' == "교목")
+  ##전처리
+  if (Stockedland){ #임목지
+    data <- filter_NFI(data, c("plot$LAND_USECD == 1"))
   }
   
-  if(!largetreearea){
-    df <- df %>% filter(df$'대경목조사원내존재여부' == 0)
+  if(talltree){#수목형태구분
+    data$tree <- data$tree %>% filter(WDY_PLNTS_TYP_CD == 1)
   }
+  
+  if(!largetreearea){ #대경목조사원내존재여부
+    data$tree <- data$tree %>% filter(SUBPTYP == 0)
+  }
+ 
+  df <- left_join(data$tree[, c('CLST_PLOT', 'SUB_PLOT',"CYCLE", 'WDY_PLNTS_TYP_CD','SP', 
+                                'basal_area', 'SUBPTYP')], 
+                  data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR','LAND_USE', "LAND_USECD")],
+                  by = c("CLST_PLOT", "SUB_PLOT", "CYCLE"))
+
   
   if(clusterplot){
     iv_temp <- df %>% 
-      group_by(df$'조사차기', df$"집락번호" , df$"수종명") %>% 
-      summarise(count = n(), basal =sum(basal_area, na.rm=T),.groups = 'drop')
+      group_by(CYCLE, CLST_PLOT , SP) %>% 
+      summarise(count = n(), basal = sum(basal_area, na.rm=T),.groups = 'drop')
+    plot_id <- c('CLST_PLOT')
+    
     
   }else{
     iv_temp <- df %>% 
-      group_by(df$'조사차기', df$"표본점번호" , df$"수종명") %>% 
-      summarise(count = n(), basal =sum(basal_area, na.rm=T),.groups = 'drop')
-    
+      group_by(CYCLE, SUB_PLOT , SP) %>% 
+      summarise(count = n(), basal = sum(basal_area, na.rm=T),.groups = 'drop')
+    plot_id <- c('SUB_PLOT')
   }
   
+  plot_id  <- rlang::sym(plot_id)
   
-  colnames(iv_temp) <- c("조사차기", "plot","species", "count","basal")
+  colnames(iv_temp) <- c("CYCLE", quo_name(plot_id), "SP", "count","basal")
   iv_temp <- data.frame(iv_temp)
   
-  ##importancevalue
   
-  iv_temp_2<-BiodiversityR::importancevalue.comp(iv_temp, site='plot', species='species', count='count', 
-                                                      basal='basal', factor="조사차기")
+  
+  
+  ##차수별 importancevalue 구하기
+  iv_temp_2<-BiodiversityR::importancevalue.comp(iv_temp, site=quo_name(plot_id), species='SP', count='count', 
+                                                      basal='basal', factor="CYCLE")
   
   for(i in 2:length(iv_temp_2)){
     iv_temp_2[[i]] <- as.data.frame(iv_temp_2[[i]])
     iv_temp_2[[i]]$species <- rownames(iv_temp_2[[i]])
     rownames(iv_temp_2[[i]]) <- NULL
-    iv_temp_2[[i]]$'조사차기' <- iv_temp_2[[1]][i-1]
+    iv_temp_2[[i]]$CYCLE <- iv_temp_2[[1]][i-1]
     
   }
   
@@ -71,6 +84,11 @@ iv_NFI <- function(data, frequency=TRUE , clusterplot=TRUE, largetreearea=TRUE, 
   iv <- data.table::rbindlist(iv_temp_2, fill=TRUE, use.names=TRUE)
   iv <- as.data.frame(iv)
   
+
+  
+  
+  
+  ## 빈도포함여부 
   if(frequency){
     iv$importance.value <- iv$importance.value/3
   }else{
@@ -101,46 +119,63 @@ iv_NFI <- function(data, frequency=TRUE , clusterplot=TRUE, largetreearea=TRUE, 
 #' 
 
 
-##  
+##  그림용 function / 내부용
 
 iv_tsvis <- function(data, frequency=TRUE , clusterplot=TRUE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
   
-  df <- left_join(data$tree[, c('집락번호', '표본점번호',"조사차기", '수목형태구분','수종명', 
-                                'basal_area', '대경목조사원내존재여부')], 
-                  data$plot[,c('집락번호', '표본점번호', "조사차기", '조사연도','토지이용')],
-                  by = c("집락번호", "표본점번호", "조사차기"))
+  ## 경고
+  required_names <- c("plot", "tree")
   
-  
-  if (Stockedland){
-    df <- df %>% filter(df$'토지이용' == "임목지")
+  if (!all(required_names %in% names(data))) {
+    missing_dfs <- required_names[!required_names %in% names(data)]
+    stop("Missing required data frames in the list: ", paste(missing_dfs, collapse = ", "), call. = FALSE)
   }
   
-  if(talltree){
-    df <- df %>% filter(df$'수목형태구분' == "교목")
+  
+  ## 전처리
+  if (Stockedland){ #임목지
+    data <- filter_NFI(data, c("plot$LAND_USECD == 1"))
   }
   
-  if(!largetreearea){
-    df <- df %>% filter(df$'대경목조사원내존재여부' == 0)
+  if(talltree){#수목형태구분
+    data$tree <- data$tree %>% filter(WDY_PLNTS_TYP_CD == 1)
   }
+  
+  if(!largetreearea){ #대경목조사원내존재여부
+    data$tree <- data$tree %>% filter(SUBPTYP == 0)
+  }
+  
+  
+  df <- left_join(data$tree[, c('CLST_PLOT', 'SUB_PLOT',"CYCLE", 'WDY_PLNTS_TYP_CD','SP', 
+                                'basal_area', 'SUBPTYP')], 
+                  data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR','LAND_USE', "LAND_USECD")],
+                  by = c("CLST_PLOT", "SUB_PLOT", "CYCLE"))
+  
+  
   
   if(clusterplot){
     iv_temp <- df %>% 
-      group_by(df$"집락번호" , df$"수종명") %>% 
-      summarise(count = n(), basal =sum(basal_area, na.rm=T),.groups = 'drop')
+      group_by(CLST_PLOT , SP) %>% 
+      summarise(count = n(), basal = sum(basal_area, na.rm=T),.groups = 'drop')
+    plot_id <- c('CLST_PLOT')
     
   }else{
     iv_temp <- df %>% 
-      group_by(df$"표본점번호" , df$"수종명") %>% 
-      summarise(count = n(), basal =sum(basal_area, na.rm=T),.groups = 'drop')
+      group_by(SUB_PLOT , SP) %>% 
+      summarise(count = n(), basal = sum(basal_area, na.rm=T),.groups = 'drop')
+    plot_id <- c('SUB_PLOT')
     
   }
   
+  plot_id  <- rlang::sym(plot_id)
   
-  colnames(iv_temp) <- c("plot","species", "count","basal")
+  colnames(iv_temp) <- c(quo_name(plot_id), "SP", "count","basal")
   iv_temp <- data.frame(iv_temp)
   
-  ##importancevalue
-  iv <-BiodiversityR::importancevalue(iv_temp, site='plot', species='species', count='count', 
+  
+  
+  ##importancevalue 구하기
+  iv <-BiodiversityR::importancevalue(iv_temp, site=quo_name(plot_id), species='SP', count='count', 
                                                  basal='basal', factor="", level="")
   
   
@@ -149,7 +184,7 @@ iv_tsvis <- function(data, frequency=TRUE , clusterplot=TRUE, largetreearea=TRUE
   rownames(iv) <- NULL
   
   
-  
+  ## 빈도포함여부 
   if(frequency){
     iv$importance.value <- iv$importance.value/3
   }else{
