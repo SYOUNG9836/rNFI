@@ -3,11 +3,12 @@
 #' This function 
 #' @param data : data
 #' @param grpby : 표본점번호
+#' @param grpby2 : 표본점번호
+#' @param byplot : byplot
+#' @param clusterplot : byplot TRUE 집락 부
 #' @param largetreearea : 대경목조사원
 #' @param Stockedland : 임목지
 #' @param talltree : 교목
-#' @param byplot : byplot
-#' @param clusterplot : byplot TRUE 집락 부 
 #' @keywords plot
 #' @return Descriptive_statistics
 #' @export 

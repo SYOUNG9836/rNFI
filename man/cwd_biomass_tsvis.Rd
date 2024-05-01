@@ -4,12 +4,7 @@
 \alias{cwd_biomass_tsvis}
 \title{cwd_biomass_tsvis() Function}
 \usage{
-cwd_biomass_tsvis(
-  data,
-  grpby = NULL,
-  strat = "stand_subplot",
-  Stockedland = TRUE
-)
+cwd_biomass_tsvis(data, grpby = NULL, strat = "FORTYP_SUB", Stockedland = TRUE)
 }
 \arguments{
 \item{data}{: data}

@@ -79,11 +79,12 @@ bm_df <- function(data){
 #' @param data : data
 #' @param byplot : byplot
 #' @param grpby : grpby
+#' @param grpby2 : grpby
 #' @param strat : 흉고단면적/개체수
+#' @param clusterplot : byplot TRUE 집락
 #' @param largetreearea : 대경목조사원
 #' @param Stockedland : 임목지
 #' @param talltree : 교목
-#' @param clusterplot : byplot TRUE 집락 
 #' @keywords biomass
 #' @return biomass
 #' @export 
@@ -459,15 +460,16 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
 #' This function 
 #' @param data : data
 #' @param grpby : grpby
+#' @param grpby2 : grpby
 #' @param strat : 흉고단면적/개체수
+#' @param clusterplot : byplot TRUE 집락
 #' @param largetreearea : 대경목조사원
 #' @param Stockedland : 임목지
 #' @param talltree : 교목
-#' @param clusterplot : byplot TRUE 집락 
 #' @keywords biomass
 
 
-biomass_tsvis <- function(data, grpby=NULL, strat="FORTYP_SUB", clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
+biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
   
   #경고 
   required_names <- c("plot", "tree")
@@ -516,7 +518,7 @@ biomass_tsvis <- function(data, grpby=NULL, strat="FORTYP_SUB", clusterplot=FALS
   }
   
   df <- left_join(data$tree[,c('CLST_PLOT', 'SUB_PLOT',"CYCLE", 'WDY_PLNTS_TYP_CD','SP', 'SPCD',
-                               'CONDEC_CLASS_CD', 'DECEVER_CD', 'DBH', 'VOL_EST',  'SUBPTYP')], 
+                               'CONDEC_CLASS_CD', 'DECEVER_CD', 'DBH', 'VOL_EST',  'SUBPTYP', grpby2 )], 
                   data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR', "LAND_USE", "LAND_USECD",
                                'NONFR_INCL_AREA_SUBP', 'NONFR_INCL_AREA_LARGEP', "SGG_CD", 'SIDO_CD', strat, grpby)],
                   by = c("CLST_PLOT", "SUB_PLOT", "CYCLE"))
@@ -546,6 +548,7 @@ biomass_tsvis <- function(data, grpby=NULL, strat="FORTYP_SUB", clusterplot=FALS
   
   plot_id  <- rlang::sym(plot_id)
   grpby  <- rlang::syms(grpby)
+  grpby2  <- rlang::syms(grpby2)
   strat<- rlang::sym(strat)
   
   if(!largetreearea){

@@ -3,6 +3,7 @@
 export(biomass_NFI)
 export(cwd_biomass_NFI)
 export(diversity_NFI)
+export(filter_NFI)
 export(iv_NFI)
 export(read_NFI)
 export(summary_NFI)

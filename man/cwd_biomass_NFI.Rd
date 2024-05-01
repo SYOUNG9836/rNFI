@@ -8,7 +8,8 @@ cwd_biomass_NFI(
   data,
   byplot = FALSE,
   grpby = NULL,
-  strat = "stand_subplot",
+  grpby2 = NULL,
+  strat = "FORTYP_SUB",
   Stockedland = TRUE
 )
 }
@@ -18,6 +19,8 @@ cwd_biomass_NFI(
 \item{byplot}{: byplot}
 
 \item{grpby}{: grpby}
+
+\item{grpby2}{: grpby2}
 
 \item{strat}{: 흉고단면적/개체수}
 

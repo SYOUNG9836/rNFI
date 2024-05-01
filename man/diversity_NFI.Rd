@@ -6,9 +6,11 @@
 \usage{
 diversity_NFI(
   data,
+  sp = "SP",
   grpby = NULL,
+  type = "tree",
   byplot = FALSE,
-  basal = TRUE,
+  basal = FALSE,
   clusterplot = FALSE,
   largetreearea = TRUE,
   Stockedland = TRUE,
@@ -18,7 +20,11 @@ diversity_NFI(
 \arguments{
 \item{data}{: data}
 
+\item{sp}{: sp}
+
 \item{grpby}{: grpby}
+
+\item{type}{: grpby}
 
 \item{byplot}{: byplot}
 

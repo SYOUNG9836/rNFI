@@ -7,10 +7,10 @@
 #' @param type : biomass; iv
 #' @param output : map; line 
 #' @param strat : 흉고단면적/개체수
+#' @param clusterplot : byplot TRUE 집락
 #' @param largetreearea : 대경목조사원
 #' @param Stockedland : 임목지
 #' @param talltree : 교목
-#' @param clusterplot : byplot TRUE 집락
 #' @param frequency : 빈도사용여부
 #' @return plot data
 #' @export
@@ -52,7 +52,7 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
   
 
   # 전처리
-  tsvis_list <- vector("list", length = (length(unique(data$plot$INVYR)-4))
+  tsvis_list <- vector("list", length = (length(unique(data$plot$INVYR)-4)))
   
   for(i in 1:(length(unique(data$plot$INVYR))-4)){ 
     
@@ -96,7 +96,7 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
       
       district_code[,1] <- (gsub("-", "", district_code[,1]))
       tsvis_df$name <- unlist(lapply(tsvis_df[, grpby], 
-                                    FUN=function(x){district_code$"법정동명"[which(x==district_code$"법정동코드")]}))
+                                    FUN=function(x){district_code$district_name[which(x==district_code$district_CD)]}))
       
       
       if(nchar(tsvis_df[, grpby][1]) == 10){

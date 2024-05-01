@@ -2,6 +2,7 @@
 #'
 #' This function 
 #' @param data : data
+#' @param sp : sp
 #' @param frequency : 빈도사용여부
 #' @param clusterplot : 빈도집락부선택
 #' @param largetreearea : 대경목조사원
@@ -16,7 +17,7 @@
 
 ##  
 
-iv_NFI <- function(data, frequency=TRUE , clusterplot=TRUE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
+iv_NFI <- function(data, sp="SP" , frequency=TRUE , clusterplot=TRUE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
   
   ##경고 
   required_names <- c("plot", "tree")
@@ -39,22 +40,24 @@ iv_NFI <- function(data, frequency=TRUE , clusterplot=TRUE, largetreearea=TRUE, 
     data$tree <- data$tree %>% filter(SUBPTYP == 0)
   }
  
-  df <- left_join(data$tree[, c('CLST_PLOT', 'SUB_PLOT',"CYCLE", 'WDY_PLNTS_TYP_CD','SP', 
-                                'basal_area', 'SUBPTYP')], 
+  df <- left_join(data$tree[, c('CLST_PLOT', 'SUB_PLOT',"CYCLE", 'WDY_PLNTS_TYP_CD', 
+                                'basal_area', 'SUBPTYP', sp)], 
                   data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR','LAND_USE', "LAND_USECD")],
                   by = c("CLST_PLOT", "SUB_PLOT", "CYCLE"))
+  
+  sp<- rlang::sym(sp)
 
   
   if(clusterplot){
     iv_temp <- df %>% 
-      group_by(CYCLE, CLST_PLOT , SP) %>% 
+      group_by(CYCLE, CLST_PLOT , !!sp) %>% 
       summarise(count = n(), basal = sum(basal_area, na.rm=T),.groups = 'drop')
     plot_id <- c('CLST_PLOT')
     
     
   }else{
     iv_temp <- df %>% 
-      group_by(CYCLE, SUB_PLOT , SP) %>% 
+      group_by(CYCLE, SUB_PLOT , !!sp) %>% 
       summarise(count = n(), basal = sum(basal_area, na.rm=T),.groups = 'drop')
     plot_id <- c('SUB_PLOT')
   }
@@ -109,6 +112,7 @@ iv_NFI <- function(data, frequency=TRUE , clusterplot=TRUE, largetreearea=TRUE, 
 #'
 #' This function 
 #' @param data : data
+#' @param sp : sp
 #' @param frequency : 빈도사용여부
 #' @param clusterplot : 빈도집락부선택
 #' @param largetreearea : 대경목조사원
@@ -121,7 +125,7 @@ iv_NFI <- function(data, frequency=TRUE , clusterplot=TRUE, largetreearea=TRUE, 
 
 ##  그림용 function / 내부용
 
-iv_tsvis <- function(data, frequency=TRUE , clusterplot=TRUE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
+iv_tsvis <- function(data, sp="SP" , frequency=TRUE , clusterplot=TRUE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
   
   ## 경고
   required_names <- c("plot", "tree")
@@ -146,22 +150,22 @@ iv_tsvis <- function(data, frequency=TRUE , clusterplot=TRUE, largetreearea=TRUE
   }
   
   
-  df <- left_join(data$tree[, c('CLST_PLOT', 'SUB_PLOT',"CYCLE", 'WDY_PLNTS_TYP_CD','SP', 
-                                'basal_area', 'SUBPTYP')], 
+  df <- left_join(data$tree[, c('CLST_PLOT', 'SUB_PLOT',"CYCLE", 'WDY_PLNTS_TYP_CD', 
+                                'basal_area', 'SUBPTYP', sp)], 
                   data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR','LAND_USE', "LAND_USECD")],
                   by = c("CLST_PLOT", "SUB_PLOT", "CYCLE"))
   
-  
+  sp<- rlang::sym(sp)
   
   if(clusterplot){
     iv_temp <- df %>% 
-      group_by(CLST_PLOT , SP) %>% 
+      group_by(CLST_PLOT , !!sp) %>% 
       summarise(count = n(), basal = sum(basal_area, na.rm=T),.groups = 'drop')
     plot_id <- c('CLST_PLOT')
     
   }else{
     iv_temp <- df %>% 
-      group_by(SUB_PLOT , SP) %>% 
+      group_by(SUB_PLOT , !!sp) %>% 
       summarise(count = n(), basal = sum(basal_area, na.rm=T),.groups = 'drop')
     plot_id <- c('SUB_PLOT')
     

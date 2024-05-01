@@ -6,6 +6,7 @@
 \usage{
 iv_tsvis(
   data,
+  sp = "SP",
   frequency = TRUE,
   clusterplot = TRUE,
   largetreearea = TRUE,
@@ -15,6 +16,8 @@ iv_tsvis(
 }
 \arguments{
 \item{data}{: data}
+
+\item{sp}{: sp}
 
 \item{frequency}{: 빈도사용여부}
 

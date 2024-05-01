@@ -7,6 +7,7 @@
 summary_NFI(
   data,
   grpby = NULL,
+  grpby2 = NULL,
   byplot = FALSE,
   clusterplot = FALSE,
   largetreearea = TRUE,
@@ -18,6 +19,8 @@ summary_NFI(
 \item{data}{: data}
 
 \item{grpby}{: 표본점번호}
+
+\item{grpby2}{: 표본점번호}
 
 \item{byplot}{: byplot}
 

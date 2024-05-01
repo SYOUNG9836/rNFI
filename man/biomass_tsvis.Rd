@@ -7,7 +7,8 @@
 biomass_tsvis(
   data,
   grpby = NULL,
-  strat = "stand_subplot",
+  grpby2 = NULL,
+  strat = "FORTYP_SUB",
   clusterplot = FALSE,
   largetreearea = TRUE,
   Stockedland = TRUE,
@@ -18,6 +19,8 @@ biomass_tsvis(
 \item{data}{: data}
 
 \item{grpby}{: grpby}
+
+\item{grpby2}{: grpby}
 
 \item{strat}{: 흉고단면적/개체수}
 

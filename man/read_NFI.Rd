@@ -2,23 +2,54 @@
 % Please edit documentation in R/read_NFI.R
 \name{read_NFI}
 \alias{read_NFI}
-\title{read_NFI() Function}
+\title{read_NFI()}
 \usage{
-read_NFI(dir, district = NULL, cwd = TRUE)
+read_NFI(
+  dir,
+  district = NULL,
+  tree = TRUE,
+  cwd = FALSE,
+  stump = FALSE,
+  sapling = FALSE,
+  veg = FALSE,
+  herb = FALSE,
+  soil = FALSE
+)
 }
 \arguments{
-\item{dir}{: dir}
+\item{dir}{: Directory of NFI files}
 
-\item{district}{: district}
+\item{district}{: District korean name in sido, sigungu, or eupmyondong.}
 
-\item{cwd}{: dead tree}
+\item{tree}{: a logical value indicating whether to load a standing tree survey table.}
+
+\item{cwd}{: a logical value indicating whether to load a coarse wood debris survey table.}
+
+\item{stump}{: a logical value indicating wether to load a stump survey table.}
+
+\item{sapling}{: a logical value indicating whether to load a sapling survey table.}
+
+\item{veg}{: a logical value indicating whether to load a vegetation survey table.}
+
+\item{herb}{: a logical value indicating whether to load a herb survey table.}
+
+\item{soil}{: a logical value indicating whether to load a soil survey table.}
 }
 \value{
-merge data nfi
+A \code{data.frame} containing the loaded and transformed NFI data, structured
+for easy analysis. Columns and structure depend on the survey tables loaded.
 }
 \description{
-This function read NFI data
+read_NFI() is a function that reads Korean National Forest Inventory.
+Loads the annual National Forest Inventory file downloaded from "https://kfss.forest.go.kr/stat/ " from the local computer.
+And change the data to an easy-to-analyze format and perform integrity verification.
+}
+\details{
+ddddddd
+}
+\note{
+note
 }
 \examples{
-read_NFI("D:/y2021/y202101/rNFI/NFI/NFI7/", district = "\uc804\ub77c\ub0a8\ub3c4") 
+read_NFI("D:/y2021/y202101/rNFI/NFI/NFI7/", district = "\uc804\ub77c\ub0a8\ub3c4", tree= TRUE)
 }

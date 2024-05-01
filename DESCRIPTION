@@ -12,14 +12,12 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.1
 Imports:
-    broom,
     dplyr,
     magrittr,
     readxl,
     stringr,
-    stringi,
     vegan,
     tidyr,
     BiodiversityR,
@@ -29,10 +27,12 @@ Imports:
     plotrix,
     rlang,
     cellranger,
-    cowplot
+    cowplot,
+    stats
 Depends: 
     R (>= 2.10)
 Suggests: 
-    rgdal,
+    broom,
+    stringi,
     sp,
     raster

@@ -2,13 +2,15 @@
 #'
 #' This function 
 #' @param data : data
+#' @param sp : sp
 #' @param grpby : grpby
+#' @param type : grpby
+#' @param byplot : byplot
 #' @param basal : 흉고단면적/개체수
+#' @param clusterplot : byplot TRUE 집락 부
 #' @param largetreearea : 대경목조사원
 #' @param Stockedland : 임목지
 #' @param talltree : 교목
-#' @param byplot : byplot
-#' @param clusterplot : byplot TRUE 집락 부 
 #' @keywords plot
 #' @return diversity
 #' @export 
@@ -18,7 +20,7 @@
 
 ##  
 
-diversity_NFI <- function(data, grpby=NULL, type="tree" , byplot= FALSE,  basal=FALSE, clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
+diversity_NFI <- function(data, sp="SP", grpby=NULL, type="tree" , byplot= FALSE,  basal=FALSE, clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
   
   # 경고 
   required_names <- c("plot", "tree")
@@ -66,26 +68,26 @@ diversity_NFI <- function(data, grpby=NULL, type="tree" , byplot= FALSE,  basal=
     }
     
     
-    df <- left_join(data$tree[, c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'WDY_PLNTS_TYP_CD','SP', 
-                                  'basal_area', 'SUBPTYP')], 
+    df <- left_join(data$tree[, c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'WDY_PLNTS_TYP_CD', 
+                                  'basal_area', 'SUBPTYP', sp)], 
                     data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR', "LAND_USE", "LAND_USECD", grpby)],
                     by = c("CLST_PLOT", "SUB_PLOT", "CYCLE"))
     
     
 
   }else if(type=="herb"){
-    df <- left_join(data$herb[, c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'SP')], 
+    df <- left_join(data$herb[, c('CLST_PLOT', 'SUB_PLOT', "CYCLE", sp)], 
                     data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR', "LAND_USE", "LAND_USECD", grpby)],
                     by = c("CLST_PLOT", "SUB_PLOT", "CYCLE"))
     
   }else if(type=="veg"){
-    df <- left_join(data$veg[, c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'SP', 'VEGPLOT', 'NUMINDI')], 
+    df <- left_join(data$veg[, c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'VEGPLOT', 'NUMINDI', sp)], 
                     data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR', "LAND_USE", "LAND_USECD", grpby)],
                     by = c("CLST_PLOT", "SUB_PLOT", "CYCLE"))
     
-  }else if(type="sapling"){
+  }else if(type=="sapling"){
     
-    df <- left_join(data$sapling[, c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'SP', 'TREECOUNT')], 
+    df <- left_join(data$sapling[, c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'TREECOUNT', sp)], 
                     data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR', "LAND_USE", "LAND_USECD", grpby)],
                     by = c("CLST_PLOT", "SUB_PLOT", "CYCLE"))
     
@@ -97,6 +99,7 @@ diversity_NFI <- function(data, grpby=NULL, type="tree" , byplot= FALSE,  basal=
   
   plot_id  <- rlang::sym(plot_id)
   grpby  <- rlang::syms(grpby)
+  sp<- rlang::sym(sp)
   
 
   
@@ -106,33 +109,33 @@ diversity_NFI <- function(data, grpby=NULL, type="tree" , byplot= FALSE,  basal=
   if(basal & type=="tree"){ # 흉고단면적 기준 종다양성 
     
     indices_temp <- df %>%
-      group_by(CYCLE, !!plot_id, !!!grpby, SP) %>%
+      group_by(CYCLE, !!plot_id, !!!grpby, !!sp) %>%
       summarise(value = sum(basal_area), .groups = 'drop')
     
   }else{ # 개체수 기준 종다양성
     
-    if(type="tree"||type= "herb"){
+    if(type=="tree"||type== "herb"){
       
       indices_temp <- df %>%
-        group_by(CYCLE, !!plot_id, !!!grpby, SP) %>%
+        group_by(CYCLE, !!plot_id, !!!grpby, !!sp) %>%
         summarise(value = n(), .groups = 'drop')
       
     }else if(type=="veg"){
       
       indices_temp <- df %>%
-        group_by(CYCLE, !!plot_id, !!!grpby, SP) %>%
+        group_by(CYCLE, !!plot_id, !!!grpby, !!sp) %>%
         summarise(value = sum(NUMINDI), .groups = 'drop')
       
     }else{ #sapling
       
       indices_temp <- df %>%
-        group_by(CYCLE, !!plot_id, !!!grpby, SP) %>%
+        group_by(CYCLE, !!plot_id, !!!grpby, !!sp) %>%
         summarise(value = sum(TREECOUNT), .groups = 'drop')
     }
   }
   
   
-  indices_temp <- indices_temp %>% tidyr::spread(key = SP, value = value )
+  indices_temp <- indices_temp %>% tidyr::spread(key = !!sp, value = value )
   
   
   indices <- indices_temp[,1:(length(grpby)+2)]

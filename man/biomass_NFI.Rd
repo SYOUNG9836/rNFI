@@ -8,7 +8,8 @@ biomass_NFI(
   data,
   byplot = FALSE,
   grpby = NULL,
-  strat = "stand_subplot",
+  grpby2 = NULL,
+  strat = "FORTYP_SUB",
   clusterplot = FALSE,
   largetreearea = TRUE,
   Stockedland = TRUE,
@@ -21,6 +22,8 @@ biomass_NFI(
 \item{byplot}{: byplot}
 
 \item{grpby}{: grpby}
+
+\item{grpby2}{: grpby}
 
 \item{strat}{: 흉고단면적/개체수}
 
