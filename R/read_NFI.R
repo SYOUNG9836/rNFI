@@ -20,7 +20,9 @@
 #' @return A `data.frame` containing the loaded and transformed NFI data, structured
 #'         for easy analysis. Columns and structure depend on the survey tables loaded.
 #' @examples
-#' " # " read_NFI("D:/NFI/NFI5", district = "\uc804\ub77c\ub0a8\ub3c4", tree= TRUE)
+#' \dontrun{
+#' read_NFI("D:/NFI/NFI5", district = "\uc804\ub77c\ub0a8\ub3c4", tree= TRUE)
+#' }
 #' @note  
 #' note 
 #' @export

@@ -22,17 +22,17 @@ Imports:
     tidyr,
     BiodiversityR,
     data.table,
-    ggplot2,
     sf,
     plotrix,
     rlang,
     cellranger,
-    cowplot,
     stats
 Depends: 
     R (>= 2.10)
 Suggests: 
     broom,
-    stringi,
+    ggplot2,
     sp,
-    raster
+    raster,
+    cowplot,
+    tcltk

@@ -19,22 +19,16 @@
 tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line", strat="stand_subplot", 
                          clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE, frequency= TRUE){
   
-  theme_set(theme_classic())
-  theme_update(text = element_text(size=13))
   
   # 경고
   if(type != "iv" & output != "table"){
     if(is.null(y)){
       stop("param 'y' is a required parameter")
     }else{
-      
       if(!is.character(y)) {
         stop("param 'y' must be 'character'")
       }
-      
-      if( y %in%  c("volume", "biomass", "AG_biomass", "carbon", "co2")){
-  
-      }else{
+      if(!y %in%  c("volume", "biomass", "AG_biomass", "carbon", "co2")){
         stop("param 'y' must be one of 'volume', 'biomass', 'AG_biomass', 'carbon', 'co2'")
       }
     }
@@ -49,6 +43,23 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
   if(type == "iv" & output == "map"){
     stop("Importance value cannot be visualized by map")
   }
+  
+  
+  if( !type %in%  c("biomass", "cwd", "iv")){
+    stop("param 'type' must be one of 'biomass', 'cwd', 'iv'")
+  }
+  
+  
+  if( !output %in%  c("table", "line", 'bar',"map")){
+    stop("param 'output' must be one of 'table', 'line', 'bar', 'map'")
+  }
+  
+  if(output %in%  c("line", 'bar',"map")){
+    ggplot2::theme_set(ggplot2::theme_classic())
+    ggplot2::theme_update(text = ggplot2::element_text(size=13))
+  }
+  
+  
   
 
   # 전처리
@@ -131,31 +142,31 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
         
       )
       
-     tsvis_value <- ggplot(bm_map) + 
-        geom_sf(aes(fill = !!value , geometry = geometry))+
-        coord_sf(expand = FALSE, lims_method = "geometry_bbox")+
+     tsvis_value <- ggplot2::ggplot(bm_map) + 
+       ggplot2::geom_sf(ggplot2::aes(fill = !!value , geometry = geometry))+
+       ggplot2::coord_sf(expand = FALSE, lims_method = "geometry_bbox")+
         #scale_x_discrete(guide = guide_axis(check.overlap = TRUE))+
-        facet_wrap(~year)+
-        theme(axis.text.x = element_text(angle =90, vjust = 1))+
+       ggplot2::facet_wrap(~year)+
+       ggplot2::theme(axis.text.x = ggplot2::element_text(angle =90, vjust = 1))+
         #ggspatial::annotation_scale(location = "bl", width_hint = 0.1) +
         #ggspatial::annotation_north_arrow(location = "bl", which_north = "true", 
         #                       pad_x = unit(0.0, "in"), pad_y = unit(0.1, "in"),
         #                       style = north_arrow_fancy_orienteering)+
-        scale_fill_viridis_c(direction = -1,  alpha = .7)+
-        labs(fill=ylab)
+       ggplot2::scale_fill_viridis_c(direction = -1,  alpha = .7)+
+       ggplot2::labs(fill=ylab)
       
       
-      tsvis_se <- ggplot(bm_map)+ 
-        geom_sf(aes(fill = !!se , geometry = geometry))+
-        coord_sf(expand = FALSE, lims_method = "geometry_bbox")+
-        facet_wrap(~year)+
-        theme(axis.text.x = element_text(angle =90, vjust = 1))+
+      tsvis_se <- ggplot2::ggplot(bm_map)+ 
+        ggplot2::geom_sf(ggplot2::aes(fill = !!se , geometry = geometry))+
+        ggplot2::coord_sf(expand = FALSE, lims_method = "geometry_bbox")+
+        ggplot2::facet_wrap(~year)+
+        ggplot2::theme(axis.text.x = ggplot2::element_text(angle =90, vjust = 1))+
         #ggspatial::annotation_scale(location = "bl", width_hint = 0.1) +
         #ggspatial::annotation_north_arrow(location = "bl", which_north = "true", 
         #                       pad_x = unit(0.0, "in"), pad_y = unit(0.1, "in"),
         #                       style = north_arrow_fancy_orienteering)+
-        scale_fill_viridis_c(direction = -1,  alpha = .7, option="magma")+
-        labs(fill=paste0("RSE (%)", paste(rep(" ", nchar(value)-1), collapse = "")))
+        ggplot2::scale_fill_viridis_c(direction = -1,  alpha = .7, option="magma")+
+        ggplot2::labs(fill=paste0("RSE (%)", paste(rep(" ", nchar(value)-1), collapse = "")))
       
       tsvis <- cowplot::plot_grid(tsvis_value, tsvis_se, ncol = 2)
       
@@ -169,17 +180,17 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
       value  <- rlang::sym(value)
       se  <- rlang::sym(se)
       
-      tsvis <- ggplot(tsvis_df, aes(x=year)) + 
-        geom_line(aes(y=!!value, group = name, color = reorder(name, -!!value)), size = 1.1)+ 
-        geom_point(aes(y=!!value, group = name, color = reorder(name, -!!value)), size = 3)+ 
-        geom_errorbar(aes(ymin=!!value-!!se, ymax=!!value+!!se, color = reorder(name, -!!value)),
+      tsvis <- ggplot2::ggplot(tsvis_df, ggplot2::aes(x=year)) + 
+        ggplot2::geom_line(ggplot2::aes(y=!!value, group = name, color = reorder(name, -!!value)), size = 1.1)+ 
+        ggplot2::geom_point(ggplot2::aes(y=!!value, group = name, color = reorder(name, -!!value)), size = 3)+ 
+        ggplot2::geom_errorbar(ggplot2::aes(ymin=!!value-!!se, ymax=!!value+!!se, color = reorder(name, -!!value)),
                       width=0.2, size=0.8)+ 
-        theme(axis.title.x = element_text(vjust=-1.5),
-              axis.title.y = element_text(vjust=4),
-              plot.margin = unit(c(0.3,0.1,0.5,0.6), "cm"), 
-              legend.title = element_blank())+
-        scale_color_viridis_d()+ 
-        labs(x="Year", y=ylab)
+        ggplot2::theme(axis.title.x = ggplot2::element_text(vjust=-1.5),
+              axis.title.y = ggplot2::element_text(vjust=4),
+              plot.margin = ggplot2::unit(c(0.3,0.1,0.5,0.6), "cm"), 
+              legend.title = ggplot2::element_blank())+
+        ggplot2::scale_color_viridis_d()+ 
+        ggplot2::labs(x="Year", y=ylab)
       
     }else if(output =="bar"){
       
@@ -191,16 +202,16 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
       value  <- rlang::sym(value)
       se  <- rlang::sym(se)
       
-      tsvis <- ggplot(tsvis_df, aes(x=year, group = name))+
-        geom_bar(aes(y=!!value, fill = reorder(name, -!!value)), size = 1, stat='identity', position = 'dodge')+ 
-        geom_errorbar(aes(ymin=!!value-!!se, ymax=!!value+!!se),
-                      position=position_dodge(0.9),width=0.2, size=0.8)+
-        theme(axis.title.x = element_text(vjust=-1.5),
-              axis.title.y = element_text(vjust=4),
-              plot.margin = unit(c(0.3,0.1,0.5,0.6), "cm"), 
-              legend.title = element_blank())+
-        scale_fill_viridis_d()+ 
-        labs(x="Year", y=ylab)
+      tsvis <- ggplot2::ggplot(tsvis_df, ggplot2::aes(x=year, group = name))+
+        ggplot2::geom_bar(ggplot2::aes(y=!!value, fill = reorder(name, -!!value)), size = 1, stat='identity', position = 'dodge')+ 
+        ggplot2::geom_errorbar(ggplot2::aes(ymin=!!value-!!se, ymax=!!value+!!se),
+                      position=ggplot2::position_dodge(0.9),width=0.2, size=0.8)+
+        ggplot2::theme(axis.title.x = ggplot2::element_text(vjust=-1.5),
+              axis.title.y = ggplot2::element_text(vjust=4),
+              plot.margin = ggplot2::unit(c(0.3,0.1,0.5,0.6), "cm"), 
+              legend.title = ggplot2::element_blank())+
+        ggplot2::scale_fill_viridis_d()+ 
+        ggplot2::labs(x="Year", y=ylab)
         
       
     
@@ -219,13 +230,13 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
       
       tsvis <- tsvis_df %>% 
         filter(species %in% reorder(species, importance.value)[1:20]) %>%
-        ggplot() + 
-        geom_line(aes(x=year, y=importance.value, group = species, color = reorder(species, -importance.value)), size = 1.1)+ 
-        theme(axis.title.x = element_text(vjust=-1.5),
-              axis.title.y = element_text(vjust=4),
-              plot.margin = unit(c(0.3,0.1,0.5,0.6), "cm"), 
-              legend.title = element_blank()) + 
-        labs(x= "Year", y="Importance value (%)")
+        ggplot2::ggplot() + 
+        ggplot2::geom_line(ggplot2::aes(x=year, y=importance.value, group = species, color = reorder(species, -importance.value)), size = 1.1)+ 
+        ggplot2::theme(axis.title.x = ggplot2::element_text(vjust=-1.5),
+              axis.title.y = ggplot2::element_text(vjust=4),
+              plot.margin = ggplot2::unit(c(0.3,0.1,0.5,0.6), "cm"), 
+              legend.title = ggplot2::element_blank()) + 
+        ggplot2::labs(x= "Year", y="Importance value (%)")
       
       
     } else if(output =="bar"){
@@ -233,17 +244,17 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
     
       tsvis <- tsvis_df %>% 
         filter(species %in% reorder(species, importance.value)[1:20]) %>%
-        ggplot(aes(y = importance.value, x = reorder(species, importance.value))) +
-        geom_bar(aes(fill = reorder(species, importance.value)), width=0.6, stat="identity") +
+        ggplot2::ggplot(ggplot2::aes(y = importance.value, x = reorder(species, importance.value))) +
+        ggplot2::geom_bar(ggplot2::aes(fill = reorder(species, importance.value)), width=0.6, stat="identity") +
         #geom_text(aes(label= paste0(round(importance.value, 1),"%")), size=3.5)+
         #scale_y_continuous(limits = c(min(Gangwon_iv$importance.value) - 1, max(Gangwon_iv$importance.value) + 6)) +
-        coord_flip() +
-        facet_wrap(~year)+
-        theme(axis.title.x = element_text(vjust=-1.5),
-              axis.title.y = element_blank(),
-              plot.margin = unit(c(0.3,0.2,0.5,0.1), "cm"),
+        ggplot2::coord_flip() +
+        ggplot2::facet_wrap(~year)+
+        ggplot2::theme(axis.title.x = ggplot2::element_text(vjust=-1.5),
+              axis.title.y = ggplot2::element_blank(),
+              plot.margin = ggplot2::unit(c(0.3,0.2,0.5,0.1), "cm"),
               legend.position = "none")+ 
-        labs(y="Importance value (%)")
+        ggplot2::labs(y="Importance value (%)")
       
       
     } else{
