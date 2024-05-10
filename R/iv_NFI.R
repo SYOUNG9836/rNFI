@@ -37,11 +37,11 @@ iv_NFI <- function(data, sp="SP" , frequency=TRUE , clusterplot=TRUE, largetreea
   }
   
   if(!largetreearea){ #대경목조사원내존재여부
-    data$tree <- data$tree %>% filter(SUBPTYP == 0)
+    data$tree <- data$tree %>% filter(LARGEP_TREE == 0)
   }
  
   df <- left_join(data$tree[, c('CLST_PLOT', 'SUB_PLOT',"CYCLE", 'WDY_PLNTS_TYP_CD', 
-                                'basal_area', 'SUBPTYP', sp)], 
+                                'basal_area', 'LARGEP_TREE', sp)], 
                   data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR','LAND_USE', "LAND_USECD")],
                   by = c("CLST_PLOT", "SUB_PLOT", "CYCLE"))
   
@@ -146,12 +146,12 @@ iv_tsvis <- function(data, sp="SP" , frequency=TRUE , clusterplot=TRUE, largetre
   }
   
   if(!largetreearea){ #대경목조사원내존재여부
-    data$tree <- data$tree %>% filter(SUBPTYP == 0)
+    data$tree <- data$tree %>% filter(LARGEP_TREE == 0)
   }
   
   
   df <- left_join(data$tree[, c('CLST_PLOT', 'SUB_PLOT',"CYCLE", 'WDY_PLNTS_TYP_CD', 
-                                'basal_area', 'SUBPTYP', sp)], 
+                                'basal_area', 'LARGEP_TREE', sp)], 
                   data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR','LAND_USE', "LAND_USECD")],
                   by = c("CLST_PLOT", "SUB_PLOT", "CYCLE"))
   

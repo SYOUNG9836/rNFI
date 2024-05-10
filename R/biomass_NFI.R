@@ -150,7 +150,7 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
   
    
   df <- left_join(data$tree[,c('CLST_PLOT', 'SUB_PLOT',"CYCLE", 'WDY_PLNTS_TYP_CD','SP', 'SPCD',
-                                'CONDEC_CLASS_CD', 'DECEVER_CD', 'DBH', 'VOL_EST',  'SUBPTYP', grpby2)], 
+                                'CONDEC_CLASS_CD', 'DECEVER_CD', 'DBH', 'VOL_EST',  'LARGEP_TREE', grpby2)], 
                   data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR', "LAND_USE", "LAND_USECD",
                                'NONFR_INCL_AREA_SUBP', 'NONFR_INCL_AREA_LARGEP', "SGG_CD", 'SIDO_CD', strat, grpby)],
                   by = c("CLST_PLOT", "SUB_PLOT", "CYCLE"))
@@ -162,7 +162,7 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
   
   
   if(!largetreearea){ #대경목조사원내존재여부
-    df <- df %>% filter(df$SUBPTYP == 0)
+    df <- df %>% filter(df$LARGEP_TREE == 0)
   }else{
     df$largetree <- ifelse(df$DBH>=30, 1, 0)
     df$largetree_area <- 0.08 - ((df$NONFR_INCL_AREA_LARGEP*10)/10000) # 단위 m2/10
@@ -523,7 +523,7 @@ biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clu
   }
   
   df <- left_join(data$tree[,c('CLST_PLOT', 'SUB_PLOT',"CYCLE", 'WDY_PLNTS_TYP_CD','SP', 'SPCD',
-                               'CONDEC_CLASS_CD', 'DECEVER_CD', 'DBH', 'VOL_EST',  'SUBPTYP', grpby2 )], 
+                               'CONDEC_CLASS_CD', 'DECEVER_CD', 'DBH', 'VOL_EST',  'LARGEP_TREE', grpby2 )], 
                   data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR', "LAND_USE", "LAND_USECD",
                                'NONFR_INCL_AREA_SUBP', 'NONFR_INCL_AREA_LARGEP', "SGG_CD", 'SIDO_CD', strat, grpby)],
                   by = c("CLST_PLOT", "SUB_PLOT", "CYCLE"))
@@ -534,7 +534,7 @@ biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clu
   } 
   
   if(!largetreearea){ #대경목조사원내존재여부
-    df <- df %>% filter(df$SUBPTYP == 0)
+    df <- df %>% filter(df$LARGEP_TREE == 0)
   }else{
     df$largetree <- ifelse(df$DBH>=30, 1, 0)
     df$largetree_area <- 0.08 - ((df$NONFR_INCL_AREA_LARGEP*10)/10000) # 단위 m2/10

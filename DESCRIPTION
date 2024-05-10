@@ -18,7 +18,6 @@ Imports:
     magrittr,
     readxl,
     stringr,
-    stringi,
     vegan,
     tidyr,
     BiodiversityR,
@@ -35,5 +34,4 @@ Suggests:
     ggplot2,
     sp,
     raster,
-    cowplot,
-    tcltk
+    cowplot

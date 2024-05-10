@@ -61,13 +61,13 @@ summary_NFI<- function(data, grpby=NULL, grpby2= NULL, byplot= FALSE, clusterplo
   }
   
   if(!largetreearea){ #대경목조사원내존재여부
-    data$tree <- data$tree %>% filter(SUBPTYP == 0)
+    data$tree <- data$tree %>% filter(LARGEP_TREE == 0)
   }
   
 
   
   df <- left_join(data$tree[, c('CLST_PLOT', 'SUB_PLOT',"CYCLE",'INVYR', 'WDY_PLNTS_TYP_CD','CCL','CCLCD', 'SP',
-                                'DBH', 'basal_area', 'HT_EST', 'VOL_EST', 'SUBPTYP', grpby2)], 
+                                'DBH', 'basal_area', 'HT_EST', 'VOL_EST', 'LARGEP_TREE', grpby2)], 
                   data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR', 
                                 "LAND_USE", "LAND_USECD", 'NONFR_INCL_AREA_LARGEP', 'NONFR_INCL_AREA_SUBP', grpby)], 
                   by = c("CLST_PLOT", "SUB_PLOT", "CYCLE", "INVYR"))
@@ -95,7 +95,7 @@ summary_NFI<- function(data, grpby=NULL, grpby2= NULL, byplot= FALSE, clusterplo
       group_by(CYCLE, !!!grpby, !!!grpby2) %>%
       summarise(num_clusterplot= n_distinct(CLST_PLOT),
                 num_subplot= n_distinct(SUB_PLOT),
-                num_largetree_subplot= n_distinct(SUB_PLOT[SUBPTYP==1]),
+                num_largetree_subplot= n_distinct(SUB_PLOT[LARGEP_TREE==1]),
                 num_dbh30_subplot= n_distinct(SUB_PLOT[largetree==1]),
                 num_tree = n(),
                 num_largetree = sum(largetree, na.rm=TRUE),
