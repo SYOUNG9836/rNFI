@@ -28,7 +28,7 @@ Imports:
     cellranger,
     stats
 Depends: 
-    R (>= 2.10)
+    R (>= 3.6)
 Suggests: 
     broom,
     ggplot2,
