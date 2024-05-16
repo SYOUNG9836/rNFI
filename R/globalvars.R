@@ -16,3 +16,5 @@ utils::globalVariables(c('.',
                           "SP", "LARGEP_TREE", "SUB_PLOT", "TREECOUNT", "VOL", "VOL_EST", "WDY_PLNTS_TYP_CD", 
                           "domin_ba", "largetree"
                          ))
+
+
