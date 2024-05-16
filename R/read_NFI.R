@@ -449,7 +449,7 @@ read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapl
     # FORTYP based on basal area (subplot)  --------------------------------------------------------------
     NFI$tree$basal_area <- (pi*(NFI$tree$DBH/2)^2)/10000
     
-    stand_sub <- NFI$tree %>% filter(SUBPTYP == 0) 
+    stand_sub <- NFI$tree %>% filter(LARGEP_TREE == 0) 
     stand_sub <- stand_sub %>%  
       mutate(deciduous_ba = ifelse(CONDEC_CLASS_CD == 1,  basal_area, 0)) %>% # deciduous
       group_by(SUB_PLOT, CYCLE) %>% 
@@ -462,7 +462,7 @@ read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapl
                                    ifelse(stand_sub$percent>25, "Mixed", "Coniferous"))
     
     
-    domin <- NFI$tree %>% filter(SUBPTYP ==0) 
+    domin <- NFI$tree %>% filter(LARGEP_TREE ==0) 
     domin <- domin %>%
       group_by(SUB_PLOT, CYCLE,  SP) %>%
       summarise(domin_ba = sum(basal_area), .groups = 'drop') %>%
@@ -481,7 +481,7 @@ read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapl
     
     
     # FORTYP based on basal area (clusterplot)
-    stand_clust <- NFI$tree %>% filter(SUBPTYP == 0) 
+    stand_clust <- NFI$tree %>% filter(LARGEP_TREE == 0) 
     stand_clust <- stand_clust %>%
       mutate(deciduous_ba = ifelse(CONDEC_CLASS_CD == 1,  basal_area, 0)) %>%
       group_by(CLST_PLOT, CYCLE) %>% 
@@ -494,7 +494,7 @@ read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapl
                                       ifelse(stand_clust$percent>25, "Mixed", "Coniferous"))
     
     
-    domin <- NFI$tree %>% filter(SUBPTYP == 0) 
+    domin <- NFI$tree %>% filter(LARGEP_TREE == 0) 
     domin <- domin %>%
       group_by(CLST_PLOT, CYCLE,  SP) %>%
       summarise(domin_ba = sum(basal_area), .groups = 'drop') %>%

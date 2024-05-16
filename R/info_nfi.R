@@ -5,4 +5,5 @@
 #' @import rlang
 #' @importFrom magrittr %>%
 #' @importFrom stats var
+#' @importFrom utils install.packages
 NULL

@@ -13,6 +13,6 @@ utils::globalVariables(c('.',
                          "var_cwd_volume_m3_ha","var_cwd_carbon_stock_tC_ha", "se_cwd_volume_m3_ha", "se_cwd_carbon_stock_tC_ha",
                          "geometry", "name","reorder","species", "importance.value" ,
                          "CCLCD", "CLST_PLOT", "CONDEC_CLASS_CD", "CYCLE", "DBH", "HT_EST", "INVYR", "NUMINDI",
-                          "SP", "SUBPTYP", "SUB_PLOT", "TREECOUNT", "VOL", "VOL_EST", "WDY_PLNTS_TYP_CD", 
+                          "SP", "LARGEP_TREE", "SUB_PLOT", "TREECOUNT", "VOL", "VOL_EST", "WDY_PLNTS_TYP_CD", 
                           "domin_ba", "largetree"
                          ))
