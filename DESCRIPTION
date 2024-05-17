@@ -1,6 +1,7 @@
 Package: rNFI
-Title: rNFI: Analysis of National Forest Inventory DB
-Version: 0.0.0.9000
+Title: Analysis of National Forest Inventory DB
+Version: 1.0.0
+Maintainer: Your Name <your.email@example.com>
 Authors@R: 
     person(given = "First",
            family = "Last",
@@ -13,7 +14,9 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
-Additional_repositories: https://SYOUNG9836.github.io/drat/
+Additional_repositories: https://SYOUNG9836.github.io/drat/, https://github.com/SYOUNG9836/kadmin
+URL: https://github.com/SYOUNG9836/rNFI
+BugReports: https://github.com/SYOUNG9836/rNFI/issues
 Imports:
     dplyr,
     magrittr,
