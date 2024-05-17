@@ -124,21 +124,24 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
       tsvis_df$name <- unlist(lapply(tsvis_df[, grpby], 
                                     FUN=function(x){district_code$district_name[which(x==district_code$district_CD)]}))
       
-      
-      if(nchar(tsvis_df[, grpby][1]) == 10){
-        emd <- kadmin::emd
-        bm_map <- right_join(emd, tsvis_df, by=c("EMD_CD" = quo_name(grpby)))
-        #bm_map <- sf::st_as_sf( bm_map )
+      if (requireNamespace("kadmin", quietly = TRUE)) {
         
-      }else if(nchar(tsvis_df[,grpby][1]) == 5){
-        sgg <- kadmin::sgg
-        bm_map <- right_join(sgg, tsvis_df, by=c("SIG_CD" = quo_name(grpby)))
-        #bm_map <- sf::st_as_sf( bm_map )
+        if(nchar(tsvis_df[, grpby][1]) == 10){
+          emd <- kadmin::emd
+          bm_map <- right_join(emd, tsvis_df, by=c("EMD_CD" = quo_name(grpby)))
+          #bm_map <- sf::st_as_sf( bm_map )
+          
+        }else if(nchar(tsvis_df[,grpby][1]) == 5){
+          sgg <- kadmin::sgg
+          bm_map <- right_join(sgg, tsvis_df, by=c("SIG_CD" = quo_name(grpby)))
+          #bm_map <- sf::st_as_sf( bm_map )
+          
+        }else{
+          do <- kadmin::do
+          bm_map <- right_join(do, tsvis_df, by=c("CTPRVN_CD" = quo_name(grpby)))
+          #bm_map <- sf::st_as_sf( bm_map )
+        }
         
-      }else{
-        do <- kadmin::do
-        bm_map <- right_join(do, tsvis_df, by=c("CTPRVN_CD" = quo_name(grpby)))
-        #bm_map <- sf::st_as_sf( bm_map )
       }
       
       value <- colnames(bm_map)[grep(paste0("^", y, "|^cwd_", y), colnames(bm_map))]
