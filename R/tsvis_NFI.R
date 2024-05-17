@@ -60,19 +60,19 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
   }
   
   
-  if(output == "map"){
-    if (!requireNamespace("kadmin", quietly = TRUE)) {
-      consent <- utils::menu(choices = c("Yes", "No"), title = "The functionality you are trying to use requires 'kadmin'. Do you want to install it? (Yes/No)")
-      
-      # 동의한 경우 패키지 설치
-      if (consent == 1) {
-        drat::addRepo("SYOUNG9836")
-        install.packages("kadmin")
-      } else {
-        stop("Package 'kadmin' is not installed. This functionality cannot be used without installing the required package.")
-      }
-    }
-  }
+  # if(output == "map"){
+  #   if (!requireNamespace("kadmin", quietly = TRUE)) {
+  #     consent <- utils::menu(choices = c("Yes", "No"), title = "The functionality you are trying to use requires 'kadmin'. Do you want to install it? (Yes/No)")
+  #     
+  #     # 동의한 경우 패키지 설치
+  #     if (consent == 1) {
+  #       drat::addRepo("SYOUNG9836")
+  #       install.packages("kadmin")
+  #     } else {
+  #       stop("Package 'kadmin' is not installed. This functionality cannot be used without installing the required package.")
+  #     }
+  #   }
+  # }
   
   
 
@@ -125,17 +125,17 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
                                     FUN=function(x){district_code$district_name[which(x==district_code$district_CD)]}))
       
       if(nchar(tsvis_df[, grpby][1]) == 10){
-        emd <- kadmin::emd
+        #emd <- kadmin::emd
         bm_map <- right_join(emd, tsvis_df, by=c("EMD_CD" = quo_name(grpby)))
         #bm_map <- sf::st_as_sf( bm_map )
         
       }else if(nchar(tsvis_df[,grpby][1]) == 5){
-        sgg <- kadmin::sgg
+        #sgg <- kadmin::sgg
         bm_map <- right_join(sgg, tsvis_df, by=c("SIG_CD" = quo_name(grpby)))
         #bm_map <- sf::st_as_sf( bm_map )
         
       }else{
-        do <- kadmin::do
+        #do <- kadmin::do
         bm_map <- right_join(do, tsvis_df, by=c("CTPRVN_CD" = quo_name(grpby)))
         #bm_map <- sf::st_as_sf( bm_map )
       }
