@@ -3,11 +3,9 @@ Title: Analysis of National Forest Inventory DB
 Version: 1.0.0
 Maintainer: Your Name <your.email@example.com>
 Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+    c(person(given = "First",family = "Last", role = c("aut", "cre"), email = "first.last@example.com", comment = c(ORCID = "YOUR-ORCID-ID")),
+    person(given = "First",family = "Last", role = c("aut", "cre"), email = "first.last@example.com", comment = c(ORCID = "YOUR-ORCID-ID")),
+    person(given = "First",family = "Last", role = c("aut", "cre"), email = "first.last@example.com", comment = c(ORCID = "YOUR-ORCID-ID")))
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
 Encoding: UTF-8
