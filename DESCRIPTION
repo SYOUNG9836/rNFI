@@ -23,18 +23,21 @@ Imports:
     tidyr,
     BiodiversityR,
     data.table,
+    sf,
     plotrix,
     rlang,
     cellranger,
-    stats
+    stats,
+    broom,
+    ggplot2,
+    sp,
+    cowplot,
+    drat
 Depends: 
     R (>= 3.6)
 Suggests: 
-    broom,
-    ggplot2,
-    sf,
-    sp,
-    raster,
-    cowplot,
-    drat
+    kadmin
+
+  
+    
 
