@@ -14,7 +14,7 @@ utils::globalVariables(c('.',
                          "geometry", "name","reorder","species", "importance.value" ,
                          "CCLCD", "CLST_PLOT", "CONDEC_CLASS_CD", "CYCLE", "DBH", "HT_EST", "INVYR", "NUMINDI",
                           "SP", "LARGEP_TREE", "SUB_PLOT", "TREECOUNT", "VOL", "VOL_EST", "WDY_PLNTS_TYP_CD", 
-                          "domin_ba", "largetree"
+                          "domin_ba", "largetree", "do", "sgg", "emd"
                          ))
 
 
