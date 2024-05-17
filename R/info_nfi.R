@@ -25,12 +25,12 @@
 NULL
 
 
-# .onLoad <- function(libname, pkgname) {
-#   repos = getOption("repos")
-#   repos["kadmin"] = "https://SYOUNG9836.github.io/drat/"
-#   options(repos = repos)
-#   invisible(repos)
-# }
+.onLoad <- function(libname, pkgname) {
+  repos = getOption("repos")
+  repos["kadmin"] = "https://SYOUNG9836.github.io/drat/"
+  options(repos = repos)
+  invisible(repos)
+}
 
 
 .onAttach <- function(lib, pkg) {
