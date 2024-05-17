@@ -39,7 +39,7 @@ Imports:
 Depends: 
     R (>= 3.6)
 Suggests: 
-
+    kadmin
 
   
     
