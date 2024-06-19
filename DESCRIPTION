@@ -35,12 +35,12 @@ Imports:
     broom,
     ggplot2,
     sp,
-    cowplot
+    cowplot,
+    drat
 Depends: 
     R (>= 3.6)
 Suggests: 
-    kadmin,
-    drat
+    kadmin
 
   
     
