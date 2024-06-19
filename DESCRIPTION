@@ -14,6 +14,7 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
+Remotes: kadmin=url::https://github.com/SYOUNG9836/drat/blob/97e1081c313a58913e005dd1fee2534ae1861c8b/docs/src/contrib/kadmin_1.0.0.tar.gz
 Additional_repositories: url::https://SYOUNG9836.github.io/drat
 URL: https://github.com/SYOUNG9836/rNFI
 BugReports: https://github.com/SYOUNG9836/rNFI/issues
