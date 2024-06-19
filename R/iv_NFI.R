@@ -1,18 +1,26 @@
-#' iv_NFI Function
+#' @description
+#' iv_NFI() is a function that calculates the importance values of tree species based on frequency, density and coverage.
+#' 
+#' @details 
+#' The importance value is calculated as the sum from (i) the relative frequency; (ii) the relative density; and (iii) the relative coverage. The importance value ranges between 0 and 100.
+#' Frequency is calculated as the number of plots where a species is observed divided by the total number of survey plots. Relative frequency is calculated by dividing the frequency by the sum of the frequencies of all species, multiplied by 100 (to obtain a percentage).
+#' Density is calculated as the total number of individuals of a species. Relative density is calculated by dividing the density by the sum of the densities of all species, multiplied by 100 (to obtain a percentage).
+#' Coverage is calculated as the total basal area of a species. Relative dominance is calculated by dividing the dominance by the sum of the dominance of all species, multiplied by 100 (to obtain a percentage).
 #'
-#' This function 
-#' @param data : data
-#' @param sp : sp
-#' @param frequency : 빈도사용여부
-#' @param clusterplot : 빈도집락부선택
-#' @param largetreearea : 대경목조사원
-#' @param Stockedland : 임목지
-#' @param talltree : 교목
-#' @keywords plot
-#' @return importance value
+#' @param data : A `list` produced by \code{\link{read_NFI}} that contains 'plot' and 'tree' data frames.
+#' @param sp : A character value indicating the column name of tree species.
+#' @param frequency : A logical value indicating whether to use frequency in importance calculations.
+#' @param clusterplot : A logical value indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.
+#' @param largetreearea : A logical value indicating whether to include a large tree plot as well, or only a tree plot.
+#' @param Stockedland : A logical value indicating whether to include only stocked land or also include other types of land.
+#' @param talltree : A logical value indicating whether to include only tall trees or also shrubs.
+
+#' @return  A `data.frame` that includes importance value for tree species.
+#' 
+#' @examples
+#' \dontrun{iv_NFI()}
+#' 
 #' @export 
-#' 
-#' 
 
 
 ##  
@@ -108,19 +116,24 @@ iv_NFI <- function(data, sp="SP" , frequency=TRUE , clusterplot=TRUE, largetreea
 
 
 
-#' importancevalue Function
-#'
-#' This function 
-#' @param data : data
-#' @param sp : sp
-#' @param frequency : 빈도사용여부
-#' @param clusterplot : 빈도집락부선택
-#' @param largetreearea : 대경목조사원
-#' @param Stockedland : 임목지
-#' @param talltree : 교목
-#' @keywords plot
+ 
+#' @description
+#' iv_tsvis() is a function that calculates the importance values of tree species based on frequency, density and coverage.
+#' 
+#' @details 
 #' 
 #' 
+#' @param data : A `list` produced by \code{\link{read_NFI}} that contains 'plot' and 'tree' data frames.
+#' @param sp : A character value indicating the column name of tree species.
+#' @param frequency : A logical value indicating whether to use frequency in importance calculations.
+#' @param clusterplot : A logical value indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.
+#' @param largetreearea : A logical value indicating whether to include a large tree plot as well, or only a tree plot.
+#' @param Stockedland : A logical value indicating whether to include only stocked land or also include other types of land.
+#' @param talltree : A logical value indicating whether to include only tall trees or also shrubs.
+#' 
+#' @return  A `data.frame` that includes importance value for tree species.
+#' 
+#' @export 
 
 
 ##  그림용 function / 내부용

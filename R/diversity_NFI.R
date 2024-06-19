@@ -1,18 +1,27 @@
-#' diversity Function
+#' @description
+#' diversity_NFI() is a function that species richness, evenness and the Shannon and Simpson diversity indices.
 #'
-#' This function 
-#' @param data : data
-#' @param sp : sp
+#' @details
+#' 
+#' 
+#' 
+#' 
+#' @param data : A `list` produced by \code{\link{read_NFI}} that contains 'plot' and one of ('tree', 'herb', 'veg', 'sapling') data frames.
+#' @param sp : A character value indicating the column name of tree species.
 #' @param grpby : grpby
 #' @param type : grpby
 #' @param byplot : byplot
 #' @param basal : 흉고단면적/개체수
-#' @param clusterplot : byplot TRUE 집락 부
-#' @param largetreearea : 대경목조사원
-#' @param Stockedland : 임목지
-#' @param talltree : 교목
-#' @keywords plot
-#' @return diversity
+#' @param clusterplot : A logical value indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.
+#' @param largetreearea : A logical value indicating whether to include a large tree plot as well, or only a tree plot.
+#' @param Stockedland : A logical value indicating whether to include only stocked land or also include other types of land.
+#' @param talltree : A logical value indicating whether to include only tall trees or also shrubs.
+#' 
+#' @return A `data.frame` that includes diversity indices or numbers of species. standard error
+#' 
+#' @note 
+#' 식생데이터 데이터 이상함
+#' 
 #' @export 
 #' 
 #' 
@@ -23,7 +32,7 @@
 diversity_NFI <- function(data, sp="SP", grpby=NULL, type="tree" , byplot= FALSE,  basal=FALSE, clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
   
   # 경고 
-  required_names <- c("plot", "tree")
+  required_names <- c("plot", type)
   
   if (!all(required_names %in% names(data))) {
     missing_dfs <- required_names[!required_names %in% names(data)]

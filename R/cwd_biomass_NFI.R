@@ -1,6 +1,6 @@
-#' cwd_bm_df() Function
-#'
-#' This function 
+#' @description
+#' cwd_bm_df() is a function that
+#' 
 #' @param data : data
 
 ## biomass 구하기--------------------------------------------------------------
@@ -48,16 +48,19 @@ cwd_bm_df <- function(data){
 
 
 
-#' cwd_biomass_NFI() Function
+#' @description
+#' cwd_biomass_NFI() is a function that
+#' 
+#' @details
 #'
-#' This function 
-#' @param data : data
+#'
+#' @param data : A `list` produced by \code{\link{read_NFI}} that contains 'plot' and 'cwd' data frames.
 #' @param byplot : byplot
 #' @param grpby : grpby
 #' @param grpby2 : grpby2
 #' @param strat : 흉고단면적/개체수
-#' @param Stockedland : 임목지
-#' @keywords cwd tree biomass
+#' @param Stockedland : A logical value indicating whether to include only stocked land or also include other types of land.
+
 #' @return cwd tree biomass
 #' @export 
 
@@ -87,7 +90,7 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2=NULL, strat=
   
   if (!is.null(grpby2)){
     if(!is.character(grpby2)) {
-      stop("param 'grpby' must be 'character'")
+      stop("param 'grpby2' must be 'character'")
     }
   }
   
@@ -296,14 +299,14 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2=NULL, strat=
 
 
 
-#' cwd_biomass_tsvis() Function
+#' @description
+#' cwd_biomass_tsvis() is a function that
 #'
-#' This function 
-#' @param data : data
+#' @param data : A `list` produced by \code{\link{read_NFI}} that contains 'plot' and 'cwd' data frames.
 #' @param grpby : grpby
 #' @param strat : 흉고단면적/개체수
-#' @param Stockedland : 임목지
-#' @keywords biomass
+#' @param Stockedland : A logical value indicating whether to include only stocked land or also include other types of land.
+
 
 
 cwd_biomass_tsvis <- function(data, grpby=NULL, strat="FORTYP_SUB", Stockedland=TRUE){
@@ -329,7 +332,7 @@ cwd_biomass_tsvis <- function(data, grpby=NULL, strat="FORTYP_SUB", Stockedland=
   
   if (!is.null(grpby2)){
     if(!is.character(grpby2)) {
-      stop("param 'grpby' must be 'character'")
+      stop("param 'grpby2' must be 'character'")
     }
   }
   

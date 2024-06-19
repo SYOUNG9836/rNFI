@@ -1,7 +1,7 @@
 
-#' bm_df() Function
+#' @description
+#' bm_df() is a function that
 #'
-#' This function 
 #' @param data : data
  
 ## biomass 구하기--------------------------------------------------------------
@@ -78,20 +78,23 @@ bm_df <- function(data){
 
 
 
-#' biomass_NFI() Function
+#' @description
+#' biomass_NFI() is a function that
+#' 
+#' @details
 #'
-#' This function 
-#' @param data : data
+#' @param data : A `list` produced by \code{\link{read_NFI}} that contains 'plot' and 'tree' data frames.
 #' @param byplot : byplot
 #' @param grpby : grpby
 #' @param grpby2 : grpby
 #' @param strat : 흉고단면적/개체수
-#' @param clusterplot : byplot TRUE 집락
-#' @param largetreearea : 대경목조사원
-#' @param Stockedland : 임목지
-#' @param talltree : 교목
-#' @keywords biomass
+#' @param clusterplot : A logical value indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.
+#' @param largetreearea : A logical value indicating whether to include a large tree plot as well, or only a tree plot.
+#' @param Stockedland : A logical value indicating whether to include only stocked land or also include other types of land.
+#' @param talltree : A logical value indicating whether to include only tall trees or also shrubs.
+#' 
 #' @return biomass
+#' 
 #' @export 
 
 
@@ -123,7 +126,7 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
   if (!is.null(grpby2)){
     
     if(!is.character(grpby2)) {
-      stop("param 'grpby' must be 'character'")
+      stop("param 'grpby2' must be 'character'")
     }
     
   }
@@ -460,18 +463,18 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
 
 
 
-#' biomass_tsvis() Function
+#' @description
+#' biomass_tsvis() is a function that
 #'
-#' This function 
-#' @param data : data
+#' @param data : A `list` produced by \code{\link{read_NFI}} that contains 'plot' and 'tree' data frames.
 #' @param grpby : grpby
 #' @param grpby2 : grpby
 #' @param strat : 흉고단면적/개체수
-#' @param clusterplot : byplot TRUE 집락
-#' @param largetreearea : 대경목조사원
-#' @param Stockedland : 임목지
-#' @param talltree : 교목
-#' @keywords biomass
+#' @param clusterplot : A logical value indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.
+#' @param largetreearea : A logical value indicating whether to include a large tree plot as well, or only a tree plot.
+#' @param Stockedland : A logical value indicating whether to include only stocked land or also include other types of land.
+#' @param talltree : A logical value indicating whether to include only tall trees or also shrubs.
+
 
 
 biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
@@ -498,7 +501,7 @@ biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clu
   if (!is.null(grpby2)){
     
     if(!is.character(grpby2)) {
-      stop("param 'grpby' must be 'character'")
+      stop("param 'grpby2' must be 'character'")
     }
     
   }

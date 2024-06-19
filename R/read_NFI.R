@@ -8,23 +8,26 @@
 #' @details 
 #' ddddddd
 #' 
-#' @param dir : Directory of NFI files
-#' @param district : District korean name in sido, sigungu, or eupmyondong.
+#' @param dir : a character value indicating directory of NFI (National Forest Inventory) files.
+#' @param district : a character value indicating the district's Korean name within levels such as sido, sigungu, or eupmyondong.
 #' @param tree : a logical value indicating whether to load a standing tree survey table. 
 #' @param cwd : a logical value indicating whether to load a coarse wood debris survey table.
-#' @param stump : a logical value indicating wether to load a stump survey table. 
+#' @param stump : a logical value indicating whether to load a stump survey table. 
 #' @param sapling : a logical value indicating whether to load a sapling survey table.
 #' @param veg : a logical value indicating whether to load a vegetation survey table.
 #' @param herb : a logical value indicating whether to load a herb survey table.
 #' @param soil : a logical value indicating whether to load a soil survey table.
-#' @return A `data.frame` containing the loaded and transformed NFI data, structured
-#'         for easy analysis. Columns and structure depend on the survey tables loaded.
+#' 
+#' @return A `data.frame` containing the loaded and transformed NFI data, structured for easy analysis. Columns and structure depend on the survey tables loaded.
+#' 
 #' @examples
 #' \dontrun{
 #' read_NFI("D:/NFI/NFI5", district = "\uc804\ub77c\ub0a8\ub3c4", tree= TRUE)
 #' }
+#' 
 #' @note  
 #' note 
+#' 
 #' @export
 
 

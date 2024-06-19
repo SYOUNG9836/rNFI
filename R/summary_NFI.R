@@ -1,22 +1,22 @@
-#' summary_NFI Function
+#' @description
+#' summary_NFI() is a function that 
+#' 
+#' @details
 #'
-#' This function 
-#' @param data : data
+#' @param data : A `list` produced by \code{\link{read_NFI}} that contains 'plot' and 'tree' data frames.
 #' @param grpby : 표본점번호
 #' @param grpby2 : 표본점번호
 #' @param byplot : byplot
-#' @param clusterplot : byplot TRUE 집락 부
-#' @param largetreearea : 대경목조사원
-#' @param Stockedland : 임목지
-#' @param talltree : 교목
-#' @keywords plot
-#' @return Descriptive_statistics
+#' @param clusterplot : A logical value indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.
+#' @param largetreearea : A logical value indicating whether to include a large tree plot as well, or only a tree plot.
+#' @param Stockedland : A logical value indicating whether to include only stocked land or also include other types of land.
+#' @param talltree : A logical value indicating whether to include only tall trees or also shrubs.
+#' 
+#' @return A `data.frame` that includes importance value for tree species. Descriptive_statistics
+#' 
 #' @export 
-#' 
-#' 
 
 
-##
 
 summary_NFI<- function(data, grpby=NULL, grpby2= NULL, byplot= FALSE, clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
   

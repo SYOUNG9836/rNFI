@@ -1,12 +1,14 @@
-#' read_NFI()
+#' @description
+#' filter_NFI() is a function that
+#' 
+#' @details
 #'
-#' read_NFI() is a function that reads Korean National Forest Inventory.
-#' Loads the annual National Forest Inventory file downloaded from "https://kfss.forest.go.kr/stat/ " from the local computer.
-#' And change the data to an easy-to-analyze format and perform integrity verification.
-#' @param data : data
+#' @param data : A `list` produced by \code{\link{read_NFI}}
 #' @param expr_texts : a logical value indicating whether to load a standing tree survey table.
 #' @param hier : a logical value indicating whether to load a standing tree survey table.
+#' 
 #' @return dataframe
+#' 
 #' @export
 
 
