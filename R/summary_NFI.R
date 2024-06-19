@@ -1,3 +1,6 @@
+#' summary_NFI()
+#' 
+#' 
 #' @description
 #' summary_NFI() is a function that calculates descriptive statistics for plot or study areas.
 #' 

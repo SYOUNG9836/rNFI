@@ -10,8 +10,8 @@
 #' 
 #' 
 #' @param dir : a character value indicating directory of NFI (National Forest Inventory) files.
-#' @param district : a character value indicating the district's Korean name within levels such as sido, sigungu, or eupmyondong
-#' @param tables: a character value indicating names of specific tables to be imported. Use \code{c()} to combine multiple variables. e.g., c('tree', 'cwd', 'stump', herb', 'veg', 'sapling', 'soil')  
+#' @param district : a character value indicating the district's Korean name within levels such as sido, sigungu, or eupmyondong.
+#' @param tables : a character value indicating names of specific tables to be imported. Use \code{c()} to combine multiple variables. e.g., c('tree', 'cwd', 'stump', herb', 'veg', 'sapling', 'soil').  
 #' 
 #' @return A `data.frame` containing the loaded and transformed NFI data, structured for easy analysis. Columns and structure depend on the survey tables loaded.
 #' 

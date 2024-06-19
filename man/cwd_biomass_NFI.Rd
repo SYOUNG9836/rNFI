@@ -2,7 +2,7 @@
 % Please edit documentation in R/cwd_biomass_NFI.R
 \name{cwd_biomass_NFI}
 \alias{cwd_biomass_NFI}
-\title{cwd_biomass_NFI() Function}
+\title{cwd_biomass_NFI()}
 \usage{
 cwd_biomass_NFI(
   data,
@@ -14,24 +14,25 @@ cwd_biomass_NFI(
 )
 }
 \arguments{
-\item{data}{: data}
+\item{data}{: A \code{list} produced by \code{\link{read_NFI}} that contains 'plot' and 'cwd' data frames.}
 
-\item{byplot}{: byplot}
+\item{byplot}{: A logical value indicating whether to calculate for each plot separately or for the entire dataset.}
 
-\item{grpby}{: grpby}
+\item{grpby}{: A character value indicating variables from 'plot' tables for grouping. Use \code{c()} to combine multiple variables.}
 
-\item{grpby2}{: grpby2}
+\item{grpby2}{: A character value indicating variables from 'tree' tables for grouping. Use \code{c()} to combine multiple variables.}
 
-\item{strat}{: 흉고단면적/개체수}
+\item{strat}{: A character value indicating the variable used for post-stratification. In the National Forest Inventory of Korea, it is typically used by forest type.}
 
-\item{Stockedland}{: 임목지}
+\item{Stockedland}{: A logical value indicating whether to include only stocked land or also include other types of land.}
 }
 \value{
 cwd tree biomass
 }
 \description{
-This function
+cwd_biomass_NFI() is a function that
 }
-\keyword{biomass}
-\keyword{cwd}
-\keyword{tree}
+\details{
+cwd_volume_m3_ha, var_cwd_volume_m3_ha, se_cwd_volume_m3_ha, rse_cwd_volume_m3_ha,
+cwd_carbon_stock_tC_ha, var_cwd_carbon_stock_tC_ha, se_cwd_carbon_stock_tC_ha, rse_cwd_carbon_stock_tC_ha
+}

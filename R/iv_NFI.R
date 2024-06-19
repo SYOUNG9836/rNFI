@@ -1,3 +1,6 @@
+#' iv_NFI()
+#' 
+#' 
 #' @description
 #' iv_NFI() is a function that calculates the importance values of tree species based on frequency, density and coverage.
 #' please refer to the \code{\link[BiodiversityR]{importancevalue}} function in the \pkg{BiodiversityR} package.
@@ -124,11 +127,14 @@ iv_NFI <- function(data, sp="SP" , frequency=TRUE , clusterplot=TRUE, largetreea
 
 
  
+#' iv_tsvis()
+#' 
+#' 
 #' @description
 #' iv_tsvis() is a function that calculates the importance values of tree species based on frequency, density and coverage.
 #' 
 #' @details 
-#' 
+#' dddd
 #' 
 #' @param data : A `list` produced by \code{\link{read_NFI}} that contains 'plot' and 'tree' data frames.
 #' @param sp : A character value indicating the column name of tree species.

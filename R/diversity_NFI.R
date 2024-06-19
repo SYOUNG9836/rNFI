@@ -1,3 +1,6 @@
+#' diversity_NFI()
+#' 
+#' 
 #' @description
 #' diversity_NFI() is a function that calculates species richness, evenness and the Shannon and Simpson diversity indices for plot or study areas.
 #' please refer to the \code{\link[vegan]{diversity}} function in the \pkg{vegan} package.

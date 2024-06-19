@@ -2,20 +2,19 @@
 % Please edit documentation in R/cwd_biomass_NFI.R
 \name{cwd_biomass_tsvis}
 \alias{cwd_biomass_tsvis}
-\title{cwd_biomass_tsvis() Function}
+\title{cwd_biomass_tsvis()}
 \usage{
 cwd_biomass_tsvis(data, grpby = NULL, strat = "FORTYP_SUB", Stockedland = TRUE)
 }
 \arguments{
-\item{data}{: data}
+\item{data}{: A \code{list} produced by \code{\link{read_NFI}} that contains 'plot' and 'cwd' data frames.}
 
-\item{grpby}{: grpby}
+\item{grpby}{: A character value indicating variables from 'plot' tables for grouping. Use \code{c()} to combine multiple variables.}
 
-\item{strat}{: 흉고단면적/개체수}
+\item{strat}{: A character value indicating the variable used for post-stratification. In the National Forest Inventory of Korea, it is typically used by forest type.}
 
-\item{Stockedland}{: 임목지}
+\item{Stockedland}{: A logical value indicating whether to include only stocked land or also include other types of land.}
 }
 \description{
-This function
+cwd_biomass_tsvis() is a function that
 }
-\keyword{biomass}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/tsvis_NFI.R
 \name{tsvis_NFI}
 \alias{tsvis_NFI}
-\title{tsvis_NFI() Function}
+\title{tsvis_NFI()}
 \usage{
 tsvis_NFI(
   data,
@@ -10,7 +10,7 @@ tsvis_NFI(
   y = NULL,
   type = "biomass",
   output = "line",
-  strat = "stand_subplot",
+  strat = "FORTYP_SUB",
   clusterplot = FALSE,
   largetreearea = TRUE,
   Stockedland = TRUE,
@@ -19,31 +19,34 @@ tsvis_NFI(
 )
 }
 \arguments{
-\item{data}{: data}
+\item{data}{: A \code{list} produced by \code{\link{read_NFI}} that contains 'plot' and 'tree' data frames.}
 
 \item{grpby}{: grpby 시도코드; 시군구코드; 읍면동 코드}
 
 \item{y}{: y}
 
-\item{type}{: biomass; iv}
+\item{type}{: biomass; iv; cwd}
 
-\item{output}{: map; line}
+\item{output}{: map; line; table; bar}
 
-\item{strat}{: 흉고단면적/개체수}
+\item{strat}{: A character value indicating the variable used for post-stratification. In the National Forest Inventory of Korea, it is typically used by forest type.}
 
-\item{clusterplot}{: byplot TRUE 집락}
+\item{clusterplot}{: A logical value indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.}
 
-\item{largetreearea}{: 대경목조사원}
+\item{largetreearea}{: A logical value indicating whether to include a large tree plot as well, or only a tree plot.}
 
-\item{Stockedland}{: 임목지}
+\item{Stockedland}{: A logical value indicating whether to include only stocked land or also include other types of land.}
 
-\item{talltree}{: 교목}
+\item{talltree}{: A logical value indicating whether to include only tall trees or also shrubs.}
 
-\item{frequency}{: 빈도사용여부}
+\item{frequency}{: A logical value indicating whether to use frequency in importance calculations.}
 }
 \value{
 plot data
 }
 \description{
+tsvis_NFI() is a function that
+}
+\details{
 This function loop function
 }

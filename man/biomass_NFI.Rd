@@ -2,7 +2,7 @@
 % Please edit documentation in R/biomass_NFI.R
 \name{biomass_NFI}
 \alias{biomass_NFI}
-\title{biomass_NFI() Function}
+\title{biomass_NFI()}
 \usage{
 biomass_NFI(
   data,
@@ -17,28 +17,34 @@ biomass_NFI(
 )
 }
 \arguments{
-\item{data}{: data}
+\item{data}{: A \code{list} produced by \code{\link{read_NFI}} that contains 'plot' and 'tree' data frames.}
 
-\item{byplot}{: byplot}
+\item{byplot}{: A logical value indicating whether to calculate for each plot separately or for the entire dataset.}
 
-\item{grpby}{: grpby}
+\item{grpby}{: A character value indicating variables from 'plot' tables for grouping. Use \code{c()} to combine multiple variables.}
 
-\item{grpby2}{: grpby}
+\item{grpby2}{: A character value indicating variables from 'tree' tables for grouping. Use \code{c()} to combine multiple variables.}
 
-\item{strat}{: 흉고단면적/개체수}
+\item{strat}{: A character value indicating the variable used for post-stratification. In the National Forest Inventory of Korea, it is typically used by forest type.}
 
-\item{clusterplot}{: byplot TRUE 집락}
+\item{clusterplot}{: A logical value indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.}
 
-\item{largetreearea}{: 대경목조사원}
+\item{largetreearea}{: A logical value indicating whether to include a large tree plot as well, or only a tree plot.}
 
-\item{Stockedland}{: 임목지}
+\item{Stockedland}{: A logical value indicating whether to include only stocked land or also include other types of land.}
 
-\item{talltree}{: 교목}
+\item{talltree}{: A logical value indicating whether to include only tall trees or also shrubs.}
 }
 \value{
 biomass
 }
 \description{
-This function
+biomass_NFI() is a function that
 }
-\keyword{biomass}
+\details{
+volume_m3_ha, var_volume_m3_ha, se_volume_m3_ha, rse_volume_m3_ha,
+biomass_ton_ha, var_biomass_ton_ha, se_biomass_ton_ha, rse_biomass_ton_ha,
+AG_biomass_ton_ha, var_AG_biomass_ton_ha, se_AG_biomass_ton_ha, rse_AG_biomass_ton_ha,
+carbon_stock_tC_ha, var_carbon_stock_tC_ha, se_carbon_stock_tC_ha, rse_carbon_stock_tC_ha,
+co2_stock_tCO2_ha, var_co2_stock_tCO2_ha, se_co2_stock_tCO2_ha, rse_co2_stock_tCO2_ha
+}

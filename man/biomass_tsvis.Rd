@@ -2,7 +2,7 @@
 % Please edit documentation in R/biomass_NFI.R
 \name{biomass_tsvis}
 \alias{biomass_tsvis}
-\title{biomass_tsvis() Function}
+\title{biomass_tsvis()}
 \usage{
 biomass_tsvis(
   data,
@@ -16,23 +16,22 @@ biomass_tsvis(
 )
 }
 \arguments{
-\item{data}{: data}
+\item{data}{: A \code{list} produced by \code{\link{read_NFI}} that contains 'plot' and 'tree' data frames.}
 
-\item{grpby}{: grpby}
+\item{grpby}{: A character value indicating variables from 'plot' tables for grouping. Use \code{c()} to combine multiple variables.}
 
-\item{grpby2}{: grpby}
+\item{grpby2}{: A character value indicating variables from 'tree' tables for grouping. Use \code{c()} to combine multiple variables.}
 
-\item{strat}{: 흉고단면적/개체수}
+\item{strat}{: A character value indicating the variable used for post-stratification. In the National Forest Inventory of Korea, it is typically used by forest type.}
 
-\item{clusterplot}{: byplot TRUE 집락}
+\item{clusterplot}{: A logical value indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.}
 
-\item{largetreearea}{: 대경목조사원}
+\item{largetreearea}{: A logical value indicating whether to include a large tree plot as well, or only a tree plot.}
 
-\item{Stockedland}{: 임목지}
+\item{Stockedland}{: A logical value indicating whether to include only stocked land or also include other types of land.}
 
-\item{talltree}{: 교목}
+\item{talltree}{: A logical value indicating whether to include only tall trees or also shrubs.}
 }
 \description{
-This function
+biomass_tsvis() is a function that
 }
-\keyword{biomass}

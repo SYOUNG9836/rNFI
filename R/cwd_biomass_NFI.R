@@ -1,3 +1,6 @@
+#' cwd_bm_df()
+#' 
+#' 
 #' @description
 #' cwd_bm_df() is a function that
 #' 
@@ -48,6 +51,8 @@ cwd_bm_df <- function(data){
 
 
 
+#' cwd_biomass_NFI()
+#' 
 #' @description
 #' cwd_biomass_NFI() is a function that
 #' 
@@ -300,6 +305,8 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2=NULL, strat=
 
 
 
+#' cwd_biomass_tsvis()
+#' 
 #' @description
 #' cwd_biomass_tsvis() is a function that
 #'

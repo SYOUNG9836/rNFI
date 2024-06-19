@@ -2,7 +2,7 @@
 % Please edit documentation in R/cwd_biomass_NFI.R
 \name{cwd_bm_df}
 \alias{cwd_bm_df}
-\title{cwd_bm_df() Function}
+\title{cwd_bm_df()}
 \usage{
 cwd_bm_df(data)
 }
@@ -10,5 +10,5 @@ cwd_bm_df(data)
 \item{data}{: data}
 }
 \description{
-This function
+cwd_bm_df() is a function that
 }

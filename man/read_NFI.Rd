@@ -4,40 +4,17 @@
 \alias{read_NFI}
 \title{read_NFI()}
 \usage{
-read_NFI(
-  dir,
-  district = NULL,
-  tree = TRUE,
-  cwd = FALSE,
-  stump = FALSE,
-  sapling = FALSE,
-  veg = FALSE,
-  herb = FALSE,
-  soil = FALSE
-)
+read_NFI(dir, district = NULL, tables = c("tree", "cwd"))
 }
 \arguments{
-\item{dir}{: Directory of NFI files}
+\item{dir}{: a character value indicating directory of NFI (National Forest Inventory) files.}
 
-\item{district}{: District korean name in sido, sigungu, or eupmyondong.}
+\item{district}{: a character value indicating the district's Korean name within levels such as sido, sigungu, or eupmyondong.}
 
-\item{tree}{: a logical value indicating whether to load a standing tree survey table.}
-
-\item{cwd}{: a logical value indicating whether to load a coarse wood debris survey table.}
-
-\item{stump}{: a logical value indicating wether to load a stump survey table.}
-
-\item{sapling}{: a logical value indicating whether to load a sapling survey table.}
-
-\item{veg}{: a logical value indicating whether to load a vegetation survey table.}
-
-\item{herb}{: a logical value indicating whether to load a herb survey table.}
-
-\item{soil}{: a logical value indicating whether to load a soil survey table.}
+\item{tables}{: a character value indicating names of specific tables to be imported. Use \code{c()} to combine multiple variables. e.g., c('tree', 'cwd', 'stump', herb', 'veg', 'sapling', 'soil').}
 }
 \value{
-A \code{data.frame} containing the loaded and transformed NFI data, structured
-for easy analysis. Columns and structure depend on the survey tables loaded.
+A \code{data.frame} containing the loaded and transformed NFI data, structured for easy analysis. Columns and structure depend on the survey tables loaded.
 }
 \description{
 read_NFI() is a function that reads Korean National Forest Inventory.
@@ -45,13 +22,17 @@ Loads the annual National Forest Inventory file downloaded from "https://kfss.fo
 And change the data to an easy-to-analyze format and perform integrity verification.
 }
 \details{
-ddddddd
+과속종 제공/ 침활 및 표본점 필터/부표봄점집락표본점별 임상 및 우점종, 우점종퍼센트 계산
 }
 \note{
-note
+다운 받는법
+To download subsets of the FIA Database manually,
+go online to the FIA Datamart (\url{https://apps.fs.usda.gov/fia/datamart/datamart.html}) and choose to download .csv files.
+열이름 영문명 한글명 변경 관련 파일 링크
 }
 \examples{
 \dontrun{
 read_NFI("D:/NFI/NFI5", district = "\uc804\ub77c\ub0a8\ub3c4", tree= TRUE)
 }
+
 }

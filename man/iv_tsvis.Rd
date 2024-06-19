@@ -2,7 +2,7 @@
 % Please edit documentation in R/iv_NFI.R
 \name{iv_tsvis}
 \alias{iv_tsvis}
-\title{importancevalue Function}
+\title{iv_tsvis()}
 \usage{
 iv_tsvis(
   data,
@@ -15,21 +15,26 @@ iv_tsvis(
 )
 }
 \arguments{
-\item{data}{: data}
+\item{data}{: A \code{list} produced by \code{\link{read_NFI}} that contains 'plot' and 'tree' data frames.}
 
-\item{sp}{: sp}
+\item{sp}{: A character value indicating the column name of tree species.}
 
-\item{frequency}{: 빈도사용여부}
+\item{frequency}{: A logical value indicating whether to use frequency in importance calculations.}
 
-\item{clusterplot}{: 빈도집락부선택}
+\item{clusterplot}{: A logical value indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.}
 
-\item{largetreearea}{: 대경목조사원}
+\item{largetreearea}{: A logical value indicating whether to include a large tree plot as well, or only a tree plot.}
 
-\item{Stockedland}{: 임목지}
+\item{Stockedland}{: A logical value indicating whether to include only stocked land or also include other types of land.}
 
-\item{talltree}{: 교목}
+\item{talltree}{: A logical value indicating whether to include only tall trees or also shrubs.}
+}
+\value{
+A \code{data.frame} that includes importance value for tree species.
 }
 \description{
-This function
+iv_tsvis() is a function that calculates the importance values of tree species based on frequency, density and coverage.
 }
-\keyword{plot}
+\details{
+dddd
+}

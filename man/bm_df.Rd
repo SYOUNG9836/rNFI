@@ -2,7 +2,7 @@
 % Please edit documentation in R/biomass_NFI.R
 \name{bm_df}
 \alias{bm_df}
-\title{bm_df() Function}
+\title{bm_df()}
 \usage{
 bm_df(data)
 }
@@ -10,5 +10,5 @@ bm_df(data)
 \item{data}{: data}
 }
 \description{
-This function
+bm_df() is a function that
 }

@@ -1,3 +1,6 @@
+#' tsvis_NFI()
+#' 
+#' 
 #' @description
 #' tsvis_NFI() is a function that
 #' 

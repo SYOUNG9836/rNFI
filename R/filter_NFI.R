@@ -1,7 +1,11 @@
+#' filter_NFI()
+#' 
+#' 
 #' @description
 #' filter_NFI() is a function that
 #' 
 #' @details
+#' dddd
 #'
 #' @param data : A `list` produced by \code{\link{read_NFI}}
 #' @param expr_texts : a logical value indicating whether to load a standing tree survey table.

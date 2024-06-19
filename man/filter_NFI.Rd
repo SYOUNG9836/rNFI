@@ -2,12 +2,12 @@
 % Please edit documentation in R/filter_NFI.R
 \name{filter_NFI}
 \alias{filter_NFI}
-\title{read_NFI()}
+\title{filter_NFI()}
 \usage{
 filter_NFI(data, expr_texts, hier = T)
 }
 \arguments{
-\item{data}{: data}
+\item{data}{: A \code{list} produced by \code{\link{read_NFI}}}
 
 \item{expr_texts}{: a logical value indicating whether to load a standing tree survey table.}
 
@@ -17,7 +17,8 @@ filter_NFI(data, expr_texts, hier = T)
 dataframe
 }
 \description{
-read_NFI() is a function that reads Korean National Forest Inventory.
-Loads the annual National Forest Inventory file downloaded from "https://kfss.forest.go.kr/stat/ " from the local computer.
-And change the data to an easy-to-analyze format and perform integrity verification.
+filter_NFI() is a function that
+}
+\details{
+dddd
 }

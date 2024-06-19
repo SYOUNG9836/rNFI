@@ -1,4 +1,6 @@
 
+#' bm_df()
+#' 
 #' @description
 #' bm_df() is a function that
 #'
@@ -78,6 +80,8 @@ bm_df <- function(data){
 
 
 
+#' biomass_NFI()
+#' 
 #' @description
 #' biomass_NFI() is a function that
 #' 
@@ -476,6 +480,8 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
 
 
 
+#' biomass_tsvis()
+#' 
 #' @description
 #' biomass_tsvis() is a function that
 #'
