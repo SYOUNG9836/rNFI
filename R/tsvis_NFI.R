@@ -7,9 +7,9 @@
 #' @param data : A `list` produced by \code{\link{read_NFI}} that contains 'plot' and 'tree' data frames.
 #' @param grpby : grpby 시도코드; 시군구코드; 읍면동 코드
 #' @param y : y
-#' @param type : biomass; iv
-#' @param output : map; line 
-#' @param strat : 흉고단면적/개체수
+#' @param type : biomass; iv; cwd
+#' @param output : map; line; table; bar
+#' @param strat : A character value indicating the variable used for post-stratification. In the National Forest Inventory of Korea, it is typically used by forest type.
 #' @param clusterplot : A logical value indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.
 #' @param largetreearea : A logical value indicating whether to include a large tree plot as well, or only a tree plot.
 #' @param Stockedland : A logical value indicating whether to include only stocked land or also include other types of land.
@@ -21,7 +21,7 @@
 #' @export
 
 
-tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line", strat="stand_subplot", 
+tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line", strat="FORTYP_SUB", 
                          clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE, frequency= TRUE){
   
   

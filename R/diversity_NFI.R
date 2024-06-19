@@ -1,17 +1,20 @@
 #' @description
-#' diversity_NFI() is a function that species richness, evenness and the Shannon and Simpson diversity indices.
+#' diversity_NFI() is a function that calculates species richness, evenness and the Shannon and Simpson diversity indices for plot or study areas.
+#' please refer to the \code{\link[vegan]{diversity}} function in the \pkg{vegan} package.
 #'
 #' @details
-#' 
-#' 
-#' 
+#' Species richness
+#' Shannon-Wiener's index
+#' Simpson's index
+#' Evenness
+#' entire dataset은 mean, standard error
 #' 
 #' @param data : A `list` produced by \code{\link{read_NFI}} that contains 'plot' and one of ('tree', 'herb', 'veg', 'sapling') data frames.
-#' @param sp : A character value indicating the column name of tree species.
-#' @param grpby : grpby
-#' @param type : grpby
-#' @param byplot : byplot
-#' @param basal : 흉고단면적/개체수
+#' @param sp : A character value indicating the column name of tree species. e.g., SP, Genus.
+#' @param grpby : A character value indicating variables from 'plot' tables for grouping. Use \code{c()} to combine multiple variables.
+#' @param type : Use \code{c()} to combine multiple variables.
+#' @param byplot : A logical value indicating whether to calculate for each plot separately or for the entire dataset.
+#' @param basal : A logical value indicating whether to calculate species diversity for trees using basal area or number of individuals.
 #' @param clusterplot : A logical value indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.
 #' @param largetreearea : A logical value indicating whether to include a large tree plot as well, or only a tree plot.
 #' @param Stockedland : A logical value indicating whether to include only stocked land or also include other types of land.
@@ -21,6 +24,9 @@
 #' 
 #' @note 
 #' 식생데이터 데이터 이상함
+#' 
+#' @seealso
+#' \code{\link[vegan]{diversity}} for calculating the Shannon and Simpson diversity indices.
 #' 
 #' @export 
 #' 

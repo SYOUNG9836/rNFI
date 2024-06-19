@@ -6,17 +6,12 @@
 #' And change the data to an easy-to-analyze format and perform integrity verification.
 #' 
 #' @details 
-#' ddddddd
+#' 과속종 제공/ 침활 및 표본점 필터/부표봄점집락표본점별 임상 및 우점종, 우점종퍼센트 계산
+#' 
 #' 
 #' @param dir : a character value indicating directory of NFI (National Forest Inventory) files.
-#' @param district : a character value indicating the district's Korean name within levels such as sido, sigungu, or eupmyondong.
-#' @param tree : a logical value indicating whether to load a standing tree survey table. 
-#' @param cwd : a logical value indicating whether to load a coarse wood debris survey table.
-#' @param stump : a logical value indicating whether to load a stump survey table. 
-#' @param sapling : a logical value indicating whether to load a sapling survey table.
-#' @param veg : a logical value indicating whether to load a vegetation survey table.
-#' @param herb : a logical value indicating whether to load a herb survey table.
-#' @param soil : a logical value indicating whether to load a soil survey table.
+#' @param district : a character value indicating the district's Korean name within levels such as sido, sigungu, or eupmyondong
+#' @param tables: a character value indicating names of specific tables to be imported. Use \code{c()} to combine multiple variables. e.g., c('tree', 'cwd', 'stump', herb', 'veg', 'sapling', 'soil')  
 #' 
 #' @return A `data.frame` containing the loaded and transformed NFI data, structured for easy analysis. Columns and structure depend on the survey tables loaded.
 #' 
@@ -26,12 +21,15 @@
 #' }
 #' 
 #' @note  
-#' note 
+#' 다운 받는법 
+#' To download subsets of the FIA Database manually, 
+#' go online to the FIA Datamart (\url{https://apps.fs.usda.gov/fia/datamart/datamart.html}) and choose to download .csv files.
+#' 열이름 영문명 한글명 변경 관련 파일 링크 
 #' 
 #' @export
 
 
-read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapling=FALSE, veg=FALSE, herb=FALSE, soil=FALSE ){
+read_NFI <- function(dir, district=NULL, tables=c('tree', 'cwd')){
   
   
   ## Load a list of .xlsx files located in the path--------------------------------------------------
@@ -42,6 +40,10 @@ read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapl
   ## error message--------------------------------------------------------------
   if(!dir.exists(dir)) {
     stop(paste('Directory ', dir, ' does not exist.'))
+  }
+  
+  if(!tables %in%  c('tree', 'cwd', 'stump', 'herb', 'veg', 'sapling', 'soil')){
+    stop("param 'tables' must be one of 'tree', 'cwd', 'stump', 'herb', 'veg', 'sapling', 'soil'")
   }
   
   
@@ -165,7 +167,7 @@ read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapl
     
     
     ## tree_list sheet --------------------------------------------------------------
-    if(tree){
+    if("tree" %in% tables){
       tree_list[[i]] <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = Sheet_name[4,1],
                                            col_names = TRUE, col_types = "text")
       
@@ -186,7 +188,7 @@ read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapl
     }
     
     
-    if(cwd){
+    if("cwd" %in% tables){
       ## cwd_list sheet --------------------------------------------------------------
       cwd_list[[i]] <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = Sheet_name[5,1], range = cellranger::cell_cols("A:M"),
                                           col_names = TRUE, col_types = "text")
@@ -207,7 +209,7 @@ read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapl
     }
     
     
-    if(stump){
+    if("stump" %in% tables){
       ## stump_list sheet --------------------------------------------------------------
       stump_list[[i]] <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = Sheet_name[6,1], 
                                             col_names = TRUE, col_types = "text")
@@ -228,7 +230,7 @@ read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapl
     }
     
     
-    if(sapling){
+    if("sapling" %in% tables){
       ## sapling_list sheet--------------------------------------------------------------
       sapling_list[[i]] <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = Sheet_name[7,1], 
                                               col_names = TRUE, col_types = "text")
@@ -250,7 +252,7 @@ read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapl
     }
     
     
-    if(veg){
+    if("veg" %in% tables){
       ## veg_list sheet --------------------------------------------------------------
       veg_list[[i]] <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = Sheet_name[8,1], 
                                           col_names = TRUE, col_types = "text")
@@ -272,7 +274,7 @@ read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapl
     
     
     
-    if(herb){
+    if("herb" %in% tables){
       ## herb_list sheet --------------------------------------------------------------
       herb_list[[i]] <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = Sheet_name[9,1], 
                                            col_names = TRUE, col_types = "text")
@@ -293,7 +295,7 @@ read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapl
     }
     
     
-    if(soil){
+    if("soil" %in% tables){
       ## soil_list sheet --------------------------------------------------------------
       soil_list[[i]] <- readxl::read_excel(paste(dir, filenames[i], sep = ""), sheet = Sheet_name[10,1], 
                                            col_names = TRUE, col_types = "text")
@@ -324,7 +326,7 @@ read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapl
   NFI <- list(plot = plot_df)
   plot_subset <- NFI$plot[,c('CLST_PLOT', 'SUB_PLOT', 'CYCLE', 'INVYR'), drop = FALSE]
   
-  if(tree){
+  if("tree" %in% tables){
     tree_df <- data.table::rbindlist(tree_list, fill=TRUE, use.names=TRUE)
     tree_df <- as.data.frame(tree_df)
     
@@ -334,7 +336,7 @@ read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapl
   }
   
   
-  if(cwd){
+  if("cwd" %in% tables){
     cwd_df <- data.table::rbindlist(cwd_list, fill=TRUE, use.names=TRUE)
     cwd_df <- as.data.frame(cwd_df)
     
@@ -344,7 +346,7 @@ read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapl
   }
   
   
-  if(stump){
+  if("stump" %in% tables){
     stump_df <- data.table::rbindlist(stump_list, fill=TRUE, use.names=TRUE)
     stump_df <- as.data.frame(stump_df)
     
@@ -354,7 +356,7 @@ read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapl
   }
   
   
-  if(sapling){
+  if("sapling" %in% tables){
     sapling_df <- data.table::rbindlist(sapling_list, fill=TRUE, use.names=TRUE)
     sapling_df <- as.data.frame(sapling_df)
     
@@ -364,7 +366,7 @@ read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapl
   }
   
   
-  if(veg){
+  if("veg" %in% tables){
     veg_df <- data.table::rbindlist(veg_list, fill=TRUE, use.names=TRUE)
     veg_df <- as.data.frame(veg_df)
     
@@ -373,7 +375,7 @@ read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapl
                          by = c('CLST_PLOT', 'SUB_PLOT', 'CYCLE'))
   }
   
-  if(herb){
+  if("herb" %in% tables){
     herb_df <- data.table::rbindlist(herb_list, fill=TRUE, use.names=TRUE)
     herb_df <- as.data.frame(herb_df)
     
@@ -382,7 +384,7 @@ read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapl
                           by = c('CLST_PLOT', 'SUB_PLOT', 'CYCLE'))
   }
   
-  if(soil){
+  if("soil" %in% tables){
     soil_df <- data.table::rbindlist(soil_list, fill=TRUE, use.names=TRUE)
     soil_df <- as.data.frame(soil_df)
     
@@ -414,35 +416,35 @@ read_NFI <- function(dir, district=NULL, tree=TRUE, cwd=FALSE, stump=FALSE, sapl
   NFI$tree[ , colnames(NFI$tree) %in% char_col ] <- lapply(NFI$tree[ , colnames(NFI$tree) %in% char_col ], as.character)
   
   
-  if(cwd){
+  if("cwd" %in% tables){
     NFI$cwd[ , colnames(NFI$cwd) %in% num_col ] <- lapply(NFI$cwd[ , colnames(NFI$cwd) %in% num_col ], as.numeric)
     NFI$cwd[ , colnames(NFI$cwd) %in% char_col ] <- lapply(NFI$cwd[ , colnames(NFI$cwd) %in% char_col ], as.character)
     NFI$cwd <- left_join(NFI$cwd, Species_DB, by= c("SP") )
   }
   
   
-  if(stump){
+  if("stump" %in% tables){
     NFI$stump[ , colnames(NFI$stump) %in% num_col ] <- lapply(NFI$stump[ , colnames(NFI$stump) %in% num_col ], as.numeric)
     NFI$stump[ , colnames(NFI$stump) %in% char_col ] <- lapply(NFI$stump[ , colnames(NFI$stump) %in% char_col ], as.character)
     NFI$stump <- left_join(NFI$stump, Species_DB, by= c("SP") )
   }
   
   
-  if(sapling){
+  if("sapling" %in% tables){
     NFI$sapling <- left_join(NFI$sapling, Species_DB, by= c("SP") )
   }
   
-  if(veg){
+  if("veg" %in% tables){
     NFI$veg <- left_join(NFI$veg, Species_DB, by= c("SP") )
   }
   
-  if(herb){
+  if("herb" %in% tables){
     NFI$herb <- left_join(NFI$herb, Species_DB, by= c("SP") )
   }
   
   
   
-  if(tree){
+  if("tree" %in% tables){
     
     NFI$tree <- NFI$tree[!(names(NFI$tree) %in% c("CONDEC_CLASS", "WDY_PLNTS_TYP"))]
     

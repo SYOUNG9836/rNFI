@@ -52,13 +52,14 @@ cwd_bm_df <- function(data){
 #' cwd_biomass_NFI() is a function that
 #' 
 #' @details
-#'
+#' cwd_volume_m3_ha, var_cwd_volume_m3_ha, se_cwd_volume_m3_ha, rse_cwd_volume_m3_ha,
+#' cwd_carbon_stock_tC_ha, var_cwd_carbon_stock_tC_ha, se_cwd_carbon_stock_tC_ha, rse_cwd_carbon_stock_tC_ha
 #'
 #' @param data : A `list` produced by \code{\link{read_NFI}} that contains 'plot' and 'cwd' data frames.
-#' @param byplot : byplot
-#' @param grpby : grpby
-#' @param grpby2 : grpby2
-#' @param strat : 흉고단면적/개체수
+#' @param byplot : A logical value indicating whether to calculate for each plot separately or for the entire dataset.
+#' @param grpby : A character value indicating variables from 'plot' tables for grouping. Use \code{c()} to combine multiple variables.
+#' @param grpby2 : A character value indicating variables from 'tree' tables for grouping. Use \code{c()} to combine multiple variables.
+#' @param strat : A character value indicating the variable used for post-stratification. In the National Forest Inventory of Korea, it is typically used by forest type.
 #' @param Stockedland : A logical value indicating whether to include only stocked land or also include other types of land.
 
 #' @return cwd tree biomass
@@ -303,8 +304,8 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2=NULL, strat=
 #' cwd_biomass_tsvis() is a function that
 #'
 #' @param data : A `list` produced by \code{\link{read_NFI}} that contains 'plot' and 'cwd' data frames.
-#' @param grpby : grpby
-#' @param strat : 흉고단면적/개체수
+#' @param grpby : A character value indicating variables from 'plot' tables for grouping. Use \code{c()} to combine multiple variables.
+#' @param strat : A character value indicating the variable used for post-stratification. In the National Forest Inventory of Korea, it is typically used by forest type.
 #' @param Stockedland : A logical value indicating whether to include only stocked land or also include other types of land.
 
 
