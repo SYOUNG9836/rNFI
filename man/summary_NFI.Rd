@@ -18,19 +18,19 @@ summary_NFI(
 \arguments{
 \item{data}{: A \code{list} produced by \code{\link{read_NFI}} that contains 'plot' and 'tree' data frames.}
 
-\item{grpby}{: A character value indicating variables from 'plot' tables for grouping. Use \code{c()} to combine multiple variables.}
+\item{grpby}{: A character vector indicating variables from 'plot' tables for grouping. Use \code{c()} to combine multiple variables.}
 
-\item{grpby2}{: A character value indicating variables from 'tree' tables for grouping. Use \code{c()} to combine multiple variables.}
+\item{grpby2}{: A character vector indicating variables from 'tree' tables for grouping. Use \code{c()} to combine multiple variables.}
 
-\item{byplot}{: A logical value indicating whether to calculate for each plot separately or for the entire dataset.}
+\item{byplot}{: A logical flag indicating whether to calculate for each plot separately or for the entire dataset.}
 
-\item{clusterplot}{: A logical value indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.}
+\item{clusterplot}{: A logical flag indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.}
 
-\item{largetreearea}{: A logical value indicating whether to include a large tree plot as well, or only a tree plot.}
+\item{largetreearea}{: A logical flag indicating whether to include a large tree plot as well, or only a tree plot.}
 
-\item{Stockedland}{: A logical value indicating whether to include only stocked land or also include other types of land.}
+\item{Stockedland}{: A logical flag indicating whether to include only stocked land or also include other types of land.}
 
-\item{talltree}{: A logical value indicating whether to include only tall trees or also shrubs.}
+\item{talltree}{: A logical flag indicating whether to include only tall trees or also shrubs.}
 }
 \value{
 A \code{data.frame} that includes summary statistics for plot or study areas

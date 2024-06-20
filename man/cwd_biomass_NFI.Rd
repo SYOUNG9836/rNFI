@@ -16,15 +16,15 @@ cwd_biomass_NFI(
 \arguments{
 \item{data}{: A \code{list} produced by \code{\link{read_NFI}} that contains 'plot' and 'cwd' data frames.}
 
-\item{byplot}{: A logical value indicating whether to calculate for each plot separately or for the entire dataset.}
+\item{byplot}{: A logical flag indicating whether to calculate for each plot separately or for the entire dataset.}
 
-\item{grpby}{: A character value indicating variables from 'plot' tables for grouping. Use \code{c()} to combine multiple variables.}
+\item{grpby}{: A character vector indicating variables from 'plot' tables for grouping. Use \code{c()} to combine multiple variables.}
 
-\item{grpby2}{: A character value indicating variables from 'tree' tables for grouping. Use \code{c()} to combine multiple variables.}
+\item{grpby2}{: A character vector indicating variables from 'tree' tables for grouping. Use \code{c()} to combine multiple variables.}
 
-\item{strat}{: A character value indicating the variable used for post-stratification. In the National Forest Inventory of Korea, it is typically used by forest type.}
+\item{strat}{: A character vector indicating the variable used for post-stratification. In the National Forest Inventory of Korea, it is typically used by forest type.}
 
-\item{Stockedland}{: A logical value indicating whether to include only stocked land or also include other types of land.}
+\item{Stockedland}{: A logical flag indicating whether to include only stocked land or also include other types of land.}
 }
 \value{
 cwd tree biomass

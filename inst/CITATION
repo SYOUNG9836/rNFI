@@ -1,11 +1,11 @@
 bibentry(
   bibtype  = "Article",
-  title    = ,
-  author   = "Sinyoung Park"",
-  journal  = ,
-  year     = ,
-  volume   = ,
-  number   = ,
-  pages    = ,
-  doi      =
-)
+  title    = "Welcome to the {tidyverse}",
+  author   = "Sinyoung Park",
+  journal  = "Journal of Open Source Software",
+  year     = 2019,
+  volume   = 4,
+  number   = 43,
+  pages    = 1686,
+  doi      = "10.21105/joss.01686"
+  )

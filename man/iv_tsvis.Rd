@@ -17,17 +17,17 @@ iv_tsvis(
 \arguments{
 \item{data}{: A \code{list} produced by \code{\link{read_NFI}} that contains 'plot' and 'tree' data frames.}
 
-\item{sp}{: A character value indicating the column name of tree species.}
+\item{sp}{: A character vector indicating the column name of tree species.}
 
-\item{frequency}{: A logical value indicating whether to use frequency in importance calculations.}
+\item{frequency}{: A logical flag indicating whether to use frequency in importance calculations.}
 
-\item{clusterplot}{: A logical value indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.}
+\item{clusterplot}{: A logical flag indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.}
 
-\item{largetreearea}{: A logical value indicating whether to include a large tree plot as well, or only a tree plot.}
+\item{largetreearea}{: A logical flag indicating whether to include a large tree plot as well, or only a tree plot.}
 
-\item{Stockedland}{: A logical value indicating whether to include only stocked land or also include other types of land.}
+\item{Stockedland}{: A logical flag indicating whether to include only stocked land or also include other types of land.}
 
-\item{talltree}{: A logical value indicating whether to include only tall trees or also shrubs.}
+\item{talltree}{: A logical flag indicating whether to include only tall trees or also shrubs.}
 }
 \value{
 A \code{data.frame} that includes importance value for tree species.
@@ -36,5 +36,5 @@ A \code{data.frame} that includes importance value for tree species.
 iv_tsvis() is a function that calculates the importance values of tree species based on frequency, density and coverage.
 }
 \details{
-dddd
+\code{\link[rNFI]{iv_NFI}}
 }

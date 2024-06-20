@@ -9,9 +9,9 @@ filter_NFI(data, expr_texts, hier = T)
 \arguments{
 \item{data}{: A \code{list} produced by \code{\link{read_NFI}}}
 
-\item{expr_texts}{: a logical value indicating whether to load a standing tree survey table.}
+\item{expr_texts}{: A logical flag indicating whether to load a standing tree survey table.}
 
-\item{hier}{: a logical value indicating whether to load a standing tree survey table.}
+\item{hier}{: A logical flag indicating whether to load a standing tree survey table.}
 }
 \value{
 dataframe

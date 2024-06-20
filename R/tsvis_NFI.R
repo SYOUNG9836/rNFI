@@ -42,6 +42,7 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
     }
   }
   
+  
   if(type != "iv" & output == "map"){
     if(!stringr::str_detect(grpby,'_CD$')){
       stop("param 'grpby' must be in administrative district code")
@@ -66,6 +67,19 @@ tsvis_NFI <- function(data, grpby=NULL, y=NULL, type = "biomass", output ="line"
     ggplot2::theme_set(ggplot2::theme_classic())
     ggplot2::theme_update(text = ggplot2::element_text(size=13))
   }
+  
+  if( type %in%  c("biomass", "cwd")){
+    if (clusterplot){
+      if(strat=="FORTYP_SUB"){
+        warning("When the param 'clusterplot' is set to TRUE, param 'strat' uses FORTYP_CLST (the forest type for the cluster plot) instead of FORTYP_SUB (the forest type for each subplot).")
+        
+        strat <- c("FORTYP_CLST")
+      }
+    }
+  }
+  
+  
+  
   
   
   # if(output == "map"){

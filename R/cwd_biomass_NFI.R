@@ -94,6 +94,14 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2=NULL, strat=
     # }
   }
   
+  if (clusterplot){
+    if(strat=="FORTYP_SUB"){
+      warning("When the param 'clusterplot' is set to TRUE, param 'strat' uses FORTYP_CLST (the forest type for the cluster plot) instead of FORTYP_SUB (the forest type for each subplot).")
+      
+      strat <- c("FORTYP_CLST")
+    }
+  }
+  
   if (!is.null(grpby2)){
     if(!is.character(grpby2)) {
       stop("param 'grpby2' must be 'character'")
@@ -335,6 +343,14 @@ cwd_biomass_tsvis <- function(data, grpby=NULL, strat="FORTYP_SUB", Stockedland=
     }
     if(!is.character(grpby)) {
       stop("param 'grpby' must be 'character'")
+    }
+  }
+  
+  if (clusterplot){
+    if(strat=="FORTYP_SUB"){
+      warning("When the param 'clusterplot' is set to TRUE, param 'strat' uses FORTYP_CLST (the forest type for the cluster plot) instead of FORTYP_SUB (the forest type for each subplot).")
+      
+      strat <- c("FORTYP_CLST")
     }
   }
   

@@ -4,7 +4,7 @@
 #' read_NFI() is a function that reads Korean National Forest Inventory (NFI).
 #' Loads the annual NFI file from the local computer.
 #' And change the data to an easy-to-analyze format and perform integrity verification.
-#' NFI is downloaded from \url{https://kfss.forest.go.kr/stat/}
+#' NFI is downloaded from \url{https://kfss.forest.go.kr/stat/}.
 #' 
 #' 
 #' @details 
@@ -15,27 +15,24 @@
 #' Additionally, this functionality calculates the forest type, dominant species, and dominant species percentage for each subplot and cluster plot. 
 #' 
 #' @param dir : A character vector indicating directory of NFI files.
-#' @param district : A character vector indicating the district's Korean name within levels such as sido, sigungu, or eupmyondong. If `NULL`, the entire dataset is loaded
-#' @param tables : A character vector indicating names of specific tables to be imported. Use \code{c()} to combine multiple variables. e.g., \code{c('tree', 'cwd', 'stump', herb', 'veg', 'sapling', 'soil')}.  
+#' @param district : A character vector indicating the district's Korean name within levels such as sido, sigungu, or eupmyondong. If `NULL`, the entire dataset is loaded.
+#' @param tables : A character vector indicating names of specific tables to be imported. Use \code{c()} to combine multiple variables. e.g., `c('tree', 'cwd', 'stump', herb', 'veg', 'sapling', 'soil')`.  
 #' 
 #' @return A `data.frame` containing the loaded and transformed NFI data, structured for easy analysis. Columns and structure depend on the survey tables loaded.
 #' 
 #' @examples
 #' \dontrun{
-#' read_NFI("D:/NFI/NFI5", district=NULL, tables=c('tree', 'cwd'))
-#' read_NFI("D:/NFI/NFI7", district="강원도", tables=c('tree', 'cwd', 'stump', herb', 'veg', 'sapling', 'soil'))
+#' read_NFI("D:/NFI/NFI5", district=NULL, tables=c("tree", "cwd"))
 #' }
 #' 
 #' @note  
-#' To download subsets of the annual NFI file manually, 
-#' go online to the Korea Forest Service Forestry Statistics Platform (\url{https://kfss.forest.go.kr/stat/}), downloaded .zip files, and extract them.
-#' 
+#' To download subsets of the annual NFI file manually, go online to the Korea Forest Service Forestry Statistics Platform (\url{https://kfss.forest.go.kr/stat/}), downloaded .zip files, and extract them.
 #' Load the data \code{rNFI::col_name} to find out the Korean and English names of the column names. 
 #' 
 #' @export
 
 
-read_NFI <- function(dir, district=NULL, tables=c('tree', 'cwd')){
+read_NFI <- function(dir, district=NULL, tables=c("tree", "cwd")){
   
   
   ## Load a list of .xlsx files located in the path--------------------------------------------------
