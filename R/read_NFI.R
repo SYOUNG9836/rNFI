@@ -1,30 +1,36 @@
-#' read_NFI()
+#' Reads Korean National Forest Inventory
 #'
 #' @description
-#' read_NFI() is a function that reads Korean National Forest Inventory.
-#' Loads the annual National Forest Inventory file downloaded from "https://kfss.forest.go.kr/stat/ " from the local computer.
+#' read_NFI() is a function that reads Korean National Forest Inventory (NFI).
+#' Loads the annual NFI file from the local computer.
 #' And change the data to an easy-to-analyze format and perform integrity verification.
+#' NFI is downloaded from \url{https://kfss.forest.go.kr/stat/}
+#' 
 #' 
 #' @details 
-#' 과속종 제공/ 침활 및 표본점 필터/부표봄점집락표본점별 임상 및 우점종, 우점종퍼센트 계산
+#' This functionality performs integrity validation on data provided by the Korea Forest Service, based on the database of subplot and species. 
+#' It corrects errors in the administrative regions of subplots and in the classification of species as coniferous or deciduous. 
+#' The existing data, which only provides species names, has been augmented with the Korean and English names of families and genera, as well as the scientific names of species. 
+#' The classification of species into coniferous and broadleaf categories, as well as plant taxonomy, follows the standards of the Korean Plant Names Index Committee of the Korea National Arboretum \url{http://www.nature.go.kr/kpni/index.do}. 
+#' Additionally, this functionality calculates the forest type, dominant species, and dominant species percentage for each subplot and cluster plot. 
 #' 
-#' 
-#' @param dir : a character value indicating directory of NFI (National Forest Inventory) files.
-#' @param district : a character value indicating the district's Korean name within levels such as sido, sigungu, or eupmyondong.
-#' @param tables : a character value indicating names of specific tables to be imported. Use \code{c()} to combine multiple variables. e.g., c('tree', 'cwd', 'stump', herb', 'veg', 'sapling', 'soil').  
+#' @param dir : A character vector indicating directory of NFI files.
+#' @param district : A character vector indicating the district's Korean name within levels such as sido, sigungu, or eupmyondong. If `NULL`, the entire dataset is loaded
+#' @param tables : A character vector indicating names of specific tables to be imported. Use \code{c()} to combine multiple variables. e.g., \code{c('tree', 'cwd', 'stump', herb', 'veg', 'sapling', 'soil')}.  
 #' 
 #' @return A `data.frame` containing the loaded and transformed NFI data, structured for easy analysis. Columns and structure depend on the survey tables loaded.
 #' 
 #' @examples
 #' \dontrun{
-#' read_NFI("D:/NFI/NFI5", district = "\uc804\ub77c\ub0a8\ub3c4", tree= TRUE)
+#' read_NFI("D:/NFI/NFI5", district=NULL, tables=c('tree', 'cwd'))
+#' read_NFI("D:/NFI/NFI7", district="강원도", tables=c('tree', 'cwd', 'stump', herb', 'veg', 'sapling', 'soil'))
 #' }
 #' 
 #' @note  
-#' 다운 받는법 
-#' To download subsets of the FIA Database manually, 
-#' go online to the FIA Datamart (\url{https://apps.fs.usda.gov/fia/datamart/datamart.html}) and choose to download .csv files.
-#' 열이름 영문명 한글명 변경 관련 파일 링크 
+#' To download subsets of the annual NFI file manually, 
+#' go online to the Korea Forest Service Forestry Statistics Platform (\url{https://kfss.forest.go.kr/stat/}), downloaded .zip files, and extract them.
+#' 
+#' Load the data \code{rNFI::col_name} to find out the Korean and English names of the column names. 
 #' 
 #' @export
 

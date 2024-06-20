@@ -12,12 +12,12 @@
 #' @param y : y
 #' @param type : biomass; iv; cwd
 #' @param output : map; line; table; bar
-#' @param strat : A character value indicating the variable used for post-stratification. In the National Forest Inventory of Korea, it is typically used by forest type.
-#' @param clusterplot : A logical value indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.
-#' @param largetreearea : A logical value indicating whether to include a large tree plot as well, or only a tree plot.
-#' @param Stockedland : A logical value indicating whether to include only stocked land or also include other types of land.
-#' @param talltree : A logical value indicating whether to include only tall trees or also shrubs.
-#' @param frequency : A logical value indicating whether to use frequency in importance calculations.
+#' @param strat : A character vector indicating the variable used for post-stratification. In the National Forest Inventory of Korea, it is typically used by forest type.
+#' @param clusterplot : A logical flag indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.
+#' @param largetreearea : A logical flag indicating whether to include a large tree plot as well, or only a tree plot.
+#' @param Stockedland : A logical flag indicating whether to include only stocked land or also include other types of land.
+#' @param talltree : A logical flag indicating whether to include only tall trees or also shrubs.
+#' @param frequency : A logical flag indicating whether to use frequency in importance calculations.
 #' 
 #' @return plot data
 #' 

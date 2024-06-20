@@ -1,3 +1,16 @@
+#' the Korean and English names of the column names
+#'
+#' @description
+#' the Korean and English names of the column names
+#' 
+#' @name col_name
+#' 
+"col_name"
+
+
+
+
+
 utils::globalVariables(c('.', 
                          "year", "deciduous_ba", "largetree_area", "tree_area", "basal_area", 
                          "num_clusterplot", "mean_DBH_temp", "mean_H_temp", "mean_dominant_H_temp",

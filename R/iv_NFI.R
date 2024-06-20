@@ -12,12 +12,12 @@
 #' Coverage is calculated as the total basal area of a species. Relative dominance is calculated by dividing the dominance by the sum of the dominance of all species, multiplied by 100 (to obtain a percentage).
 #'
 #' @param data : A `list` produced by \code{\link{read_NFI}} that contains 'plot' and 'tree' data frames.
-#' @param sp : A character value indicating the column name of tree species. e.g,. SP, Genus.
-#' @param frequency : A logical value indicating whether to use frequency in importance calculations.
-#' @param clusterplot : A logical value indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.
-#' @param largetreearea : A logical value indicating whether to include a large tree plot as well, or only a tree plot.
-#' @param Stockedland : A logical value indicating whether to include only stocked land or also include other types of land.
-#' @param talltree : A logical value indicating whether to include only tall trees or also shrubs.
+#' @param sp : A character vector indicating the column name of tree species. e.g,. SP, Genus.
+#' @param frequency : A logical flag indicating whether to use frequency in importance calculations.
+#' @param clusterplot : A logical flag indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.
+#' @param largetreearea : A logical flag indicating whether to include a large tree plot as well, or only a tree plot.
+#' @param Stockedland : A logical flag indicating whether to include only stocked land or also include other types of land.
+#' @param talltree : A logical flag indicating whether to include only tall trees or also shrubs.
 #' 
 #' @return  A `data.frame` that includes importance value for tree species.
 #' 
@@ -134,15 +134,15 @@ iv_NFI <- function(data, sp="SP" , frequency=TRUE , clusterplot=TRUE, largetreea
 #' iv_tsvis() is a function that calculates the importance values of tree species based on frequency, density and coverage.
 #' 
 #' @details 
-#' dddd
+#' \code{\link[rNFI]{iv_NFI}}
 #' 
 #' @param data : A `list` produced by \code{\link{read_NFI}} that contains 'plot' and 'tree' data frames.
-#' @param sp : A character value indicating the column name of tree species.
-#' @param frequency : A logical value indicating whether to use frequency in importance calculations.
-#' @param clusterplot : A logical value indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.
-#' @param largetreearea : A logical value indicating whether to include a large tree plot as well, or only a tree plot.
-#' @param Stockedland : A logical value indicating whether to include only stocked land or also include other types of land.
-#' @param talltree : A logical value indicating whether to include only tall trees or also shrubs.
+#' @param sp : A character vector indicating the column name of tree species.
+#' @param frequency : A logical flag indicating whether to use frequency in importance calculations.
+#' @param clusterplot : A logical flag indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.
+#' @param largetreearea : A logical flag indicating whether to include a large tree plot as well, or only a tree plot.
+#' @param Stockedland : A logical flag indicating whether to include only stocked land or also include other types of land.
+#' @param talltree : A logical flag indicating whether to include only tall trees or also shrubs.
 #' 
 #' @return  A `data.frame` that includes importance value for tree species.
 #' 

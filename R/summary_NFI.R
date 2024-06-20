@@ -11,13 +11,13 @@
 #' mean_tree_n_ha, se_tree_n_ha, mean_basal_m2_ha, se_basal_m2_ha, mean_volume_m3_ha, se_volume_m3_ha
 #'
 #' @param data : A `list` produced by \code{\link{read_NFI}} that contains 'plot' and 'tree' data frames.
-#' @param byplot : A logical value indicating whether to calculate for each plot separately or for the entire dataset.
-#' @param grpby : A character value indicating variables from 'plot' tables for grouping. Use \code{c()} to combine multiple variables.
-#' @param grpby2 : A character value indicating variables from 'tree' tables for grouping. Use \code{c()} to combine multiple variables.
-#' @param clusterplot : A logical value indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.
-#' @param largetreearea : A logical value indicating whether to include a large tree plot as well, or only a tree plot.
-#' @param Stockedland : A logical value indicating whether to include only stocked land or also include other types of land.
-#' @param talltree : A logical value indicating whether to include only tall trees or also shrubs.
+#' @param byplot : A logical flag indicating whether to calculate for each plot separately or for the entire dataset.
+#' @param grpby : A character vector indicating variables from 'plot' tables for grouping. Use \code{c()} to combine multiple variables.
+#' @param grpby2 : A character vector indicating variables from 'tree' tables for grouping. Use \code{c()} to combine multiple variables.
+#' @param clusterplot : A logical flag indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.
+#' @param largetreearea : A logical flag indicating whether to include a large tree plot as well, or only a tree plot.
+#' @param Stockedland : A logical flag indicating whether to include only stocked land or also include other types of land.
+#' @param talltree : A logical flag indicating whether to include only tall trees or also shrubs.
 #' 
 #' @return A `data.frame` that includes summary statistics for plot or study areas
 #' 

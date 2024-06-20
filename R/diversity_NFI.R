@@ -13,15 +13,15 @@
 #' entire dataset은 mean, standard error
 #' 
 #' @param data : A `list` produced by \code{\link{read_NFI}} that contains 'plot' and one of ('tree', 'herb', 'veg', 'sapling') data frames.
-#' @param sp : A character value indicating the column name of tree species. e.g., SP, Genus.
-#' @param grpby : A character value indicating variables from 'plot' tables for grouping. Use \code{c()} to combine multiple variables.
+#' @param sp : A character vector indicating the column name of tree species. e.g., SP, Genus.
+#' @param grpby : A character vector indicating variables from 'plot' tables for grouping. Use \code{c()} to combine multiple variables.
 #' @param type : Use \code{c()} to combine multiple variables.
-#' @param byplot : A logical value indicating whether to calculate for each plot separately or for the entire dataset.
-#' @param basal : A logical value indicating whether to calculate species diversity for trees using basal area or number of individuals.
-#' @param clusterplot : A logical value indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.
-#' @param largetreearea : A logical value indicating whether to include a large tree plot as well, or only a tree plot.
-#' @param Stockedland : A logical value indicating whether to include only stocked land or also include other types of land.
-#' @param talltree : A logical value indicating whether to include only tall trees or also shrubs.
+#' @param byplot : A logical flag indicating whether to calculate for each plot separately or for the entire dataset.
+#' @param basal : A logical flag indicating whether to calculate species diversity for trees using basal area or number of individuals.
+#' @param clusterplot : A logical flag indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.
+#' @param largetreearea : A logical flag indicating whether to include a large tree plot as well, or only a tree plot.
+#' @param Stockedland : A logical flag indicating whether to include only stocked land or also include other types of land.
+#' @param talltree : A logical flag indicating whether to include only tall trees or also shrubs.
 #' 
 #' @return A `data.frame` that includes diversity indices or numbers of species. standard error
 #' 
