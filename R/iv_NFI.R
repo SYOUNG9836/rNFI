@@ -5,7 +5,7 @@
 #' iv_NFI() is a function that calculates the importance values of tree species based on frequency, density and coverage.
 #' please refer to the \code{\link[BiodiversityR]{importancevalue}} function in the \pkg{BiodiversityR} package.
 #' 
-#' @details 
+#' @details in
 #' The importance value is calculated as the mean from (i) the relative frequency; (ii) the relative density; and (iii) the relative coverage. The importance value ranges between 0 and 100.
 #' Frequency is calculated as the number of plots where a species is observed divided by the total number of survey plots. Relative frequency is calculated by dividing the frequency by the sum of the frequencies of all species, multiplied by 100 (to obtain a percentage).
 #' Density is calculated as the total number of individuals of a species. Relative density is calculated by dividing the density by the sum of the densities of all species, multiplied by 100 (to obtain a percentage).
