@@ -4,21 +4,31 @@
 #' read_NFI() is a function that reads Korean National Forest Inventory (NFI).
 #' Loads the annual NFI file from the local computer.
 #' And change the data to an easy-to-analyze format and perform integrity verification.
+#' read_NFI() allows you to select and load specific districts and desired tables.
 #' NFI is downloaded from \url{https://kfss.forest.go.kr/stat/}.
 #' 
-#' 
 #' @details 
+#' `plot` This table contains data for each subplot, including site, stand, non-forest area, and other information. It is a base part, so there is no need to configure it separately. It includes many other variables as well.
+#' `tree` This table records tree survey data, including species, diameter at breast height (DBH), and tree height, among others.
+#' `cwd` Coarse Woody Debris table. It includes information on species, tree decay level, and cause of death, among other details. Data is collected only at the center subplot of the cluster.
+#' `stump` This table provides data on stumps, including species and diameter at 20 cm above the ground, among other details. Data is collected only at the center subplot of the cluster.
+#' `sapling` This table includes information on saplings, such as species, diameter at 20 cm above the ground, and the number of individuals, among other details.
+#' `veg` This table includes data on vegetation, covering both woody and herbaceous plants. It records species, number of individuals, and dominance information, among others. Data is collected at the center subplot of the cluster and 25% of all plots.
+#' `herb` This table lists herbaceous species. Data is collected at the center subplot of the cluster and 25% of all plots. It includes many other variables as well.
+#' `soil` This table contains soil data, including the thickness of the organic layer and soil depth, among others. Data is collected at the center subplot of the cluster and 25% of all plots.
+#' For more details, refer to the National Forest Inventory guidelines.
+#' 
 #' This functionality performs integrity validation on data provided by the Korea Forest Service, based on the database of subplot and species. 
 #' It corrects errors in the administrative regions of subplots and in the classification of species as coniferous or deciduous. 
 #' The existing data, which only provides species names, has been augmented with the Korean and English names of families and genera, as well as the scientific names of species. 
 #' The classification of species into coniferous and broadleaf categories, as well as plant taxonomy, follows the standards of the Korean Plant Names Index Committee of the Korea National Arboretum \url{http://www.nature.go.kr/kpni/index.do}. 
 #' Additionally, this functionality calculates the forest type, dominant species, and dominant species percentage for each subplot and cluster plot. 
+#'  
+#' @param dir : A character vector; directory of NFI files.
+#' @param district : A character vector; the district's Korean name within levels such as sido, sigungu, or eupmyondong. If `NULL`, the entire dataset is loaded. Use \code{c()} to combine multiple variables. e.g., `c('tree', 'cwd', 'stump', 'sapling', 'veg', 'herb', 'soil')`.  
+#' @param tables : A character vector; names of specific tables to be imported. Can be any of 'tree', 'cwd', 'stump', 'sapling', 'veg', 'herb', 'soil'. Use \code{c()} to combine multiple variables. 
 #' 
-#' @param dir : A character vector indicating directory of NFI files.
-#' @param district : A character vector indicating the district's Korean name within levels such as sido, sigungu, or eupmyondong. If `NULL`, the entire dataset is loaded.
-#' @param tables : A character vector indicating names of specific tables to be imported. Use \code{c()} to combine multiple variables. e.g., `c('tree', 'cwd', 'stump', herb', 'veg', 'sapling', 'soil')`.  
-#' 
-#' @return A `data.frame` containing the loaded and transformed NFI data, structured for easy analysis. Columns and structure depend on the survey tables loaded.
+#' @return A `data.frame`; the loaded and transformed NFI data, structured for easy analysis. Columns and structure depend on the survey tables loaded.
 #' 
 #' @examples
 #' \dontrun{
@@ -28,6 +38,10 @@
 #' @note  
 #' To download subsets of the annual NFI file manually, go online to the Korea Forest Service Forestry Statistics Platform (\url{https://kfss.forest.go.kr/stat/}), downloaded .zip files, and extract them.
 #' Load the data \code{rNFI::col_name} to find out the Korean and English names of the column names. 
+#' 
+#' The National Forest Inventory conducts internal reviews, field inspections, and error prevention efforts to maintain quality. 
+#' However, given that approximately 4,000 plots and over 70 items are surveyed in the 7th phase, various errors may still exist. 
+#' Please use the data with caution, and share any anomalies you discover with us so we can incorporate them into our algorithms.
 #' 
 #' @export
 
@@ -45,9 +59,14 @@ read_NFI <- function(dir, district=NULL, tables=c("tree", "cwd")){
     stop(paste('Directory ', dir, ' does not exist.'))
   }
   
-  if(!tables %in%  c('tree', 'cwd', 'stump', 'herb', 'veg', 'sapling', 'soil')){
-    stop("param 'tables' must be one of 'tree', 'cwd', 'stump', 'herb', 'veg', 'sapling', 'soil'")
+  
+  
+  if(!is.null(tables)){
+    if(!tables %in%  c('plot', 'tree', 'cwd', 'stump', 'herb', 'veg', 'sapling', 'soil')){
+      stop("param 'tables' must be one of 'plot', 'tree', 'cwd', 'stump', 'sapling', 'veg', 'herb', 'soil'")
+    }
   }
+  
   
   
   filenames <- list.files(path=dir, pattern="xlsx")
@@ -135,16 +154,20 @@ read_NFI <- function(dir, district=NULL, tables=c("tree", "cwd")){
       }
       
       
-      site_code <- (gsub("-", "", district_code[district_code[,2] == district, 1][1]))
+      site_codes <- sapply(district, function(d) {
+        gsub("-", "", district_code[district_code[, "district_name"] == d, "district_CD"][1])
+      })
       
-      if(nchar(site_code) == 10){
-        Stand_inve <- Stand_inve %>% 
-          filter(Stand_inve$EMD_CD == substr(site_code,1,8))
-      }else if(nchar(site_code) == 5){
-        Stand_inve <- Stand_inve %>% filter(Stand_inve$SGG_CD == site_code)
-      }else{
-        Stand_inve <- Stand_inve %>% filter(Stand_inve$SIDO_CD == site_code)
-      }
+
+      Stand_inve <- bind_rows(lapply(site_codes, function(site_code) {
+        if(nchar(site_code) == 10) {
+          Stand_inve %>% filter(EMD_CD == substr(site_code, 1, 8))
+        } else if(nchar(site_code) == 5) {
+          Stand_inve %>% filter(SGG_CD == site_code)
+        } else {
+          Stand_inve %>% filter(SIDO_CD == site_code)
+        }
+      }))
       
       
       ## error: No NFI data for the district-----------------------------------------------------------

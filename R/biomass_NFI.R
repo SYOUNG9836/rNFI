@@ -2,71 +2,69 @@
 #' bm_df()
 #' 
 #' @description
-#' bm_df() is a function that
+#' bm_df() is a function that calculates the biomass of individual trees using species-specific national emission factors.
+#' It is an internal function used within the biomass_NFI() function.
 #'
 #' @param data : data
+#' @noRd
  
-## biomass 구하기--------------------------------------------------------------
-## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)(1+뿌리함량비)-----------------
+## Calculates biomass --------------------------------------------------------------
+## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)*(1+뿌리함량비)*(탄소전환계수)*(44/12)-----------------
+## species ~ Volume*(Wood density)*(Biomass expansion factor)*(1+Root to shoot ratio)*(Carbon fraction)*(44/12)-----------------
 bm_df <- function(data){
   
   
   output <- data  %>% mutate(species_bm = case_when(
     
-    ## bio_coeff = 국가고유배출계수, 
-    ## 출처 : "탄소배출계수를 활용한 국가 온실가스 통계 작성", 
-    ## "NIFoS 산림정책이슈 제129호 : 주요 산림수종의 표준 탄소흡수량(ver.1.2)"
     
-    ## 강원지방소나무--------------------------------------------------------------
+    ##species-specific
+    ## Pinus densiflora in Gangwondo()
+    ## 강원지방소나무(영주시, 봉화군, 울진군, 영양군, 강원도) --------------------------------------------------------------
     (SPCD =="14994" & ( SGG_CD == 47210 |  SGG_CD == 47920 |  SGG_CD == 47930 | SGG_CD == 47760 | SIDO_CD == 42 )) 
     ~ "14994_GW" , 
     
-    ##강원지방소나무 영주시, 봉화군, 울진군, 영양군, 강원도 #
+    SPCD =="14994" ~ "14994", # Pinus densiflora (중부지방소나무)
+    SPCD =="14964" ~ "14964" , # Larix kaempferi (일본잎갈나무)
+    SPCD =="14987" ~ "14987", # Pinus rigida (리기다소나무)
+    SPCD =="15003" ~ "15003", # Pinus thunbergii (곰솔)
+    SPCD =="14973" ~ "14973", # Pinus koraiensis (잣나무)
+    SPCD =="15014" ~ "15014" , # Cryptomeria japonica (삼나무)
+    SPCD =="14973" ~ "14973" , # Chamaecyparis obtusa (편백)
+    SPCD =="6617" ~ "6617" , # Quercus variabilis (굴참나무)
+    SPCD =="6556" ~ "6556" , # Quercus mongolica (신갈나무)
+    SPCD =="6512" ~ "6512" , # Quercus acutissima (상수리나무)
+    SPCD =="6591" ~ "6591" , # Quercus serrata (졸참나무)
+    SPCD =="6505" ~ "6505" , # Quercus acuta (붉가시나무)
+    SPCD =="1959" ~ "1959" , # Robinia pseudoacacia (아까시나무)
+    SPCD =="895" ~ "895" , # Betula pendula (자작나무)
+    SPCD =="11588" ~ "11588" , # Liriodendron tulipifera (백합나무)
+    SPCD =="19592" ~ "19592" , # Populus × tomentiglandulosa (은사시나무)
+    SPCD =="6476" ~ "6476" , # Castanea crenata (밤나무)
     
-    ## 수종별--------------------------------------------------------------
-    SPCD =="14994" ~ "14994", #중부지방소나무
-    SPCD =="14964" ~ "14964" , #일본잎갈나무
-    SPCD =="14987" ~ "14987", #리기다
-    SPCD =="15003" ~ "15003", #곰솔
-    SPCD =="14973" ~ "14973", #잣나무
-    SPCD =="15014" ~ "15014" , #삼나무
-    SPCD =="14973" ~ "14973" , #편백
-    SPCD =="6617" ~ "6617" , #굴참나무
-    SPCD =="6556" ~ "6556" , #신갈나무
-    SPCD =="6512" ~ "6512" , #상수리나무
-    SPCD =="6591" ~ "6591" , #졸참나무
-    SPCD =="6505" ~ "6505" , #붉가시나무
-    SPCD =="1959" ~ "1959" , #아까시나무
-    SPCD =="895" ~ "895" , #자작나무
-    SPCD =="11588" ~ "11588" , #백합나무
-    SPCD =="19592" ~ "19592" , #현사시? 은사시?
-    SPCD =="6476" ~ "6476" , #밤나무
-    
-    ## 기타 활엽수 및 기타 침엽수--------------------------------------------------------------
-    (DECEVER_CD == 1) ~ "EVERDEC" ,
-    (CONDEC_CLASS_CD ==1) ~ "OTHER_DEC" ,
-    (CONDEC_CLASS_CD ==0) ~ "OTHER_CON",
+    (DECEVER_CD == 1) ~ "EVERDEC" , # Other evergreen broad-leaved species
+    (CONDEC_CLASS_CD ==1) ~ "OTHER_DEC" , # Other deciduous species
+    (CONDEC_CLASS_CD ==0) ~ "OTHER_CON", # Other conifer species
     TRUE ~ as.character(NA)
+    
+    # Bambusoideae (대나무) ?? 
     
   ))
   
-  ## bio_coeff = 국가고유배출계수, 
-  ## 출처 : "탄소배출계수를 활용한 국가 온실가스 통계 작성", 
-  ## "NIFoS 산림정책이슈 제129호 : 주요 산림수종의 표준 탄소흡수량(ver.1.2)"
+
   output <- left_join(output, bio_coeff, by= c("species_bm" ="SPCD") )
   
-  ## 지상부 biomass 구하기--------------------------------------------------------------
-  ## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)-------------------------------
+  ## Calculating aboveground biomass--------------------------------------------------------------
+  ## species ~ Volume*(Wood density)*(Biomass expansion factor)-------------------------------
   output$AG_biomass <- (output$VOL_EST)*(output$wood_density)*(output$biomass_expan)
-  ## biomass 구하기--------------------------------------------------------------
-  ## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)(1+뿌리함량비)-----------------
+  ## Calculating biomass--------------------------------------------------------------
+  ## species ~ Volume*(Wood density)*(Biomass expansion factor)*(1+Root to shoot ratio)-----------------
   output$T_biomass <- output$AG_biomass*(1+output$root_shoot_ratio)
-  ## 탄소흡수량 구하기-----------------------------------------------
-  ## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)(1+뿌리함량비)*(0.51(침) or 0.48(활))-----------------------
-  output$CF <- ifelse(output$CONDEC_CLASS_CD ==1, 0.48, 0.51 ) ##탄소전환계수
+  ## Calculating carbon storage-----------------------------------------------
+  ## species ~ Volume*(Wood density)*(Biomass expansion factor)*(1+Root to shoot ratio)*(Carbon fraction)-----------------------
+  output$CF <- ifelse(output$CONDEC_CLASS_CD ==1, 0.48, 0.51 ) # Carbon fraction 0.51 (coniferous) or 0.48 (broadleaf)
   output$carbon_stock <- output$T_biomass*output$CF
-  ## 이산탄소흡수량 구하기--------------------------------------------------------------
-  ## 수종 ~ 추정간재적*(목재기본밀도)*(바이오매스 확장계수)(1+뿌리함량비)*(0.51(침) or 0.48(활))*(44/12)--------------------
+  ## Calculating carbon dioxide storage--------------------------------------------------------------
+  ## species ~ Volume*(Wood density)*(Biomass expansion factor)*(1+Root to shoot ratio)*(Carbon fraction)*(44/12)--------------------
   output$co2_stock = output$carbon_stock*(44/12)
   
   
@@ -84,6 +82,7 @@ bm_df <- function(data){
 #' 
 #' @description
 #' biomass_NFI() is a function that
+#' You can specify whether to include large tree survey plots, to focus only on tall trees and Stocked land, and to treat cluster plots as single plots.
 #' 
 #' @details
 #' volume_m3_ha, var_volume_m3_ha, se_volume_m3_ha, rse_volume_m3_ha, 
@@ -92,17 +91,26 @@ bm_df <- function(data){
 #' carbon_stock_tC_ha, var_carbon_stock_tC_ha, se_carbon_stock_tC_ha, rse_carbon_stock_tC_ha,
 #' co2_stock_tCO2_ha, var_co2_stock_tCO2_ha, se_co2_stock_tCO2_ha, rse_co2_stock_tCO2_ha
 #'
-#' @param data : A `list` produced by \code{\link{read_NFI}} that contains 'plot' and 'tree' data frames.
-#' @param byplot : A logical flag indicating whether to calculate for each plot separately or for the entire dataset.
-#' @param grpby : A character vector indicating variables from 'plot' tables for grouping. Use \code{c()} to combine multiple variables.
-#' @param grpby2 : A character vector indicating variables from 'tree' tables for grouping. Use \code{c()} to combine multiple variables.
-#' @param strat : A character vector indicating the variable used for post-stratification. In the National Forest Inventory of Korea, it is typically used by forest type.
-#' @param clusterplot : A logical flag indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.
-#' @param largetreearea : A logical flag indicating whether to include a large tree plot as well, or only a tree plot.
-#' @param Stockedland : A logical flag indicating whether to include only stocked land or also include other types of land.
-#' @param talltree : A logical flag indicating whether to include only tall trees or also shrubs.
+#' @param data : A `list` generated by \code{\link{read_NFI}} that contains 'plot' and 'tree' data frames.
+#' @param byplot : A logical flag; whether to calculate for each plot separately or for the entire dataset.
+#' @param grpby : A character vector; variables from 'plot' tables for grouping. Use \code{c()} to combine multiple variables.
+#' @param grpby2 : A character vector; variables from 'tree' tables for grouping. Use \code{c()} to combine multiple variables.
+#' @param strat : A character vector; the variable used for post-stratification. In the National Forest Inventory of Korea, it is typically used by forest type.
+#' @param clusterplot : A logical flag; whether to calculate for cluster plot collectively or calculate for each subplot separately.
+#' @param largetreearea : A logical flag; whether to include a large tree plot as well, or only a tree plot.
+#' @param Stockedland : A logical flag; whether to include only stocked land or also include other types of land.
+#' @param talltree : A logical flag; whether to include only tall trees or also shrubs.
 #' 
-#' @return biomass
+#' @return A `data.frame` that includes biomass for plot or study areas
+#' 
+#' @examples
+#' \dontrun{
+#' biomass_NFI(NFI5, grpby="map")
+#' }
+#' 
+#' @references 
+#' Son, Y., Kim, R., Lee, K., Pyo, J., Kim, S., Hwang, J., Lee, S., & Park, H. (2014). Carbon emission factors and biomass allometric equations by species in Korea. Korea Forest Research Institute.
+#' Yim, J., Moon, G., Lee, M., Kang, J., Won, M., Ahn, E., & Jeon, J. (2021). 2020 Forest inventory of Korea. Korea Forest Research Institute.
 #' 
 #' @export 
 
@@ -110,7 +118,7 @@ bm_df <- function(data){
 biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FORTYP_SUB", clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
   
   
-  # 경고 
+  ## error message-------------------------------------------------------------- 
   required_names <- c("plot", "tree")
   
   if (!all(required_names %in% names(data))) {
@@ -161,12 +169,12 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
   }
   
   
-  # 전처리
-  if (Stockedland){ #임목지
+  ## Preprocessing-------------------------------------------------------------- 
+  if (Stockedland){ 
     data <- filter_NFI(data, c("plot$LAND_USECD == 1"))
   }
   
-  if(talltree){#수목형태구분
+  if(talltree){
     data$tree <- data$tree %>% filter(WDY_PLNTS_TYP_CD == 1)
   }
   
@@ -183,11 +191,11 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
   
   
   
-  if(!largetreearea){ #대경목조사원내존재여부
+  if(!largetreearea){ 
     df <- df %>% filter(df$LARGEP_TREE == 0)
   }else{
     df$largetree <- ifelse(df$DBH>=30, 1, 0)
-    df$largetree_area <- 0.08 - ((df$NONFR_INCL_AREA_LARGEP*10)/10000) # 단위 m2/10
+    df$largetree_area <- 0.08 - ((df$NONFR_INCL_AREA_LARGEP*10)/10000) # unit m2/10
   }
   
   df$tree_area <- 0.04 - ((df$NONFR_INCL_AREA_SUBP*10)/10000)
@@ -213,8 +221,8 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
   }
   
   
-  # 집락 또는 부표본점별 생물량 계산
-  if(clusterplot){ # 집락표본점별 생물량 계산
+  # 1.Biomass calculation by cluster or subplot
+  if(clusterplot){ #  1.1 Biomass calculation by cluster plots
     
     plot_area <- df[-which(duplicated(df[c('SUB_PLOT', 'CYCLE')])),c('CYCLE', 'INVYR', 'CLST_PLOT', 'SUB_PLOT', 'largetree_area', 'tree_area')]
     
@@ -236,7 +244,7 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
     condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomass_ton","carbon_stock_tC","co2_stock_tCO2"))
     
     
-    if(!largetreearea){ # 대경목조사원 미포함 집락표본점별 생물량 계산 
+    if(!largetreearea){ # 1.1.1 Biomass calculation by cluster plots excluding large tree survey plots 
       
       condition_ha <- c("volume_m3_ha","biomass_ton_ha","AG_biomass_ton_ha","carbon_stock_tC_ha","co2_stock_tCO2_ha")
       bm_temp[condition_ha] <-  NA
@@ -255,7 +263,7 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
       bm_temp$largetreearea <- NULL
       
       
-    }else{ # 대경목조사원 포함 집락표본점별 생물량 계산 
+    }else{ # 1.1.2 Biomass calculation by cluster plots including large tree survey plots 
       
       bm_temp[condition] <- 
         lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, 
@@ -276,7 +284,7 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
     
     
     
-  }else{ # 부표본점별 생물량 계산  
+  }else{ # 1.2 Biomass calculation by subplots 
     
     
     bm_temp <- df %>% 
@@ -290,7 +298,7 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
 
     condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomass_ton","carbon_stock_tC","co2_stock_tCO2"))
     
-    if(!largetreearea){ # 대경목조사원 미포함 부표본점별 생물량 계산  
+    if(!largetreearea){ # 1.2.1 Biomass calculation by subplots excluding large tree survey plots  
       
       condition_ha <- c("volume_m3_ha","biomass_ton_ha","AG_biomass_ton_ha","carbon_stock_tC_ha","co2_stock_tCO2_ha")
       bm_temp[condition_ha] <-  NA
@@ -310,7 +318,7 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
       
       
       
-    }else{ # 대경목조사원 포함 부표본점별 생물량 계산  
+    }else{ # 1.2.2 Biomass calculation by subplots including large tree survey plots  
       
       bm_temp[condition] <- 
         lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, 
@@ -327,11 +335,11 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
     }
   }
   
-  if(!byplot){ # 사후층화이중추출법 및 가중이동평균 생물량 계산
+  if(!byplot){ # 2.1 Biomass calculation using post-stratified double sampling and weighted moving average methods
     
-    # Double sampling for post-strat(forest stand)
+    # 2.1.1 Double sampling for post-strat(by forest stand)
     weight_grpby <- data$plot %>% 
-      group_by(CYCLE, !!!grpby) %>% 
+      group_by(!!!grpby) %>% 
       summarise(plot_num_all = n(),.groups = 'drop')
     
     
@@ -349,7 +357,7 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
     weight_DSS$weight_DSS <- weight_DSS$plot_num_stand/weight_DSS$plot_num_year
     
 
-    # plot to stand 생물량 계산
+    # 2.1.2 Aggregating calculated biomass per plot by forest type.
     bm_temp_DSS <- bm_temp %>% 
       group_by(CYCLE, INVYR, !!strat, !!!grpby, !!!grpby2) %>% 
       summarise(var_volume_m3_ha =  var(volume_m3_ha, na.rm=TRUE),
@@ -395,7 +403,7 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
                 w_co2_stock_tCO2_ha = sum(w_co2_stock_tCO2_ha, na.rm=TRUE), .groups = 'drop')
     
     
-    # stand to study area 생물량 계산
+    # 2.1.3 Aggregating calculated biomass per forest type by study area.
     bm_temp_DSS[condition_DSS] <-  NULL
     bm_temp_DSS <- left_join(bm_temp_DSS, bm_temp_WMA, by =c("CYCLE", "INVYR", as.character(unlist(lapply(grpby, quo_name))),
                                                              as.character(unlist(lapply(grpby2, quo_name)))))
@@ -423,8 +431,8 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
                 var_co2_stock_tCO2_ha = sum(var_co2_stock_tCO2_ha, na.rm=TRUE),.groups = 'drop')
     
     
-    # Weighted Moving Average(to combine annual inventory field data)
-    weight_WMA <- full_join(weight_year, weight_grpby, by =c("CYCLE", as.character(unlist(lapply(grpby, quo_name)))))
+    # 2.1.4 Weighted Moving Average(to combine annual inventory field data)
+    weight_WMA <- full_join(weight_year, weight_grpby, by =c(as.character(unlist(lapply(grpby, quo_name)))))
     weight_WMA$weight_WMA <- weight_WMA$plot_num_year/weight_WMA$plot_num_all
     
     
@@ -464,7 +472,7 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
     
     
     
-  }else{ # 표본점별 생물량 계산
+  }else{ # 2.2 Biomass calculation by plot
     
     bm <- bm_temp
     
@@ -486,21 +494,25 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
 #' 
 #' @description
 #' biomass_tsvis() is a function that
+#' It is an internal function used within the tsvis_NFI() function.
+#' biomass_NFI() calculates biomass by cycle, while this function calculates biomass by 5 year.
 #'
-#' @param data : A `list` produced by \code{\link{read_NFI}} that contains 'plot' and 'tree' data frames.
-#' @param grpby : A character vector indicating variables from 'plot' tables for grouping. Use \code{c()} to combine multiple variables.
-#' @param grpby2 : A character vector indicating variables from 'tree' tables for grouping. Use \code{c()} to combine multiple variables.
-#' @param strat : A character vector indicating the variable used for post-stratification. In the National Forest Inventory of Korea, it is typically used by forest type.
-#' @param clusterplot : A logical flag indicating whether to calculate for cluster plot collectively or calculate for each subplot separately.
-#' @param largetreearea : A logical flag indicating whether to include a large tree plot as well, or only a tree plot.
-#' @param Stockedland : A logical flag indicating whether to include only stocked land or also include other types of land.
-#' @param talltree : A logical flag indicating whether to include only tall trees or also shrubs.
+#' @param data : A `list` generated by \code{\link{read_NFI}} that contains 'plot' and 'tree' data frames.
+#' @param grpby : A character vector; variables from 'plot' tables for grouping. Use \code{c()} to combine multiple variables.
+#' @param grpby2 : A character vector; variables from 'tree' tables for grouping. Use \code{c()} to combine multiple variables.
+#' @param strat : A character vector; the variable used for post-stratification. In the National Forest Inventory of Korea, it is typically used by forest type.
+#' @param clusterplot : A logical flag; whether to calculate for cluster plot collectively or calculate for each subplot separately.
+#' @param largetreearea : A logical flag; whether to include a large tree plot as well, or only a tree plot.
+#' @param Stockedland : A logical flag; whether to include only stocked land or also include other types of land.
+#' @param talltree : A logical flag; whether to include only tall trees or also shrubs.
+#' 
+#' @noRd
 
 
 
 biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
   
-  #경고 
+  ## error message--------------------------------------------------------------  
   required_names <- c("plot", "tree")
   
   if (!all(required_names %in% names(data))) {
@@ -544,13 +556,12 @@ biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clu
   
   
   
-  # 전처리
-  
-  if (Stockedland){ #임목지
+  ## Preprocessing-------------------------------------------------------------- 
+  if (Stockedland){ 
     data <- filter_NFI(data, c("plot$LAND_USECD == 1"))
   }
   
-  if(talltree){#수목형태구분
+  if(talltree){
     data$tree <- data$tree %>% filter(WDY_PLNTS_TYP_CD == 1)
   }
   
@@ -565,11 +576,11 @@ biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clu
     df$VOL_EST <- as.numeric(df$VOL_EST)
   } 
   
-  if(!largetreearea){ #대경목조사원내존재여부
+  if(!largetreearea){ 
     df <- df %>% filter(df$LARGEP_TREE == 0)
   }else{
     df$largetree <- ifelse(df$DBH>=30, 1, 0)
-    df$largetree_area <- 0.08 - ((df$NONFR_INCL_AREA_LARGEP*10)/10000) # 단위 m2/10
+    df$largetree_area <- 0.08 - ((df$NONFR_INCL_AREA_LARGEP*10)/10000) # unit m2/10
   }
   
   
@@ -593,8 +604,8 @@ biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clu
   }
   
   
-  # 집락 또는 부표본점별 생물량 계산
-  if(clusterplot){ # 집락표본점별 생물량 계산
+  # 1.Biomass calculation by cluster or subplot
+  if(clusterplot){ # 1.1 Biomass calculation by cluster plots
     
     plot_area <- df[-which(duplicated(df[c('SUB_PLOT', 'CYCLE')])),c('CYCLE', 'INVYR', 'CLST_PLOT', 'SUB_PLOT', 'largetree_area', 'tree_area')]
 
@@ -619,7 +630,7 @@ biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clu
     condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomass_ton","carbon_stock_tC","co2_stock_tCO2"))
     
     
-    if(!largetreearea){ # 대경목조사원 미포함 집락표본점별 생물량 계산
+    if(!largetreearea){ # 1.1.1 Biomass calculation by cluster plots excluding large tree survey plots
       
       condition_ha <- c("volume_m3_ha","biomass_ton_ha","AG_biomass_ton_ha","carbon_stock_tC_ha","co2_stock_tCO2_ha")
       bm_temp[condition_ha] <-  NA
@@ -638,7 +649,7 @@ biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clu
       bm_temp$largetreearea <- NULL
       
       
-    }else{ # 대경목조사원 포함 집락표본점별 생물량 계산
+    }else{ # 1.1.2 Biomass calculation by cluster plots including large tree survey plots
       
       bm_temp[condition] <- 
         lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, 
@@ -659,7 +670,7 @@ biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clu
     
     
     
-  }else{ # 부표본점별 생물량 계산
+  }else{ # 1.2 Biomass calculation by subplots 
     
     bm_temp <- df %>% 
       group_by(CYCLE, !!plot_id, INVYR, !!strat, largetree, !!!grpby, !!!grpby2, largetree_area, tree_area) %>% 
@@ -672,7 +683,7 @@ biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clu
     
     condition <- (names(bm_temp) %in% c("volume_m3","biomass_ton","AG_biomass_ton","carbon_stock_tC","co2_stock_tCO2"))
     
-    if(!largetreearea){ # 대경목조사원 미포함 부표본점별 생물량 계산
+    if(!largetreearea){ # 1.2.1 Biomass calculation by subplots excluding large tree survey plots
       
       condition_ha <- c("volume_m3_ha","biomass_ton_ha","AG_biomass_ton_ha","carbon_stock_tC_ha","co2_stock_tCO2_ha")
       bm_temp[condition_ha] <-  NA
@@ -692,7 +703,7 @@ biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clu
       bm_temp$largetreearea <- NULL
       
       
-    }else{ # 대경목조사원 포함 부표본점별 생물량 계산
+    }else{ # 1.2.2 Biomass calculation by subplots including large tree survey plots
       
       bm_temp[condition] <- 
         lapply(bm_temp[condition], function(x) ifelse(bm_temp$largetree == 1, 
@@ -709,10 +720,9 @@ biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clu
     }
   }
   
-  
-  
-  # Double sampling for post-strat(forest stand)
-  weight_grpby <- data$plot %>% 
+  # 2.1 Biomass calculation using post-stratified double sampling and weighted moving average methods
+  # 2.1.1 Double sampling for post-strat(forest stand)
+  weight_grpby <- data$plot %>%  # not CYCLE
     group_by(!!!grpby) %>% 
     summarise(plot_num_all = n(),.groups = 'drop')
   
@@ -731,7 +741,7 @@ biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clu
   weight_DSS$weight_DSS <- weight_DSS$plot_num_stand/weight_DSS$plot_num_year
   
   
-  # plot to stand 생물량 계산
+  # 2.1.2 Aggregating calculated biomass per plot by forest type.
   bm_temp_DSS <- bm_temp %>% 
     group_by(CYCLE, INVYR, !!strat, !!!grpby, !!!grpby2) %>% 
     summarise(var_volume_m3_ha =  var(volume_m3_ha, na.rm=TRUE),
@@ -777,7 +787,7 @@ biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clu
               w_co2_stock_tCO2_ha = sum(w_co2_stock_tCO2_ha, na.rm=TRUE), .groups = 'drop')
   
   
-  # stand to study area 생물량 계산
+  # 2.1.3 Aggregating calculated biomass per forest type by study area.
   bm_temp_DSS[condition_DSS] <-  NULL
   bm_temp_DSS <- left_join(bm_temp_DSS, bm_temp_WMA, by =c("CYCLE", "INVYR", as.character(unlist(lapply(grpby, quo_name))),
                                                            as.character(unlist(lapply(grpby2, quo_name)))))
@@ -809,7 +819,7 @@ biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clu
   # var2_volume_m3_ha = sum(weight_DSS*(volume_m3_ha-w_volume_m3_ha)^2/plot_num_year),
   
   
-  # Weighted Moving Average(to combine annual inventory field data)
+  # 2.1.4 Weighted Moving Average(to combine annual inventory field data)
   weight_WMA <- full_join(weight_year, weight_grpby, by =c(as.character(unlist(lapply(grpby, quo_name)))))
   weight_WMA$weight_WMA <- weight_WMA$plot_num_year/weight_WMA$plot_num_all
   
