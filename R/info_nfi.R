@@ -11,6 +11,7 @@
 #' @import sp
 #' @import cowplot
 #' @import drat
+#' @import ggpubr
 #' @importFrom magrittr %>%
 #' @importFrom stats var
 #' @importFrom utils install.packages
