@@ -30,13 +30,13 @@ iv_NFI(
 \item{talltree}{: A logical flag; whether to include only tall trees or also shrubs.}
 }
 \value{
-A \code{data.frame} that includes importance value for tree species.
+A \code{data.frame} that includes importance value for tree species
 }
 \description{
 iv_NFI() is a function that calculates the importance values of tree species based on frequency, density and coverage.
 You can specify whether to include frequency in the calculation.
 please refer to the \code{\link[BiodiversityR]{importancevalue}} function in the \pkg{BiodiversityR} package.
-You can also specify whether to include large tree survey plots, to focus only on tall trees and Stocked land, and to treat cluster plots as single plots.
+Users can also specify whether to include large tree survey plots, to focus only on tall trees and Stocked land, and to treat cluster plots as single plots.
 }
 \details{
 The importance value (ranging from 0 to 100) is calculated as the mean of (i) relative frequency, (ii) relative density, and (iii) relative coverage.

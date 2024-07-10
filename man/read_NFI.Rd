@@ -28,10 +28,10 @@ NFI is downloaded from \url{https://kfss.forest.go.kr/stat/}.
 \code{tree} This table records tree survey data, including species, diameter at breast height (DBH), and tree height, among others.
 \code{cwd} Coarse Woody Debris table. It includes information on species, tree decay level, and cause of death, among other details. Data is collected only at the center subplot of the cluster.
 \code{stump} This table provides data on stumps, including species and diameter at 20 cm above the ground, among other details. Data is collected only at the center subplot of the cluster.
-\code{sapling} This table includes information on saplings, such as species, diameter at 20 cm above the ground, and the number of individuals, among other details.
-\code{veg} This table includes data on vegetation, covering both woody and herbaceous plants. It records species, number of individuals, and dominance information, among others. Data is collected at the center subplot of the cluster and 25\% of all plots.
-\code{herb} This table lists herbaceous species. Data is collected at the center subplot of the cluster and 25\% of all plots. It includes many other variables as well.
-\code{soil} This table contains soil data, including the thickness of the organic layer and soil depth, among others. Data is collected at the center subplot of the cluster and 25\% of all plots.
+\code{sapling} This table includes information on saplings, such as species, diameter at 20 cm above the ground, and the number of individuals, among other details. Data is collected only at the sapling plot of the subplot.
+\code{veg} This table includes data on vegetation, covering both woody and herbaceous plants. It records species, number of individuals, and dominance information, among others. Data is collected from three vegetation plots located within 25\% of total center subplot.
+\code{herb} This table lists herbaceous species. Data is collected only at the sapling plot of the subplot. It includes many other variables as well.
+\code{soil} This table contains soil data, including the thickness of the organic layer and soil depth, among others. Data is collected from three soil plots located within 25\% of total center subplot.
 For more details, refer to the National Forest Inventory guidelines.
 
 This functionality performs integrity validation on data provided by the Korea Forest Service, based on the database of subplot and species.

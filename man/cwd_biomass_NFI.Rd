@@ -27,15 +27,20 @@ cwd_biomass_NFI(
 \item{Stockedland}{: A logical flag; whether to include only stocked land or also include other types of land.}
 }
 \value{
-cwd tree biomass
+A \code{data.frame} that includes biomass of CWD for plot or study areas
 }
 \description{
-cwd_biomass_NFI() is a function that
+cwd_biomass_NFI() is a function that estimates volume, carbon storage and carbon dioxide storage of Coarse Woody Debris (CWD) for each plot, the entire study area, or groups within the study area.
+Users can specify whether to focus only on Stocked land.
+Users can choose the criteria for post-stratification and can also group results by plot or tree characteristics.
 }
 \details{
-cwd_volume_m3_ha, var_cwd_volume_m3_ha, se_cwd_volume_m3_ha, rse_cwd_volume_m3_ha,
-cwd_carbon_stock_tC_ha, var_cwd_carbon_stock_tC_ha, se_cwd_carbon_stock_tC_ha, rse_cwd_carbon_stock_tC_ha
-cwd_co2_stock_tCO2_ha, var_cwd_co2_stock_tCO2_ha, se_cwd_co2_stock_tCO2_ha, rse_cwd_co2_stock_tCO2_ha
+Biomass of CWD is calculated using methodologies employed for national statistics.
+It applies national carbon emission factors to calculate biomass of CWD at the individual tree level.
+Then, the function estimates biomass per hectare at the plot level and uses the calculated per hectare biomass to derive annual statistics, applying the Double Sampling for Post-stratification (DSS) method.
+Since only 20\% of the total plots are surveyed each year, the derived annual statistics are integrated into a single time point.
+The Weighted Moving Average (WMA) method, which assigns weights to the proportion of plots collected over time, is used to calculate these statistics.
+The function also estimates the variance, standard error, and relative standard error of the estimated mean values.
 }
 \examples{
 \dontrun{

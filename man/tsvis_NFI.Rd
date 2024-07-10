@@ -45,11 +45,11 @@ tsvis_NFI(
 \item{frequency}{: A logical flag; whether to use frequency in importance calculations.}
 }
 \value{
-plot data
+An object of class \pkg{ggplot}.
 }
 \description{
 tsvis_NFI() is a function that analyzes and visualizes data in a time series format. It can visualize 'biomass', 'cwd', and 'iv' data as 'table', 'line', 'bar', or 'map'.
-you need to select the specific biomass variable, such as volume or carbon, to visualize biomass.
+Users need to select the specific biomass variable, such as volume or carbon, to visualize biomass.
 If you want to view biomass on a map, you must choose the administrative unit level for the map visualization.
 }
 \note{

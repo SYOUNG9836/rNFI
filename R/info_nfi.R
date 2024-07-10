@@ -9,7 +9,6 @@
 #' @import broom
 #' @import ggplot2
 #' @import sp
-#' @import cowplot
 #' @import drat
 #' @import ggpubr
 #' @importFrom magrittr %>%
@@ -22,5 +21,6 @@
 #' @importFrom rlang syms
 #' @importFrom rlang parse_exprs
 #' @importFrom tidyr spread
+#' @importFrom cowplot plot_grid
 #' 
 NULL
