@@ -50,7 +50,7 @@ cwd_bm_df <- function(data){
 
 
 
-#' cwd_biomass_NFI()
+#' Calculates biomass of Coarse Woody Debris
 #' 
 #' @description
 #' cwd_biomass_NFI() is a function that estimates volume, carbon storage and carbon dioxide storage of Coarse Woody Debris (CWD) for each plot, the entire study area, or groups within the study area.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/biomass_NFI.R
 \name{biomass_NFI}
 \alias{biomass_NFI}
-\title{biomass_NFI()}
+\title{Calculates biomass of tree}
 \usage{
 biomass_NFI(
   data,

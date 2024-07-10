@@ -78,7 +78,7 @@ bm_df <- function(data){
 
 
 
-#' biomass_NFI()
+#' Calculates biomass of tree
 #' 
 #' @description
 #' biomass_NFI() is a function that estimates volume, aboveground biomass, biomass, carbon storage and carbon dioxide storage for each plot, the entire study area, or groups within the study area.

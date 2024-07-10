@@ -2,7 +2,7 @@
 % Please edit documentation in R/cwd_biomass_NFI.R
 \name{cwd_biomass_NFI}
 \alias{cwd_biomass_NFI}
-\title{cwd_biomass_NFI()}
+\title{Calculates biomass of Coarse Woody Debris}
 \usage{
 cwd_biomass_NFI(
   data,
