@@ -42,7 +42,7 @@
 
 ##  
 
-iv_NFI <- function(data, sp="SP" , frequency=TRUE , clusterplot=TRUE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
+iv_NFI <- function(data, sp="SP", frequency=TRUE, clusterplot=FALSE, largetreearea=FALSE, Stockedland=TRUE, talltree=TRUE){
   
   ## error message-------------------------------------------------------------- 
   required_names <- c("plot", "tree")
@@ -51,6 +51,10 @@ iv_NFI <- function(data, sp="SP" , frequency=TRUE , clusterplot=TRUE, largetreea
     missing_dfs <- required_names[!required_names %in% names(data)]
     stop("Missing required data frames in the list: ", paste(missing_dfs, collapse = ", "), call. = FALSE)
   }
+  
+  if(!sp %in% names(data$tree)){
+    stop(paste0("param 'sp': ", sp," is not a column name in the 'tree' data frame."))
+  } 
   
   ## Preprocessing--------------------------------------------------------------
   if (Stockedland){ 
@@ -124,7 +128,7 @@ iv_NFI <- function(data, sp="SP" , frequency=TRUE , clusterplot=TRUE, largetreea
     iv$importance.value <- (iv$density.percent + iv$dominance.percent)/2
   }
   
-  
+  iv <- iv[, c(ncol(iv), ncol(iv)-1, 1:(ncol(iv) - 2))]
   
   
   return(iv)
@@ -161,7 +165,7 @@ iv_NFI <- function(data, sp="SP" , frequency=TRUE , clusterplot=TRUE, largetreea
 
 
 
-iv_tsvis <- function(data, sp="SP" , frequency=TRUE , clusterplot=TRUE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
+iv_tsvis <- function(data, sp="SP" , frequency=TRUE , clusterplot=FALSE, largetreearea=FALSE, Stockedland=TRUE, talltree=TRUE){
   
   ## error message-------------------------------------------------------------- 
   required_names <- c("plot", "tree")
@@ -171,6 +175,9 @@ iv_tsvis <- function(data, sp="SP" , frequency=TRUE , clusterplot=TRUE, largetre
     stop("Missing required data frames in the list: ", paste(missing_dfs, collapse = ", "), call. = FALSE)
   }
   
+  if(!sp %in% names(data$tree)){
+    stop(paste0("param 'sp': ", sp," is not a column name in the 'tree' data frame."))
+  } 
   
   ## Preprocessing--------------------------------------------------------------
   if (Stockedland){ 
@@ -234,6 +241,7 @@ iv_tsvis <- function(data, sp="SP" , frequency=TRUE , clusterplot=TRUE, largetre
     iv$frequency.percent <- NULL
   }
   
+  iv <- iv[, c(ncol(iv), ncol(iv)-1, 1:(ncol(iv) - 2))]
   
   return(iv)
   

@@ -21,14 +21,14 @@
 #' 
 #' @examples
 #' \dontrun{
-#' summary_NFI(NFI5)
+#' summary_NFI(NFI5, grpby = "AGE_CLS")
 #' }
 #' 
 #' @export 
 
 
 
-summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
+summary_NFI<- function(data, grpby=NULL, byplot=FALSE, clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
   
   
   ## error message-------------------------------------------------------------- 
@@ -43,7 +43,11 @@ summary_NFI<- function(data, grpby=NULL, byplot= FALSE, clusterplot=FALSE, large
     
     if(!is.character(grpby)) {
       stop("param 'grpby' must be 'character'")
-    }}
+    }
+    if(any(!grpby %in% names(data$plot))){
+      stop(paste0("param 'grpby': ", grpby," is not a column name in the 'plot' data frame."))
+    }
+  }
   
   
   

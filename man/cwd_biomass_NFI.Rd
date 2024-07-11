@@ -44,7 +44,7 @@ The function also estimates the variance, standard error, and relative standard 
 }
 \examples{
 \dontrun{
-cwd_biomass_NFI(NFI5, grpby="map")
+cwd_biomass_NFI(NFI5, grpby2 = "DECAY")
 }
 
 }

@@ -54,7 +54,7 @@ The function also estimates the variance, standard error, and relative standard 
 }
 \examples{
 \dontrun{
-biomass_NFI(NFI5, grpby="map")
+biomass_NFI(NFI5, grpby="SGG")
 }
 
 }

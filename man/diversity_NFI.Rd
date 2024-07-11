@@ -12,7 +12,7 @@ diversity_NFI(
   grpby = NULL,
   byplot = FALSE,
   clusterplot = FALSE,
-  largetreearea = TRUE,
+  largetreearea = FALSE,
   Stockedland = TRUE,
   talltree = TRUE
 )

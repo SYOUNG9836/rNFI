@@ -76,7 +76,7 @@ cwd_bm_df <- function(data){
 #' 
 #' @examples
 #' \dontrun{
-#' cwd_biomass_NFI(NFI5, grpby="map")
+#' cwd_biomass_NFI(NFI5, grpby2 = "DECAY")
 #' }
 #' 
 #' @references 
@@ -98,28 +98,24 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2=NULL, strat=
   }
   
   if (!is.null(grpby)){
-    if(grpby==strat){
+    if(any(grpby %in% strat)){
       stop("param 'grpby' is the same as param 'strat'")
     }
     if(!is.character(grpby)) {
       stop("param 'grpby' must be 'character'")
     }
-    # if(byplot){
-    #  warning("param 'grpby' has priority over param 'byplot'")
-    # }
-  }
-  
-  if (clusterplot){
-    if(strat=="FORTYP_SUB"){
-      warning("When the param 'clusterplot' is set to TRUE, param 'strat' uses FORTYP_CLST (the forest type for the cluster plot) instead of FORTYP_SUB (the forest type for each subplot).")
-      
-      strat <- c("FORTYP_CLST")
+    if(any(!grpby %in% names(data$plot))){
+      stop(paste0("param 'grpby': ", grpby," is not a column name in the 'plot' data frame."))
     }
   }
+  
   
   if (!is.null(grpby2)){
     if(!is.character(grpby2)) {
       stop("param 'grpby2' must be 'character'")
+    }
+    if(any(!grpby2 %in% names(data$cwd))){
+      stop(paste0("param 'grpby2': ",grpby2," is not a column name in the 'cwd' data frame."))
     }
   }
   
@@ -129,6 +125,9 @@ cwd_biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2=NULL, strat=
     }
     if(byplot){
       warning("param 'byplot' has priority over param 'strat'")
+    }
+    if(!strat %in% names(data$plot)){
+      stop(paste0("param 'strat': ", strat," is not a column name in the 'plot' data frame."))
     }
     
   }
@@ -359,11 +358,14 @@ cwd_biomass_tsvis <- function(data, grpby=NULL, strat="FORTYP_SUB", Stockedland=
   }
   
   if (!is.null(grpby)){
-    if(grpby==strat){
+    if(any(grpby %in% strat)){
       stop("param 'grpby' is the same as param 'strat'")
     }
     if(!is.character(grpby)) {
       stop("param 'grpby' must be 'character'")
+    }
+    if(any(!grpby %in% names(data$plot))){
+      stop(paste0("param 'grpby': ", grpby," is not a column name in the 'plot' data frame."))
     }
   }
   
@@ -379,11 +381,17 @@ cwd_biomass_tsvis <- function(data, grpby=NULL, strat="FORTYP_SUB", Stockedland=
     if(!is.character(grpby2)) {
       stop("param 'grpby2' must be 'character'")
     }
+    if(any(!grpby2 %in% names(data$cwd))){
+      stop(paste0("param 'grpby2': ",grpby2," is not a column name in the 'cwd' data frame."))
+    }
   }
   
   if (!is.null(strat)){
     if(!is.character(strat)) {
       stop("param 'strat' must be 'character'")
+    }
+    if(!strat %in% names(data$plot)){
+      stop(paste0("param 'strat': ", strat," is not a column name in the 'plot' data frame."))
     }
   }
   

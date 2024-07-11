@@ -43,7 +43,7 @@ Additionally, this function estimates the mean and standard error for tree measu
 }
 \examples{
 \dontrun{
-summary_NFI(NFI5)
+summary_NFI(NFI5, grpby = "AGE_CLS")
 }
 
 }

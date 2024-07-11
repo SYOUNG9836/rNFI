@@ -48,10 +48,10 @@
 
 ##  
 
-diversity_NFI <- function(data, sp="SP", table="tree", basal=FALSE, grpby=NULL, byplot= FALSE, clusterplot=FALSE, largetreearea=TRUE, Stockedland=TRUE, talltree=TRUE){
+diversity_NFI <- function(data, sp="SP", table="tree", basal=FALSE, grpby=NULL, byplot=FALSE, clusterplot=FALSE, largetreearea=FALSE, Stockedland=TRUE, talltree=TRUE){
   
   ## error message-------------------------------------------------------------- 
-  if(!tables %in%  c('tree', 'herb', 'veg', 'sapling')){
+  if(!table %in%  c('tree', 'herb', 'veg', 'sapling')){
     stop("param 'table' must be one of 'tree', 'herb', 'veg', 'sapling'")
   }
   
@@ -66,7 +66,15 @@ diversity_NFI <- function(data, sp="SP", table="tree", basal=FALSE, grpby=NULL, 
   if (!is.null(grpby)){
     if(!is.character(grpby)) {
       stop("param 'grpby' must be 'character'")
-    }}
+    }
+    if(any(!grpby %in% names(data$plot))){
+      stop(paste0("param 'grpby': ", grpby," is not a column name in the 'plot' data frame."))
+    }
+  }
+  
+  if(!sp %in% names(data[[table]])){
+    stop(paste0("param 'sp': ", sp," is not a column name in the '", table,"' data frame."))
+  } 
   
   
   if (table != "tree"){
@@ -117,11 +125,15 @@ diversity_NFI <- function(data, sp="SP", table="tree", basal=FALSE, grpby=NULL, 
                     data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR', "LAND_USE", "LAND_USECD", grpby)],
                     by = c("CLST_PLOT", "SUB_PLOT", "CYCLE"))
     
+    df$NUMINDI <- as.numeric(as.character(df$NUMINDI))
+    
   }else if(table=="sapling"){
     
     df <- left_join(data$sapling[, c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'TREECOUNT', sp)], 
                     data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR', "LAND_USE", "LAND_USECD", grpby)],
                     by = c("CLST_PLOT", "SUB_PLOT", "CYCLE"))
+    
+    df$TREECOUNT <- as.numeric(as.character(df$TREECOUNT))
     
   }else(
     

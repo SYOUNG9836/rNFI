@@ -8,8 +8,8 @@ iv_NFI(
   data,
   sp = "SP",
   frequency = TRUE,
-  clusterplot = TRUE,
-  largetreearea = TRUE,
+  clusterplot = FALSE,
+  largetreearea = FALSE,
   Stockedland = TRUE,
   talltree = TRUE
 )

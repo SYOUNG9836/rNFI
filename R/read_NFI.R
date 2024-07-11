@@ -62,7 +62,7 @@ read_NFI <- function(dir, district=NULL, tables=c("tree", "cwd")){
   
   
   if(!is.null(tables)){
-    if(!tables %in%  c('plot', 'tree', 'cwd', 'stump', 'herb', 'veg', 'sapling', 'soil')){
+    if(any(!tables %in% c('plot', 'tree', 'cwd', 'stump', 'herb', 'veg', 'sapling', 'soil'))){
       stop("param 'tables' must be one of 'plot', 'tree', 'cwd', 'stump', 'sapling', 'veg', 'herb', 'soil'")
     }
   }

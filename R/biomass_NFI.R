@@ -108,7 +108,7 @@ bm_df <- function(data){
 #' 
 #' @examples
 #' \dontrun{
-#' biomass_NFI(NFI5, grpby="map")
+#' biomass_NFI(NFI5, grpby="SGG")
 #' }
 #' 
 #' @references 
@@ -141,15 +141,15 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
   
   
   if (!is.null(grpby)){
-    if(grpby==strat){
+    if(any(grpby %in% strat)){
       stop("param 'grpby' is the same as param 'strat'")
     }
     if(!is.character(grpby)) {
       stop("param 'grpby' must be 'character'")
     }
-    #if(byplot){
-    #  warning("param 'grpby' has priority over param 'byplot'")
-    #}
+    if(any(!grpby %in% names(data$plot))){
+      stop(paste0("param 'grpby': ", grpby," is not a column name in the 'plot' data frame."))
+    }
     
   }
   
@@ -158,7 +158,9 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
     if(!is.character(grpby2)) {
       stop("param 'grpby2' must be 'character'")
     }
-    
+    if(any(!grpby2 %in% names(data$tree))){
+      stop(paste0("param 'grpby2': ",grpby2," is not a column name in the 'tree' data frame."))
+    }
   }
   
   if (!is.null(strat)){
@@ -168,7 +170,9 @@ biomass_NFI <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
     if(byplot){
       warning("param 'byplot' has priority over param 'strat'")
     }
-    
+    if(!strat %in% names(data$plot)){
+      stop(paste0("param 'strat': ", strat," is not a column name in the 'plot' data frame."))
+    }
   }
   
   
@@ -524,13 +528,15 @@ biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clu
   }
   
   if (!is.null(grpby)){
-    if(grpby==strat){
+    if(any(grpby %in% strat)){
       stop("param 'grpby' is the same as param 'strat'")
     }
     if(!is.character(grpby)) {
       stop("param 'grpby' must be 'character'")
     }
-    
+    if(any(!grpby %in% names(data$plot))){
+      stop(paste0("param 'grpby': ", grpby," is not a column name in the 'plot' data frame."))
+    }
   }
   
   if (clusterplot){
@@ -547,12 +553,17 @@ biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clu
     if(!is.character(grpby2)) {
       stop("param 'grpby2' must be 'character'")
     }
-    
+    if(any(!grpby2 %in% names(data$tree))){
+      stop(paste0("param 'grpby2': ",grpby2," is not a column name in the 'tree' data frame."))
+    }
   }
   
   if (!is.null(strat)){
     if(!is.character(strat)) {
       stop("param 'strat' must be 'character'")
+    }
+    if(!strat %in% names(data$plot)){
+      stop(paste0("param 'strat': ", strat," is not a column name in the 'plot' data frame."))
     }
     
   }
