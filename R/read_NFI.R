@@ -1,10 +1,10 @@
 #' Reads Korean National Forest Inventory
 #'
 #' @description
-#' read_NFI() is a function that reads Korean National Forest Inventory (NFI).
+#' read_nfi() is a function that reads Korean National Forest Inventory (NFI).
 #' Loads the annual NFI file from the local computer.
 #' And change the data to an easy-to-analyze format and perform integrity verification.
-#' read_NFI() allows you to select and load specific districts and desired tables.
+#' read_nfi() allows you to select and load specific districts and desired tables.
 #' NFI is downloaded from \url{https://kfss.forest.go.kr/stat/}.
 #' 
 #' @details 
@@ -32,7 +32,7 @@
 #' 
 #' @examples
 #' \dontrun{
-#' read_NFI("D:/NFI/NFI5", district=NULL, tables=c("tree", "cwd"))
+#' read_nfi("D:/NFI/NFI5", district=NULL, tables=c("tree", "cwd"))
 #' }
 #' 
 #' @note  
@@ -46,7 +46,7 @@
 #' @export
 
 
-read_NFI <- function(dir, district=NULL, tables=c("tree", "cwd")){
+read_nfi <- function(dir, district=NULL, tables=c("tree", "cwd")){
   
   
   ## Load a list of .xlsx files located in the path--------------------------------------------------
