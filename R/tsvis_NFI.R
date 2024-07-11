@@ -137,8 +137,8 @@ tsvis_nfi <- function(data, admin=NULL, y = "biomass", bm_type = NULL, output ="
       tsvis_list[[i]] <- cwd_biomass_tsvis(data_temp, grpby = admin, strat = strat, stockedland = stockedland)
       tsvis_list[[i]]$year <- e_year
     }else if(y == "iv"){
-      tsvis_list[[i]] <- iv_tsvis(data_temp, frequency = frequency, clusterplot = clusterplot,
-                                                 largetreearea = largetreearea, stockedland = stockedland, talltree = talltree)
+      tsvis_list[[i]] <- iv_tsvis(data_temp, sp = sp, frequency = frequency, clusterplot = clusterplot,
+                                  largetreearea = largetreearea, stockedland = stockedland, talltree = talltree)
       tsvis_list[[i]]$year <- e_year
     }else{
       stop(paste( y, ' does not exist.'))
@@ -244,7 +244,7 @@ tsvis_nfi <- function(data, admin=NULL, y = "biomass", bm_type = NULL, output ="
       se  <- rlang::sym(se)
       
       tsvis <- ggplot2::ggplot(tsvis_df, ggplot2::aes(x=year)) + 
-        ggplot2::geom_line(ggplot2::aes(y=!!value, group = name, color = reorder(name, -!!value)), size = 1.1)+ 
+        ggplot2::geom_line(ggplot2::aes(y=!!value, group = name, color = reorder(name, -!!value)), linewidth = 1.1)+ 
         ggplot2::geom_point(ggplot2::aes(y=!!value, group = name, color = reorder(name, -!!value)), size = 3)+ 
         ggplot2::geom_errorbar(ggplot2::aes(ymin=!!value-!!se, ymax=!!value+!!se, color = reorder(name, -!!value)),
                       width=0.2, size=0.8)+ 
@@ -301,7 +301,7 @@ tsvis_nfi <- function(data, admin=NULL, y = "biomass", bm_type = NULL, output ="
       tsvis <- tsvis_df %>% 
         filter(species %in% reorder(species, importance.value)[1:20]) %>%
         ggplot2::ggplot() + 
-        ggplot2::geom_line(ggplot2::aes(x=year, y=importance.value, group = species, color = reorder(species, -importance.value)), size = 1.1)+ 
+        ggplot2::geom_line(ggplot2::aes(x=year, y=importance.value, group = species, color = reorder(species, -importance.value)), linewidth = 1.1)+ 
         ggplot2::theme(axis.title.x = ggplot2::element_text(vjust=-1.5),
               axis.title.y = ggplot2::element_text(vjust=4),
               plot.margin = ggplot2::unit(c(0.3,0.1,0.5,0.6), "cm"), 

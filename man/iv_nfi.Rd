@@ -34,7 +34,7 @@ A \code{data.frame} that includes importance value for tree species
 }
 \description{
 iv_nfi() is a function that calculates the importance values of tree species based on frequency, density and coverage.
-You can specify whether to include frequency in the calculation.
+Users can specify whether to include frequency in the calculation.
 please refer to the \code{\link[BiodiversityR]{importancevalue}} function in the \pkg{BiodiversityR} package.
 Users can also specify whether to include large tree survey plots, to focus only on tall trees and Stocked land, and to treat cluster plots as single plots.
 }

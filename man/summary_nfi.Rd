@@ -37,7 +37,7 @@ summary_nfi() is a function that calculates descriptive statistics for each plot
 Users can specify whether to include large tree survey plots, to focus only on tall trees and Stocked land, and to treat cluster plots as single plots.
 }
 \details{
-The summary_nfi function provides statistics related to plots, including the number of cluster plots, subplots, subplots with large trees (≥30cm) observed in large tree plots, and subplots where large trees were observed.
+The summary_nfi function provides statistics related to plots, including the number of cluster plots, subplots, subplots with large trees (≥30cm) observed in large tree survey plots, and subplots where large trees were observed.
 It also offers statistics for trees, such as the number of individuals, large trees, dominant trees, and species.
 Additionally, this function estimates the mean and standard error for tree measurements and stand statistics: DBH (Diameter at Breast Height), height, height of dominant trees, number of individuals per hectare, basal area per hectare, and volume per hectare.
 }
