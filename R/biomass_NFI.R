@@ -178,11 +178,11 @@ biomass_nfi <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
   
   ## Preprocessing-------------------------------------------------------------- 
   if (stockedland){ 
-    data <- filter_nfi(data, c("plot$LAND_USECD == 1"))
+    data <- filter_nfi(data, c("plot$LAND_USECD == '1'"))
   }
   
   if(talltree){
-    data$tree <- data$tree %>% filter(WDY_PLNTS_TYP_CD == 1)
+    data$tree <- data$tree %>% filter(WDY_PLNTS_TYP_CD == "1")
   }
   
    
@@ -199,7 +199,7 @@ biomass_nfi <- function(data, byplot= FALSE, grpby=NULL, grpby2= NULL, strat="FO
   
   
   if(!largetreearea){ 
-    df <- df %>% filter(df$LARGEP_TREE == 0)
+    df <- df %>% filter(df$LARGEP_TREE == "0")
   }else{
     df$largetree <- ifelse(df$DBH>=30, 1, 0)
     df$largetree_area <- 0.08 - ((df$NONFR_INCL_AREA_LARGEP*10)/10000) # unit m2/10
@@ -572,11 +572,11 @@ biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clu
   
   ## Preprocessing-------------------------------------------------------------- 
   if (stockedland){ 
-    data <- filter_nfi(data, c("plot$LAND_USECD == 1"))
+    data <- filter_nfi(data, c("plot$LAND_USECD == '1'"))
   }
   
   if(talltree){
-    data$tree <- data$tree %>% filter(WDY_PLNTS_TYP_CD == 1)
+    data$tree <- data$tree %>% filter(WDY_PLNTS_TYP_CD == "1")
   }
   
   df <- left_join(data$tree[,c('CLST_PLOT', 'SUB_PLOT',"CYCLE", 'WDY_PLNTS_TYP_CD','SP', 'SPCD',
@@ -591,7 +591,7 @@ biomass_tsvis <- function(data, grpby=NULL, grpby2=NULL, strat="FORTYP_SUB", clu
   } 
   
   if(!largetreearea){ 
-    df <- df %>% filter(df$LARGEP_TREE == 0)
+    df <- df %>% filter(df$LARGEP_TREE == "0")
   }else{
     df$largetree <- ifelse(df$DBH>=30, 1, 0)
     df$largetree_area <- 0.08 - ((df$NONFR_INCL_AREA_LARGEP*10)/10000) # unit m2/10

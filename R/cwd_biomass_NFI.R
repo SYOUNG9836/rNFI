@@ -135,7 +135,7 @@ cwd_biomass_nfi <- function(data, byplot= FALSE, grpby=NULL, grpby2=NULL, strat=
   
   ## Preprocessing--------------------------------------------------------------
   if (stockedland){ 
-    data <- filter_nfi(data, c("plot$LAND_USECD == 1"))
+    data <- filter_nfi(data, c("plot$LAND_USECD == '1'"))
   }
 
   df <- left_join(data$cwd[, c('CLST_PLOT', 'SUB_PLOT',"CYCLE", 'SP', 'SPCD','DECAYCD', 
@@ -398,7 +398,7 @@ cwd_biomass_tsvis <- function(data, grpby=NULL, strat="FORTYP_SUB", stockedland=
   
   ## Preprocessing-------------------------------------------------------------- 
   if (stockedland){ 
-    data <- filter_nfi(data, c("plot$LAND_USECD == 1"))
+    data <- filter_nfi(data, c("plot$LAND_USECD == '1'"))
   }
   
   df <- left_join(data$cwd[, c('CLST_PLOT', 'SUB_PLOT',"CYCLE", 'SP', 'SPCD', 'DECAYCD', 

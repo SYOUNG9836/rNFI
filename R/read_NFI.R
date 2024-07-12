@@ -1,47 +1,51 @@
-#' Reads Korean National Forest Inventory
+#' Read Korean National Forest Inventory
 #'
 #' @description
-#' read_nfi() is a function that reads Korean National Forest Inventory (NFI).
-#' It loads the annual NFI file from the local computer, changes the data to an easy-to-analyze format, and performs integrity verification.
-#' read_nfi() allows users to select and load specific districts and desired tables.
-#' NFI is downloaded from \url{https://kfss.forest.go.kr/stat/}.
-#' 
+#' read_nfi() is a function that reads and processes Korean National Forest Inventory (NFI).
+#' It loads annual NFI files from a local computer, transforms the data into an analysis-friendly format, and performs data integrity verification.
+#' Users can specify districts and tables to load.
+#' NFI data can be downloaded from \url{https://kfss.forest.go.kr/stat/}.
 #' 
 #' @details 
-#' `plot` This table contains data for each subplot, including site, stand, non-forest area, and other information. It is a base part, so there is no need to configure it separately.
-#' `tree` This table records tree survey data, including species, diameter at breast height (DBH), and tree height, among others.
-#' `cwd` Coarse Woody Debris table. It includes information on species, tree decay level, and cause of death, among other details. Data is collected only at the center subplot of the cluster plot.
-#' `stump` This table provides data on stumps, including species and diameter at 20 cm above the ground, among other details. Data is collected only at the center subplot of the cluster.
-#' `sapling` This table includes information on saplings, such as species, diameter at 20 cm above the ground, and the number of individuals, among other details. Data is collected only at the sapling survey plot of the subplot.
-#' `veg` This table includes data on vegetation, covering both woody and herbaceous plants. It records species, number of individuals, and dominance, among others. Data is collected from three vegetation survey plots located within each selected center subplot. The selection includes 25% of the total number of center subplots.
-#' `herb` This table lists herbaceous species. Data is collected only at the sapling survey plot of the subplot.
-#' `soil` This table contains soil data, including the thickness of the organic layer and soil depth, among others. Data is collected from three soil survey plots located within each selected center subplot. The selection includes 25% of the total number of center subplots.
+#' The function can load the following tables:
+#' `plot` Base table containing subplot data including site, stand and non-forest area, among other details (automatically included).
+#' `tree` Tree survey table including species, DBH, and height, among others. Data is collected from trees and large trees survey plot of subplot.
+#' `cwd` Coarse woody debris table including species, tree decay level, and cause of death, among other details. Data is collected only at the center subplot of the cluster plot.
+#' `stump` Stumps table including species and diameter at 20 cm above the ground, among other details. Data is collected only at the center subplot of the cluster.
+#' `sapling` Saplings table including species, diameter at 20 cm above the ground, and the number of individuals, among other details. Data is collected only at the sapling survey plot of the subplot.
+#' `veg` Vegetation table (both woody and herbaceous plants). It records species, number of individuals, and dominance, among others. Data is collected from three vegetation survey plots located within each selected center subplot. The selection includes 25% of the total number of center subplots.
+#' `herb` Herbaceous table focused on herbaceous list. Data is collected only at the sapling survey plot of the subplot.
+#' `soil` Soil table including the thickness of the organic layer and soil depth, among others. Data is collected from three soil survey plots located within each selected center subplot. The selection includes 25% of the total number of center subplots.
 #' For more details, refer to the National Forest Inventory guidelines.
 #' 
-#' This functionality performs integrity validation on data provided by the Korea Forest Service, based on the database of subplot and species. 
-#' It corrects errors in the administrative regions of subplots and in the classification of species as coniferous or deciduous. 
-#' The existing data, which only provides species names, has been augmented with the Korean and English names of families and genera, as well as the scientific names of species. 
-#' The classification of species into coniferous and broadleaf categories, as well as plant taxonomy, follows the standards of the Korean Plant Names Index Committee of the Korea National Arboretum \url{http://www.nature.go.kr/kpni/index.do}. 
-#' Additionally, this functionality calculates the forest type, dominant species, and dominant species percentage for each subplot and cluster plot. 
+#' This function performs several data integrity validation. 
+#' 1. Corrects administrative region information for subplots.
+#' 2. Adds ecoregion and catchment for subplots.
+#' 3. Verifies and corrects coniferous/deciduous classification of tree species.
+#' 4. Adds scientific names for species.
+#' 5. Adds Korean and English names for plant families and genera. 
+#' 6. Calculates forest type, dominant species, and dominant species percentage for each subplot and cluster plot
+#' Species classification and taxonomy follow the standards set by the Korean Plant Names Index Committee of the Korea National Arboretum \url{http://www.nature.go.kr/kpni/index.do}. 
 #'  
-#' @param dir : A character vector; directory of NFI files.
-#' @param district : A character vector; the district's Korean name within levels such as sido, sigungu, or eupmyondong. If `NULL`, the entire dataset is loaded. Use \code{c()} to combine multiple district names. 
-#' @param tables : A character vector; names of specific tables to be imported. Can be any of 'tree', 'cwd', 'stump', 'sapling', 'veg', 'herb', 'soil'. Use \code{c()} to combine multiple table names. e.g., `c('tree', 'cwd', 'stump', 'sapling', 'veg', 'herb', 'soil')`.  
+#' @param dir : A character vector; The directory containing NFI files.
+#' @param district : A character vector; The district names in Korean (sido, sigungu, or eupmyondong levels). If `NULL`, the entire dataset is loaded. Combine multiple districts using \code{c()}. 
+#' @param tables : A character vector; tables to import. Options: 'tree', 'cwd', 'stump', 'sapling', 'veg', 'herb', 'soil'. Combine multiple tables using \code{c()}. e.g., `c('tree', 'cwd', 'stump', 'sapling', 'veg', 'herb', 'soil')`.  
 #' 
-#' @return A `data.frame`; the loaded and transformed NFI data, structured for easy analysis. Columns and structure depend on the survey tables loaded.
+#' @return A `data.frame`; the processed NFI data, structured for easy analysis. 
 #' 
 #' @examples
 #' \dontrun{
-#' read_nfi("D:/NFI/NFI5", district=NULL, tables=c("tree", "cwd"))
+#'  # Load tree and CWD data for all districts
+#'  nfi5_data <- read_nfi("D:/NFI/NFI5", district=NULL, tables=c("tree", "cwd"))
 #' }
 #' 
 #' @note  
-#' To download subsets of the annual NFI file manually, go online to the Korea Forest Service Forestry Statistics Platform (\url{https://kfss.forest.go.kr/stat/}), download .zip files, and extract them.
-#' Load the data \code{rNFI::col_name} to find out the Korean and English names of the column names. 
+#' To manually download subsets of the annual NFI file, visit the Korea Forest Service Forestry Statistics Platform (\url{https://kfss.forest.go.kr/stat/}), download .zip files, and extract them.
 #' 
-#' The National Forest Inventory conducts internal reviews, field inspections, and error prevention efforts to maintain quality. 
-#' However, given that approximately 4,000 plots and over 70 items are surveyed in the 7th phase, various errors may still exist. 
-#' Please use the data with caution, and share any anomalies you discover with us so we can incorporate them into our algorithms.
+#' Use \code{rNFI::col_name} to view the Korean and English names of the column names. 
+#' 
+#' While the National Forest Inventory undergoes rigorous quality control, including internal reviews  and field inspections, errors may still exist due to the extensive nature of the survey (approximately 4,000 plots and over 70 items in the 7th phase). 
+#' Please use the data cautiously and report any anomalies to help improve our algorithms.
 #' 
 #' @export
 
@@ -149,8 +153,20 @@ read_nfi <- function(dir, district=NULL, tables=c("tree", "cwd")){
       }
       
       
-      if(any(district %in% district_code[,2] == FALSE )) {
-        stop(paste( 'District ', district, ' does not exist.'))
+      if(any(district %in% NFI_plot_DB$district_name == FALSE )) { # Check NFI_plot_DB  district_code 
+        
+        prefix <- substr(district, 1, 2)
+        matches <- NFI_plot_DB$district_name[grep(prefix, NFI_plot_DB$district_name)]
+        
+        if (length(matches) > 0) {
+          matches <- paste(matches, collapse = ", ")
+          matches_name <- paste0("Closest match: ", matches)
+        } else {
+          matches_name <- paste0("No similar names found.")
+        }
+        
+        
+        stop(paste0( 'District ', district, ' does not exist. ', matches_name))
       }
       
       
@@ -421,53 +437,39 @@ read_nfi <- function(dir, district=NULL, tables=c("tree", "cwd")){
 
 
   ## Assign column attributes --------------------------------------------------------------
-  log_col <- c("FORCD", "SVYCD")
-  NFI$plot[ , colnames(NFI$plot) %in% log_col ] <- lapply(lapply(NFI$plot[ , colnames(NFI$plot) %in% log_col ], as.numeric), as.logical)
+  # log_col <- c("FORCD", "SVYCD")
+  # NFI$plot[ , colnames(NFI$plot) %in% log_col ] <- lapply(lapply(NFI$plot[ , colnames(NFI$plot) %in% log_col ], as.numeric), as.logical)
+  # 
+  # 
+  # fac_col <- c("LAND_USECD", "LAND_USE","FORTYPCD","FORTYP", "DECAYCD")
+  # NFI$plot[ , colnames(NFI$plot) %in% fac_col ] <- lapply(NFI$plot[ , colnames(NFI$plot) %in% fac_col ], as.factor)
+  # 
   
-  
-  fac_col <- c("LAND_USECD", "LAND_USE","FORTYPCD","FORTYP", "DECAYCD")
-  NFI$plot[ , colnames(NFI$plot) %in% fac_col ] <- lapply(NFI$plot[ , colnames(NFI$plot) %in% fac_col ], as.factor)
-  
-  
+
   num_col <- c("NONFR_INCL_AREA_SUBP", "NONFR_INCL_AREA_LARGEP","RDDIST", "ELEV","SLOPE",
                "ASPCT",
                "DBH", "BOLE_HT", "HT", "DIST", "AZIMUTH", "TOTAGE",	"PITH_BARK_LEN",	"TRG_5YRS",
-               "BARK_THICK",	"STD_DIAM_PROP", "ACTUALVOL",	"HT_EST",	"VOL_EST", "INVYR", "VOL", "HT", "DIA")
-  NFI$plot[ , colnames(NFI$plot) %in% num_col ] <- lapply(NFI$plot[ , colnames(NFI$plot) %in% num_col ], as.numeric)
-  NFI$tree[ , colnames(NFI$tree) %in% num_col ] <- lapply(NFI$tree[ , colnames(NFI$tree) %in% num_col ], as.numeric)
+               "BARK_THICK",	"STD_DIAM_PROP", "ACTUALVOL",	"HT_EST",	"VOL_EST", "INVYR", "VOL", "HT", "DIA", "LEN",
+               "TREECOUNT", "NUMINDI")
   
+  char_col <- c("SUB_PLOT", "CLST_PLOT", "CREATED_DATE", "LARGEP_TREE",
+                "FORCD", "SVYCD", "LAND_USECD", "FORTYPCD", "TRTCD", "SIDO_CD", "SGG_CD", "EMD_CD", 
+                "TOPO_POSITION_CD", "SLP_POS_CD", "TERIN_CD", "8_ASPCT_CD", "FOR_TYP_CD", 
+                "CAN_CVER_CD", "DIAM_CLS_CD", "AGE_CLS_CD", "OWN_CD", "TREE_SP_CD", 
+                "FOR_MANAGE_STATUS_CD", "REG_STATUS_CD", "SOIL_TYP_CD", "SOIL_TX_A_CD", 
+                "SOIL_TX_B_CD", "ROCK_EXP_CD", "ERO_COND_CD", "SPCD", "TREECLCD", "CCLCD", 
+                "DECAYCD", "STANDING_DEAD_CD", "DOMINCD", "DRCCD",
+                "SOILPLOT", "VEGPLOT")
   
-  char_col <- c("SUB_PLOT", "CLST_PLOT", "CREATED_DATE", "CTPRVN_CD","SIG_CD", "EMD_CD")
-  NFI$plot[ , colnames(NFI$plot) %in% char_col ] <- lapply(NFI$plot[ , colnames(NFI$plot) %in% char_col ], as.character)
-  NFI$tree[ , colnames(NFI$tree) %in% char_col ] <- lapply(NFI$tree[ , colnames(NFI$tree) %in% char_col ], as.character)
-  
-  
-  if("cwd" %in% tables){
-    NFI$cwd[ , colnames(NFI$cwd) %in% num_col ] <- lapply(NFI$cwd[ , colnames(NFI$cwd) %in% num_col ], as.numeric)
-    NFI$cwd[ , colnames(NFI$cwd) %in% char_col ] <- lapply(NFI$cwd[ , colnames(NFI$cwd) %in% char_col ], as.character)
-    NFI$cwd <- left_join(NFI$cwd, Species_DB, by= c("SP") )
+  for(i in 1: length(NFI)){
+    
+    NFI[[i]][ , colnames(NFI[[i]]) %in% num_col ] <- lapply(NFI[[i]][ , colnames(NFI[[i]]) %in% num_col ], function(x) as.numeric(as.character(x)))
+    NFI[[i]][ , colnames(NFI[[i]]) %in% char_col ] <- lapply(NFI[[i]][ , colnames(NFI[[i]]) %in% char_col ], function(x) as.character(x))
+    
+    if(!names(NFI)[i] %in% c("plot", "soil")){
+      NFI[[i]] <- left_join(NFI[[i]], Species_DB, by= c("SP") )
+    }
   }
-  
-  
-  if("stump" %in% tables){
-    NFI$stump[ , colnames(NFI$stump) %in% num_col ] <- lapply(NFI$stump[ , colnames(NFI$stump) %in% num_col ], as.numeric)
-    NFI$stump[ , colnames(NFI$stump) %in% char_col ] <- lapply(NFI$stump[ , colnames(NFI$stump) %in% char_col ], as.character)
-    NFI$stump <- left_join(NFI$stump, Species_DB, by= c("SP") )
-  }
-  
-  
-  if("sapling" %in% tables){
-    NFI$sapling <- left_join(NFI$sapling, Species_DB, by= c("SP") )
-  }
-  
-  if("veg" %in% tables){
-    NFI$veg <- left_join(NFI$veg, Species_DB, by= c("SP") )
-  }
-  
-  if("herb" %in% tables){
-    NFI$herb <- left_join(NFI$herb, Species_DB, by= c("SP") )
-  }
-  
   
   
   if("tree" %in% tables){
@@ -480,9 +482,9 @@ read_nfi <- function(dir, district=NULL, tables=c("tree", "cwd")){
     # FORTYP based on basal area (subplot)  --------------------------------------------------------------
     NFI$tree$basal_area <- (pi*(NFI$tree$DBH/2)^2)/10000
     
-    stand_sub <- NFI$tree %>% filter(LARGEP_TREE == 0) 
+    stand_sub <- NFI$tree %>% filter(LARGEP_TREE == "0") 
     stand_sub <- stand_sub %>%  
-      mutate(deciduous_ba = ifelse(CONDEC_CLASS_CD == 1,  basal_area, 0)) %>% # deciduous
+      mutate(deciduous_ba = ifelse(CONDEC_CLASS_CD == "1",  basal_area, 0)) %>% # deciduous
       group_by(SUB_PLOT, CYCLE) %>% 
       summarise(all_ba = sum(basal_area), 
                 deciduous_ba = sum(deciduous_ba),
@@ -493,7 +495,7 @@ read_nfi <- function(dir, district=NULL, tables=c("tree", "cwd")){
                                    ifelse(stand_sub$percent>25, "Mixed", "Coniferous"))
     
     
-    domin <- NFI$tree %>% filter(LARGEP_TREE ==0) 
+    domin <- NFI$tree %>% filter(LARGEP_TREE == "0") 
     domin <- domin %>%
       group_by(SUB_PLOT, CYCLE,  SP) %>%
       summarise(domin_ba = sum(basal_area), .groups = 'drop') %>%
@@ -512,9 +514,9 @@ read_nfi <- function(dir, district=NULL, tables=c("tree", "cwd")){
     
     
     # FORTYP based on basal area (clusterplot)
-    stand_clust <- NFI$tree %>% filter(LARGEP_TREE == 0) 
+    stand_clust <- NFI$tree %>% filter(LARGEP_TREE == "0") 
     stand_clust <- stand_clust %>%
-      mutate(deciduous_ba = ifelse(CONDEC_CLASS_CD == 1,  basal_area, 0)) %>%
+      mutate(deciduous_ba = ifelse(CONDEC_CLASS_CD == "1",  basal_area, 0)) %>%
       group_by(CLST_PLOT, CYCLE) %>% 
       summarise(all_ba = sum(basal_area), 
                 deciduous_ba = sum(deciduous_ba),
@@ -525,7 +527,7 @@ read_nfi <- function(dir, district=NULL, tables=c("tree", "cwd")){
                                       ifelse(stand_clust$percent>25, "Mixed", "Coniferous"))
     
     
-    domin <- NFI$tree %>% filter(LARGEP_TREE == 0) 
+    domin <- NFI$tree %>% filter(LARGEP_TREE == "0") 
     domin <- domin %>%
       group_by(CLST_PLOT, CYCLE,  SP) %>%
       summarise(domin_ba = sum(basal_area), .groups = 'drop') %>%

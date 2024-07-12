@@ -2,54 +2,61 @@
 % Please edit documentation in R/read_nfi.R
 \name{read_nfi}
 \alias{read_nfi}
-\title{Reads Korean National Forest Inventory}
+\title{Read Korean National Forest Inventory}
 \usage{
 read_nfi(dir, district = NULL, tables = c("tree", "cwd"))
 }
 \arguments{
-\item{dir}{: A character vector; directory of NFI files.}
+\item{dir}{: A character vector; The directory containing NFI files.}
 
-\item{district}{: A character vector; the district's Korean name within levels such as sido, sigungu, or eupmyondong. If \code{NULL}, the entire dataset is loaded. Use \code{c()} to combine multiple district names.}
+\item{district}{: A character vector; The district names in Korean (sido, sigungu, or eupmyondong levels). If \code{NULL}, the entire dataset is loaded. Combine multiple districts using \code{c()}.}
 
-\item{tables}{: A character vector; names of specific tables to be imported. Can be any of 'tree', 'cwd', 'stump', 'sapling', 'veg', 'herb', 'soil'. Use \code{c()} to combine multiple table names. e.g., \code{c('tree', 'cwd', 'stump', 'sapling', 'veg', 'herb', 'soil')}.}
+\item{tables}{: A character vector; tables to import. Options: 'tree', 'cwd', 'stump', 'sapling', 'veg', 'herb', 'soil'. Combine multiple tables using \code{c()}. e.g., \code{c('tree', 'cwd', 'stump', 'sapling', 'veg', 'herb', 'soil')}.}
 }
 \value{
-A \code{data.frame}; the loaded and transformed NFI data, structured for easy analysis. Columns and structure depend on the survey tables loaded.
+A \code{data.frame}; the processed NFI data, structured for easy analysis.
 }
 \description{
-read_nfi() is a function that reads Korean National Forest Inventory (NFI).
-It loads the annual NFI file from the local computer, changes the data to an easy-to-analyze format, and performs integrity verification.
-read_nfi() allows users to select and load specific districts and desired tables.
-NFI is downloaded from \url{https://kfss.forest.go.kr/stat/}.
+read_nfi() is a function that reads and processes Korean National Forest Inventory (NFI).
+It loads annual NFI files from a local computer, transforms the data into an analysis-friendly format, and performs data integrity verification.
+Users can specify districts and tables to load.
+NFI data can be downloaded from \url{https://kfss.forest.go.kr/stat/}.
 }
 \details{
-\code{plot} This table contains data for each subplot, including site, stand, non-forest area, and other information. It is a base part, so there is no need to configure it separately.
-\code{tree} This table records tree survey data, including species, diameter at breast height (DBH), and tree height, among others.
-\code{cwd} Coarse Woody Debris table. It includes information on species, tree decay level, and cause of death, among other details. Data is collected only at the center subplot of the cluster plot.
-\code{stump} This table provides data on stumps, including species and diameter at 20 cm above the ground, among other details. Data is collected only at the center subplot of the cluster.
-\code{sapling} This table includes information on saplings, such as species, diameter at 20 cm above the ground, and the number of individuals, among other details. Data is collected only at the sapling survey plot of the subplot.
-\code{veg} This table includes data on vegetation, covering both woody and herbaceous plants. It records species, number of individuals, and dominance, among others. Data is collected from three vegetation survey plots located within each selected center subplot. The selection includes 25\% of the total number of center subplots.
-\code{herb} This table lists herbaceous species. Data is collected only at the sapling survey plot of the subplot.
-\code{soil} This table contains soil data, including the thickness of the organic layer and soil depth, among others. Data is collected from three soil survey plots located within each selected center subplot. The selection includes 25\% of the total number of center subplots.
+The function can load the following tables:
+\code{plot} Base table containing subplot data including site, stand and non-forest area, among other details (automatically included).
+\code{tree} Tree survey table including species, DBH, and height, among others. Data is collected from trees and large trees survey plot of subplot.
+\code{cwd} Coarse woody debris table including species, tree decay level, and cause of death, among other details. Data is collected only at the center subplot of the cluster plot.
+\code{stump} Stumps table including species and diameter at 20 cm above the ground, among other details. Data is collected only at the center subplot of the cluster.
+\code{sapling} Saplings table including species, diameter at 20 cm above the ground, and the number of individuals, among other details. Data is collected only at the sapling survey plot of the subplot.
+\code{veg} Vegetation table (both woody and herbaceous plants). It records species, number of individuals, and dominance, among others. Data is collected from three vegetation survey plots located within each selected center subplot. The selection includes 25\% of the total number of center subplots.
+\code{herb} Herbaceous table focused on herbaceous list. Data is collected only at the sapling survey plot of the subplot.
+\code{soil} Soil table including the thickness of the organic layer and soil depth, among others. Data is collected from three soil survey plots located within each selected center subplot. The selection includes 25\% of the total number of center subplots.
 For more details, refer to the National Forest Inventory guidelines.
 
-This functionality performs integrity validation on data provided by the Korea Forest Service, based on the database of subplot and species.
-It corrects errors in the administrative regions of subplots and in the classification of species as coniferous or deciduous.
-The existing data, which only provides species names, has been augmented with the Korean and English names of families and genera, as well as the scientific names of species.
-The classification of species into coniferous and broadleaf categories, as well as plant taxonomy, follows the standards of the Korean Plant Names Index Committee of the Korea National Arboretum \url{http://www.nature.go.kr/kpni/index.do}.
-Additionally, this functionality calculates the forest type, dominant species, and dominant species percentage for each subplot and cluster plot.
+This function performs several data integrity validation.
+\enumerate{
+\item Corrects administrative region information for subplots.
+\item Adds ecoregion and catchment for subplots.
+\item Verifies and corrects coniferous/deciduous classification of tree species.
+\item Adds scientific names for species.
+\item Adds Korean and English names for plant families and genera.
+\item Calculates forest type, dominant species, and dominant species percentage for each subplot and cluster plot
+Species classification and taxonomy follow the standards set by the Korean Plant Names Index Committee of the Korea National Arboretum \url{http://www.nature.go.kr/kpni/index.do}.
+}
 }
 \note{
-To download subsets of the annual NFI file manually, go online to the Korea Forest Service Forestry Statistics Platform (\url{https://kfss.forest.go.kr/stat/}), download .zip files, and extract them.
-Load the data \code{rNFI::col_name} to find out the Korean and English names of the column names.
+To manually download subsets of the annual NFI file, visit the Korea Forest Service Forestry Statistics Platform (\url{https://kfss.forest.go.kr/stat/}), download .zip files, and extract them.
 
-The National Forest Inventory conducts internal reviews, field inspections, and error prevention efforts to maintain quality.
-However, given that approximately 4,000 plots and over 70 items are surveyed in the 7th phase, various errors may still exist.
-Please use the data with caution, and share any anomalies you discover with us so we can incorporate them into our algorithms.
+Use \code{rNFI::col_name} to view the Korean and English names of the column names.
+
+While the National Forest Inventory undergoes rigorous quality control, including internal reviews  and field inspections, errors may still exist due to the extensive nature of the survey (approximately 4,000 plots and over 70 items in the 7th phase).
+Please use the data cautiously and report any anomalies to help improve our algorithms.
 }
 \examples{
 \dontrun{
-read_nfi("D:/NFI/NFI5", district=NULL, tables=c("tree", "cwd"))
+ # Load tree and CWD data for all districts
+ nfi5_data <- read_nfi("D:/NFI/NFI5", district=NULL, tables=c("tree", "cwd"))
 }
 
 }

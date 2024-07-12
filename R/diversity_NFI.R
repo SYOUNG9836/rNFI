@@ -1,9 +1,10 @@
-#' Calculates species diversity indices
+#' Calculate species diversity indices for National Forest Inventory Data
 #' 
 #' @description
 #' diversity_nfi() is a function that calculates species richness, evenness and the Shannon and Simpson diversity indices for each plot, the entire study area, or groups within the study area.
-#' It can calculate diversity at the species or genus level for tables such as trees and saplings.
+#' It can calculate diversity at the species or genus level for different vegetation components (trees, herbs, vegetation, saplings).
 #' please refer to the \code{\link[vegan]{diversity}} function in the \pkg{vegan} package.
+#' The function offers flexibility in data inclusion criteria, analysis levels, and grouping options.
 #' Users can specify whether to include large tree survey plots, to focus only on tall trees and Stocked land, and to treat cluster plots as single plots.
 #' Users can also group diversity indices by plot characteristics.
 #' 
@@ -96,15 +97,15 @@ diversity_nfi <- function(data, sp="SP", table="tree", basal=FALSE, grpby=NULL, 
   if(table=="tree"){
     
     if (stockedland){ 
-      data <- filter_nfi(data, c("plot$LAND_USECD == 1"))
+      data <- filter_nfi(data, c("plot$LAND_USECD == '1'"))
     }
     
     if(talltree){
-      data$tree <- data$tree %>% filter(WDY_PLNTS_TYP_CD == 1)
+      data$tree <- data$tree %>% filter(WDY_PLNTS_TYP_CD == "1")
     }
     
     if(!largetreearea){ 
-      data$tree <- data$tree %>% filter(LARGEP_TREE == 0)
+      data$tree <- data$tree %>% filter(LARGEP_TREE == "0")
     }
     
     
@@ -125,15 +126,11 @@ diversity_nfi <- function(data, sp="SP", table="tree", basal=FALSE, grpby=NULL, 
                     data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR', "LAND_USE", "LAND_USECD", grpby)],
                     by = c("CLST_PLOT", "SUB_PLOT", "CYCLE"))
     
-    df$NUMINDI <- as.numeric(as.character(df$NUMINDI))
-    
   }else if(table=="sapling"){
     
     df <- left_join(data$sapling[, c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'TREECOUNT', sp)], 
                     data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR', "LAND_USE", "LAND_USECD", grpby)],
                     by = c("CLST_PLOT", "SUB_PLOT", "CYCLE"))
-    
-    df$TREECOUNT <- as.numeric(as.character(df$TREECOUNT))
     
   }else(
     

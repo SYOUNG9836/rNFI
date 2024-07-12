@@ -2,7 +2,7 @@
 % Please edit documentation in R/diversity_nfi.R
 \name{diversity_nfi}
 \alias{diversity_nfi}
-\title{Calculates species diversity indices}
+\title{Calculate species diversity indices for National Forest Inventory Data}
 \usage{
 diversity_nfi(
   data,
@@ -43,8 +43,9 @@ A \code{data.frame} that includes diversity indices
 }
 \description{
 diversity_nfi() is a function that calculates species richness, evenness and the Shannon and Simpson diversity indices for each plot, the entire study area, or groups within the study area.
-It can calculate diversity at the species or genus level for tables such as trees and saplings.
+It can calculate diversity at the species or genus level for different vegetation components (trees, herbs, vegetation, saplings).
 please refer to the \code{\link[vegan]{diversity}} function in the \pkg{vegan} package.
+The function offers flexibility in data inclusion criteria, analysis levels, and grouping options.
 Users can specify whether to include large tree survey plots, to focus only on tall trees and Stocked land, and to treat cluster plots as single plots.
 Users can also group diversity indices by plot characteristics.
 }
