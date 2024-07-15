@@ -102,7 +102,7 @@ iv_nfi <- function(data, sp="SP", grpby=NULL, frequency=TRUE, clusterplot=FALSE,
   iv_temp$factor <- apply(iv_temp[grpby_nm], 1, function(row) paste(row, collapse = "_"))
   
   ## Calculating importance Value by survey cycle--------------------------------------------------------------
-  iv_temp_2<-BiodiversityR::importancevalue.comp(iv_temp, site=quo_name(plot_id), species='SP', count='count', 
+  iv_temp_2<-BiodiversityR::importancevalue.comp(iv_temp, site=quo_name(plot_id), species=quo_name(sp), count='count', 
                                                       basal='basal', factor="factor")
   
   for(i in 2:length(iv_temp_2)){
@@ -252,7 +252,7 @@ iv_tsvis <- function(data, sp="SP", grpby=NULL , frequency=TRUE , clusterplot=FA
   }
   
   ## Calculating importance Value by survey cycle--------------------------------------------------------------
-  iv_temp_2 <-BiodiversityR::importancevalue.comp(iv_temp, site=quo_name(plot_id), species='SP', count='count', 
+  iv_temp_2 <-BiodiversityR::importancevalue.comp(iv_temp, site=quo_name(plot_id), species=quo_name(sp), count='count', 
                                                  basal='basal', factor="factor")
   
   
