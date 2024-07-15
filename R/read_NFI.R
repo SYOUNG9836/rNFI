@@ -71,6 +71,28 @@ read_nfi <- function(dir, district=NULL, tables=c("tree", "cwd")){
     }
   }
   
+  if(!is.null(district)){
+    
+    if(!is.character(district)) {
+      stop("param 'district' must be 'character'")
+    }
+    
+    
+    if(any(district %in% NFI_plot_DB$district_name == FALSE )) { # Check NFI_plot_DB  district_code 
+      
+      prefix <- substr(district, 1, 2)
+      matches <- NFI_plot_DB$district_name[grep(prefix, district_DB$district_name)]
+      
+      if (length(matches) > 0) {
+        matches <- paste(matches, collapse = ", ")
+        matches_name <- paste0("Closest match: ", matches)
+      } else {
+        matches_name <- paste0("No similar names found.")
+      }
+      
+      
+      stop(paste0( 'District ', district, ' does not exist. ', matches_name))
+    }}
   
   
   filenames <- list.files(path=dir, pattern="xlsx")
@@ -147,28 +169,6 @@ read_nfi <- function(dir, district=NULL, tables=c("tree", "cwd")){
     
     ## district filtering --------------------------------------------------------------
     if(!is.null(district)){
-      
-      if(!is.character(district)) {
-        stop("param 'district' must be 'character'")
-      }
-      
-      
-      if(any(district %in% NFI_plot_DB$district_name == FALSE )) { # Check NFI_plot_DB  district_code 
-        
-        prefix <- substr(district, 1, 2)
-        matches <- NFI_plot_DB$district_name[grep(prefix, NFI_plot_DB$district_name)]
-        
-        if (length(matches) > 0) {
-          matches <- paste(matches, collapse = ", ")
-          matches_name <- paste0("Closest match: ", matches)
-        } else {
-          matches_name <- paste0("No similar names found.")
-        }
-        
-        
-        stop(paste0( 'District ', district, ' does not exist. ', matches_name))
-      }
-      
       
       site_codes <- sapply(district, function(d) {
         gsub("-", "", district_code[district_code[, "district_name"] == d, "district_CD"][1])
