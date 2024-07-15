@@ -78,7 +78,7 @@ read_nfi <- function(dir, district=NULL, tables=c("tree", "cwd")){
     }
     
     
-    if(any(district %in% district_DB$district_name == FALSE )) { # Check NFI_plot_DB  district_code  district_DB
+    if(any(!district %in% district_DB$district_name)) { # Check NFI_plot_DB  district_code  district_DB
       
       prefix <- substr(district, 1, 2)
       matches <- district_DB$district_name[grep(prefix, district_DB$district_name)]
