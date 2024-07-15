@@ -97,21 +97,39 @@ iv_nfi <- function(data, sp="SP", grpby=NULL, frequency=TRUE, clusterplot=FALSE,
   
   iv_temp <- data.frame(iv_temp)
   
-  iv_temp$factor <- as.character(paste0(iv_temp$CYCLE, "_",   paste(as.character(unlist(lapply(grpby, quo_name))), collapse = "_")))
+  grpby_nm <- c("CYCLE", as.character(unlist(lapply(grpby, quo_name))))
+  
+  iv_temp$factor <- apply(iv_temp[grpby_nm], 1, function(row) paste(row, collapse = "_"))
   
   ## Calculating importance Value by survey cycle--------------------------------------------------------------
   iv_temp_2<-BiodiversityR::importancevalue.comp(iv_temp, site=quo_name(plot_id), species='SP', count='count', 
                                                       basal='basal', factor="factor")
   
   for(i in 2:length(iv_temp_2)){
-    iv_temp_2[[i]] <- as.data.frame(iv_temp_2[[i]])
-    iv_temp_2[[i]]$species <- rownames(iv_temp_2[[i]])
-    rownames(iv_temp_2[[i]]) <- NULL
+    
+    if(is.null(dim(iv_temp_2[[i]]))){
+      iv_temp_2[[i]] <- as.data.frame(iv_temp_2[[i]])
+      colnm_temp <- rownames(iv_temp_2[[i]])
+      iv_temp_2[[i]] <- t(iv_temp_2[[i]])
+      colnames(iv_temp_2[[i]]) <- colnm_temp
+      rownames(iv_temp_2[[i]]) <- NULL
+      iv_temp_2[[i]] <- as.data.frame(iv_temp_2[[i]])
+      iv_temp_2[[i]]$species <- iv_temp$SP[iv_temp$factor ==iv_temp_2[[1]][i-1]][1]
+      
+    }else{
+      
+      iv_temp_2[[i]] <- as.data.frame(iv_temp_2[[i]])
+      iv_temp_2[[i]]$species <- rownames(iv_temp_2[[i]])
+      rownames(iv_temp_2[[i]]) <- NULL
+      
+    }
+    
     iv_temp_2[[i]]$CYCLE <- sapply(strsplit(iv_temp_2[[1]][i-1], "_"), `[`, 1)
     
     if(!is.null(grpby)){
       for(j in 1:length(as.character(unlist(lapply(grpby, quo_name))))){
-        iv_temp_2[[i]][, as.character(unlist(lapply(grpby, quo_name)))[j]] <- sapply(strsplit(iv_temp_2[[1]][i-1], "_"), `[`, j+1)
+        ivcol <- as.character(unlist(lapply(grpby, quo_name)))[j]
+        iv_temp_2[[i]][ivcol] <- sapply(strsplit(iv_temp_2[[1]][i-1], "_"), `[`, j+1)
       }
     }
   }
@@ -133,7 +151,7 @@ iv_nfi <- function(data, sp="SP", grpby=NULL, frequency=TRUE, clusterplot=FALSE,
     iv$importance.value <- (iv$density.percent + iv$dominance.percent)/2
   }
   
-  iv <- iv[, c(ncol(iv), ncol(iv)-1, 1:(ncol(iv) - 2))]
+  iv <- iv[, c("CYCLE", "species", setdiff(names(iv), c("CYCLE", "species")))]
   
   
   return(iv)
@@ -223,17 +241,53 @@ iv_tsvis <- function(data, sp="SP", grpby=NULL , frequency=TRUE , clusterplot=FA
   plot_id  <- rlang::sym(plot_id)
   
   iv_temp <- data.frame(iv_temp)
-  iv_temp$factor <- as.character(paste(as.character(unlist(lapply(grpby, quo_name))), collapse = "_"))
   
+  grpby_nm <- as.character(unlist(lapply(grpby, quo_name)))
   
+  if(length(grpby) > 0){
+    iv_temp$factor <- apply(iv_temp[grpby_nm], 1, function(row) paste(row, collapse = "_"))
+  }else{
+    iv_temp$factor <- "forest"
+  }
   
   ## Calculating importance Value by survey cycle--------------------------------------------------------------
-  iv <-BiodiversityR::importancevalue(iv_temp, site=quo_name(plot_id), species='SP', count='count', 
-                                                 basal='basal', factor="factor", level="")
+  iv_temp_2 <-BiodiversityR::importancevalue.comp(iv_temp, site=quo_name(plot_id), species='SP', count='count', 
+                                                 basal='basal', factor="factor")
   
+  
+  for(i in 2:length(iv_temp_2)){
+    
+    if(is.null(dim(iv_temp_2[[i]]))){
+      iv_temp_2[[i]] <- as.data.frame(iv_temp_2[[i]])
+      colnm_temp <- rownames(iv_temp_2[[i]])
+      iv_temp_2[[i]] <- t(iv_temp_2[[i]])
+      colnames(iv_temp_2[[i]]) <- colnm_temp
+      rownames(iv_temp_2[[i]]) <- NULL
+      iv_temp_2[[i]] <- as.data.frame(iv_temp_2[[i]])
+      iv_temp_2[[i]]$species <- iv_temp$SP[iv_temp$factor ==iv_temp_2[[1]][i-1]][1]
+      
+    }else{
+      
+      iv_temp_2[[i]] <- as.data.frame(iv_temp_2[[i]])
+      iv_temp_2[[i]]$species <- rownames(iv_temp_2[[i]])
+      rownames(iv_temp_2[[i]]) <- NULL
+      
+    }
+    
+    
+    if(!is.null(grpby)){
+      for(j in 1:length(as.character(unlist(lapply(grpby, quo_name))))){
+        ivcol <- as.character(unlist(lapply(grpby, quo_name)))[j]
+        iv_temp_2[[i]][ivcol] <- sapply(strsplit(iv_temp_2[[1]][i-1], "_"), `[`, j)
+      }
+    }
+  }
+  
+  iv_temp_2[[1]] <- NULL
+  
+  iv <- data.table::rbindlist(iv_temp_2, fill=TRUE, use.names=TRUE)
   
   iv  <- as.data.frame(iv) 
-  iv$species <- rownames(iv)
   rownames(iv) <- NULL
   
   
@@ -247,7 +301,7 @@ iv_tsvis <- function(data, sp="SP", grpby=NULL , frequency=TRUE , clusterplot=FA
     iv$frequency.percent <- NULL
   }
   
-  iv <- iv[, c(ncol(iv), ncol(iv)-1, 1:(ncol(iv) - 2))]
+  iv <- iv[, c("species", setdiff(names(iv), "species"))]
   
   return(iv)
   
