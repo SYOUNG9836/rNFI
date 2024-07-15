@@ -458,26 +458,29 @@ read_nfi <- function(dir, district=NULL, tables=c("tree", "cwd")){
                 "CAN_CVER_CD", "DIAM_CLS_CD", "AGE_CLS_CD", "OWN_CD", "TREE_SP_CD", 
                 "FOR_MANAGE_STATUS_CD", "REG_STATUS_CD", "SOIL_TYP_CD", "SOIL_TX_A_CD", 
                 "SOIL_TX_B_CD", "ROCK_EXP_CD", "ERO_COND_CD", "SPCD", "TREECLCD", "CCLCD", 
-                "DECAYCD", "STANDING_DEAD_CD", "DOMINCD", "DRCCD",
+                "DECAYCD", "STANDING_DEAD_CD", "DOMINCD", "DRCCD", "CONDEC_CLASS_CD", "DECEVER_CD", "WDY_PLNTS_TYP_CD",
                 "SOILPLOT", "VEGPLOT")
   
   for(i in 1: length(NFI)){
     
-    NFI[[i]][ , colnames(NFI[[i]]) %in% num_col ] <- lapply(NFI[[i]][ , colnames(NFI[[i]]) %in% num_col ], function(x) as.numeric(as.character(x)))
-    NFI[[i]][ , colnames(NFI[[i]]) %in% char_col ] <- lapply(NFI[[i]][ , colnames(NFI[[i]]) %in% char_col ], function(x) as.character(x))
+    if(names(NFI)[i] == "tree"){
+      NFI[[i]]$CONDEC_CLASS <- NULL
+      NFI[[i]]$WDY_PLNTS_TYP <- NULL
+    }
     
     if(!names(NFI)[i] %in% c("plot", "soil")){
       NFI[[i]] <- left_join(NFI[[i]], Species_DB, by= c("SP") )
     }
+    
+    NFI[[i]][ , colnames(NFI[[i]]) %in% num_col ] <- lapply(NFI[[i]][ , colnames(NFI[[i]]) %in% num_col ], function(x) as.numeric(as.character(x)))
+    NFI[[i]][ , colnames(NFI[[i]]) %in% char_col ] <- lapply(NFI[[i]][ , colnames(NFI[[i]]) %in% char_col ], function(x) as.character(x))
+    
+    
   }
   
   
   if("tree" %in% tables){
     
-    NFI$tree <- NFI$tree[!(names(NFI$tree) %in% c("CONDEC_CLASS", "WDY_PLNTS_TYP"))]
-    
-    ## Species_DB --------------------------------------------------------------
-    NFI$tree <- left_join(NFI$tree, Species_DB, by= c("SP") )
     
     # FORTYP based on basal area (subplot)  --------------------------------------------------------------
     NFI$tree$basal_area <- (pi*(NFI$tree$DBH/2)^2)/10000
