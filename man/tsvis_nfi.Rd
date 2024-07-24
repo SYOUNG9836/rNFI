@@ -58,7 +58,7 @@ If the output is a table: a \code{data.frame}.
 tsvis_nfi() is a function that analyzes and visualizes data in a time series format. It can visualize 'biomass', 'cwd', and 'iv' data as 'table', 'line', 'bar', or 'map'.
 Users need to select the specific biomass variable, such as volume or carbon, to visualize biomass.
 For map visualization of biomass, users must choose the administrative unit level.
-It uses the \code{\link[iv_nfi]}, \code{\link[biomass_nfi]} and \code{\link[cwd_biomass_nfi]} function for core calculations.
+It uses the \code{\link{iv_nfi}} and \code{\link{biomass_nfi}} and \code{\link{cwd_biomass_nfi}} function for core calculations.
 }
 \note{
 To visualize data as a map, you need to agree to install the \code{kadmin} package during the function execution or install it in advance.
