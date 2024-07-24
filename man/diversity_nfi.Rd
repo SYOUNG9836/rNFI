@@ -28,6 +28,8 @@ diversity_nfi(
 
 \item{plotgrp}{: A character vector; specifies variables from 'plot' table to use for grouping. Use \code{c()} to combine multiple variables.}
 
+\item{byplot}{: A logical flag (default FALSE); if TRUE, calculates statistics for each plot separately. If FALSE, calculates for the entire dataset.}
+
 \item{clusterplot}{: A logical flag (default FALSE); if TRUE, treats each cluster plot as a single unit. If FALSE, calculates for each subplot separately.}
 
 \item{largetreearea}{: A logical flag (default FALSE); if TRUE, includes large tree survey plots in the analysis. If FALSE, only uses standard tree plots.}
@@ -37,11 +39,16 @@ diversity_nfi(
 \item{talltree}{: A logical flag (default TRUE); if TRUE, includes only tall trees. If FALSE, includes both trees and shrubs.}
 }
 \value{
-A \code{data.frame} that includes diversity indices. each row represents the entire dataset or a group specified by \code{plotgrp} and \code{treegrp}
+A \code{data.frame} that includes diversity indices.
+The structure depends on the input parameters:
+\itemize{
+\item If \code{byplot = TRUE}, each row represents a plot.
+\item If \code{byplot = FALSE}, each row represents the entire dataset or a group specified by \code{plotgrp}
+}
 }
 \description{
 diversity_nfi() is a function that calculates species richness, evenness and the Shannon and Simpson diversity indices for National Forest Inventory (NFI) data.
-It can provide diversity measures for the entire study area, or specific groups within it using the \code{plotgrp} parameter.
+It can provide diversity measures for individual plots, the entire study area, or specific groups within the study area using parameters \code{byplot} or \code{plotgrp}.
 The function can calculate diversity at the species or genus level for different vegetation components (trees, herbs, vegetation, saplings).
 It uses the \code{\link[vegan]{diversity}} function from the \pkg{vegan} package for core calculations.
 Users have flexibility in specifying data inclusion criteria and analysis levels using parameters \code{clusterplot}, \code{largetreearea}, \code{stockedland}, and \code{talltree}.

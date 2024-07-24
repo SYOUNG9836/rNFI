@@ -2,7 +2,7 @@
 #' 
 #' @description
 #' diversity_nfi() is a function that calculates species richness, evenness and the Shannon and Simpson diversity indices for National Forest Inventory (NFI) data.
-#' It can provide diversity measures for the entire study area, or specific groups within it using the `plotgrp` parameter.
+#' It can provide diversity measures for individual plots, the entire study area, or specific groups within the study area using parameters `byplot` or `plotgrp`.
 #' The function can calculate diversity at the species or genus level for different vegetation components (trees, herbs, vegetation, saplings).
 #' It uses the \code{\link[vegan]{diversity}} function from the \pkg{vegan} package for core calculations.
 #' Users have flexibility in specifying data inclusion criteria and analysis levels using parameters `clusterplot`, `largetreearea`, `stockedland`, and `talltree`.
@@ -20,13 +20,17 @@
 #' @param sp : A character vector; the column name of species information (e.g., "SP" for species, "Genus" for genus-level analysis).
 #' @param table : A character vector; Specifies which vegetation table to use for diversity analysis. Must be one of 'tree', 'herb', 'veg', 'sapling'.
 #' @param basal : A logical flag (default FALSE); if TRUE, calculates tree diversity using basal area. If FALSE, uses number of individuals. Only applicable when `table = "tree"`.
+#' @param byplot : A logical flag (default FALSE); if TRUE, calculates statistics for each plot separately. If FALSE, calculates for the entire dataset.
 #' @param plotgrp : A character vector; specifies variables from 'plot' table to use for grouping. Use \code{c()} to combine multiple variables.
 #' @param clusterplot : A logical flag (default FALSE); if TRUE, treats each cluster plot as a single unit. If FALSE, calculates for each subplot separately.
 #' @param largetreearea : A logical flag (default FALSE); if TRUE, includes large tree survey plots in the analysis. If FALSE, only uses standard tree plots.
 #' @param stockedland : A logical flag (default TRUE); if TRUE, includes only stocked land. If FALSE, includes all land types.
 #' @param talltree : A logical flag (default TRUE); if TRUE, includes only tall trees. If FALSE, includes both trees and shrubs.
 #' 
-#' @return A `data.frame` that includes diversity indices. each row represents the entire dataset or a group specified by `plotgrp` and `treegrp`
+#' @return A `data.frame` that includes diversity indices.
+#' The structure depends on the input parameters:
+#' - If `byplot = TRUE`, each row represents a plot.
+#' - If `byplot = FALSE`, each row represents the entire dataset or a group specified by `plotgrp`
 #' 
 #' @note 
 #' The 'herb', 'veg', and 'sapling' tables may contain a lot of errors, so use caution when interpreting results from these tables.

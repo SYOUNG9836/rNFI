@@ -13,6 +13,7 @@
 #' @import ggpubr
 #' @importFrom magrittr %>%
 #' @importFrom stats var
+#' @importFrom stats sd
 #' @importFrom utils install.packages
 #' @importFrom utils packageDescription
 #' @importFrom utils menu
