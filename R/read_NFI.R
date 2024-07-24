@@ -19,12 +19,12 @@
 #' For more details, refer to the National Forest Inventory guidelines.
 #' 
 #' This function performs several data integrity validation. 
-#' 1. Corrects administrative region information for subplots.
-#' 2. Adds ecoregion and catchment for subplots.
-#' 3. Verifies and corrects coniferous/deciduous classification of tree species.
-#' 4. Adds scientific names for species.
-#' 5. Adds Korean and English names for plant families and genera. 
-#' 6. Calculates forest type, dominant species, and dominant species percentage for each subplot and cluster plot
+#' 1. Corrects administrative region information for subplots. (col: SIDO, SIDO_CD, SGG, SGG_CD, EMD, EMD_CD)
+#' 2. Adds ecoregion and catchment for subplots. (col: EcoRegion, Catchment)
+#' 3. Verifies and corrects coniferous/deciduous classification of tree species. (col: CONDEC_CLASS, CONDEC_CLASS_CD, WDY_PLNTS_TYP, WDY_PLNTS_TYP_CD)
+#' 4. Adds scientific names for species. (col: Scientific_Name)
+#' 5. Adds Korean and English names for plant families and genera. (col: Family, Family_korean, Genus, Genus_korean)
+#' 6. Calculates forest type, dominant species, and dominant species percentage for each subplot and cluster plot. (col: FORTYP_SUB, DOMIN_PERCNT_SUB, DOMIN_SP_SUB, FORTYP_CLST, DOMIN_PERCNT_CLST, DOMIN_SP_CLST)
 #' Species classification and taxonomy follow the standards set by the Korean Plant Names Index Committee of the Korea National Arboretum \url{http://www.nature.go.kr/kpni/index.do}. 
 #'  
 #' @param dir : A character vector; The directory containing NFI files.
@@ -36,13 +36,13 @@
 #' @examples
 #' \dontrun{
 #'  # Load tree and CWD data for all districts
-#'  nfi5_data <- read_nfi("D:/NFI/NFI5", district=NULL, tables=c("tree", "cwd"))
+#'  nfi5_data <- read_nfi("D:/NFI/NFI5", district = NULL, tables = c("tree", "cwd"))
 #' }
 #' 
 #' @note  
 #' To manually download subsets of the annual NFI file, visit the Korea Forest Service Forestry Statistics Platform (\url{https://kfss.forest.go.kr/stat/}), download .zip files, and extract them.
 #' 
-#' Use \code{rNFI::col_name} to view the Korean and English names of the column names. 
+#' Use \code{data("col_name")} to view the Korean and English names of the column names. 
 #' 
 #' While the National Forest Inventory undergoes rigorous quality control, including internal reviews  and field inspections, errors may still exist due to the extensive nature of the survey (approximately 4,000 plots and over 70 items in the 7th phase). 
 #' Please use the data cautiously and report any anomalies to help improve our algorithms.
@@ -105,6 +105,8 @@ read_nfi <- function(dir, district=NULL, tables=c("tree", "cwd")){
   veg_list <- vector("list", length = length(filenames))
   herb_list <- vector("list", length = length(filenames))
   soil_list <- vector("list", length = length(filenames))
+  
+  card <- 0
   
 
   for(i in 1:length(filenames)){
@@ -188,7 +190,13 @@ read_nfi <- function(dir, district=NULL, tables=c("tree", "cwd")){
       
       ## error: No NFI data for the district-----------------------------------------------------------
       if(nrow(Stand_inve) == 0){
-        stop(paste('NFI data in ',district ,' does not exist.'))}
+        
+        if (card == length(filenames)) {
+          stop(paste('NFI data in', district, 'does not exist.'))
+        } else {
+          card <- card + 1
+          next
+        }}
       
     }
     
