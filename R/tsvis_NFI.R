@@ -83,9 +83,7 @@ tsvis_nfi <- function(data, y = "biomass", bm_type = NULL, output ="line", plotg
   }
   
   if(y != "iv" & output == "map"){
-    if(!stringr::str_detect(admin,'_CD$')){
-      stop("param 'admin' must be in administrative district code")
-    }
+    
     if(!admin %in%  c('sido', 'sgg', 'emg')){
       stop("param 'admin' must be one of 'sido', 'sgg', 'emg'")
     }
@@ -192,14 +190,14 @@ tsvis_nfi <- function(data, y = "biomass", bm_type = NULL, output ="line", plotg
       if(y == "biomass"){
         tsvis_list[[i]] <- biomass_tsvis(data_temp, plotgrp = plotgrp, strat = strat, clusterplot = clusterplot,
                                          largetreearea = largetreearea, stockedland = stockedland, talltree = talltree)
-        tsvis_list[[i]]$year <- e_year
+        tsvis_list[[i]]$year <- s_year
       }else if(y == "cwd"){
         tsvis_list[[i]] <- cwd_biomass_tsvis(data_temp, plotgrp = plotgrp, strat = strat, stockedland = stockedland)
-        tsvis_list[[i]]$year <- e_year
+        tsvis_list[[i]]$year <- s_year
       }else if(y == "iv"){
         tsvis_list[[i]] <- iv_tsvis(data_temp, sp = sp, plotgrp = plotgrp, frequency = frequency, clusterplot = clusterplot,
                                     largetreearea = largetreearea, stockedland = stockedland, talltree = talltree)
-        tsvis_list[[i]]$year <- e_year
+        tsvis_list[[i]]$year <- s_year
       }else{
         stop(paste( y, ' does not exist.'))
       }
