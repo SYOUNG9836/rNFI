@@ -190,14 +190,14 @@ tsvis_nfi <- function(data, y = "biomass", bm_type = NULL, output ="line", plotg
       if(y == "biomass"){
         tsvis_list[[i]] <- biomass_tsvis(data_temp, plotgrp = plotgrp, strat = strat, clusterplot = clusterplot,
                                          largetreearea = largetreearea, stockedland = stockedland, talltree = talltree)
-        tsvis_list[[i]]$year <- s_year
+        tsvis_list[[i]]$year <- e_year
       }else if(y == "cwd"){
         tsvis_list[[i]] <- cwd_biomass_tsvis(data_temp, plotgrp = plotgrp, strat = strat, stockedland = stockedland)
-        tsvis_list[[i]]$year <- s_year
+        tsvis_list[[i]]$year <- e_year
       }else if(y == "iv"){
         tsvis_list[[i]] <- iv_tsvis(data_temp, sp = sp, plotgrp = plotgrp, frequency = frequency, clusterplot = clusterplot,
                                     largetreearea = largetreearea, stockedland = stockedland, talltree = talltree)
-        tsvis_list[[i]]$year <- s_year
+        tsvis_list[[i]]$year <- e_year
       }else{
         stop(paste( y, ' does not exist.'))
       }
@@ -214,7 +214,7 @@ tsvis_nfi <- function(data, y = "biomass", bm_type = NULL, output ="line", plotg
   tsvis_df$year <- as.character(tsvis_df$year)
   
   if(!isannual){
-    years <- seq(from = min(unique(data$plot$INVYR)), by = 5, length.out = 10)
+    years <- seq(from = min(unique(tsvis_df$year)), by = 5, length.out = 10)
     years <- as.character(years)
     tsvis_df <- tsvis_df %>% filter(year %in% years)
   }

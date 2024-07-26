@@ -361,7 +361,7 @@ cwd_biomass_nfi <- function(data, byplot= FALSE, plotgrp=NULL, treegrp=NULL, str
 
 
 
-cwd_biomass_tsvis <- function(data, plotgrp=NULL, strat="FORTYP_SUB", stockedland=TRUE){
+cwd_biomass_tsvis <- function(data, plotgrp=NULL, treegrp=NULL, strat="FORTYP_SUB", stockedland=TRUE){
   
   
   ## error message--------------------------------------------------------------  
