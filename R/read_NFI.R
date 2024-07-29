@@ -480,7 +480,7 @@ read_nfi <- function(dir, district=NULL, tables=c("tree", "cwd")){
     }
     
     if(!names(NFI)[i] %in% c("plot", "soil")){
-      NFI[[i]] <- left_join(NFI[[i]], Species_DB, by= c("SP") )
+      NFI[[i]] <- left_join(NFI[[i]], Species_DB, by= c("SP", "SPCD") )
     }
     
     NFI[[i]][ , colnames(NFI[[i]]) %in% num_col ] <- lapply(NFI[[i]][ , colnames(NFI[[i]]) %in% num_col ], function(x) as.numeric(as.character(x)))

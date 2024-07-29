@@ -18,7 +18,7 @@
 #' @param largetreearea : A logical flag (default FALSE); if TRUE, includes large tree survey plots in the analysis. If FALSE, only uses standard tree plots.
 #' @param stockedland : A logical flag (default TRUE); if TRUE, includes only stocked land. If FALSE, includes all land types.
 #' @param talltree : A logical flag (default TRUE); if TRUE, includes only tall trees. If FALSE, includes both trees and shrubs.
-#' @param sp : A character vector; the column name of species information (e.g., "SP" for species, "Genus" for genus-level analysis).
+#' @param sp : A character vector; the column name of species information (e.g., "SP" for species, "GENUS" for genus-level analysis).
 #' @param frequency : A logical flag (default TRUE); if TRUE, includes frequency in importance value calculations.
 #' 
 #' @return If the output is a map, line, or bar plot: an object of class \pkg{ggplot}. 
