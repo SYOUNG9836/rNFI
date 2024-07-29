@@ -20,11 +20,13 @@
 #' 
 #' This function performs several data integrity validation. 
 #' 1. Corrects administrative region information for subplots. (col: SIDO, SIDO_CD, SGG, SGG_CD, EMD, EMD_CD)
-#' 2. Adds ecoregion and catchment for subplots. (col: EcoRegion, Catchment)
+#' 2. Adds ecoregion and catchment for subplots. (col: ECOREGION, CATCHMENT)
 #' 3. Verifies and corrects coniferous/deciduous classification of tree species. (col: CONDEC_CLASS, CONDEC_CLASS_CD, WDY_PLNTS_TYP, WDY_PLNTS_TYP_CD)
-#' 4. Adds scientific names for species. (col: Scientific_Name)
-#' 5. Adds Korean and English names for plant families and genera. (col: Family, Family_korean, Genus, Genus_korean)
-#' 6. Calculates forest type, dominant species, and dominant species percentage for each subplot and cluster plot. (col: FORTYP_SUB, DOMIN_PERCNT_SUB, DOMIN_SP_SUB, FORTYP_CLST, DOMIN_PERCNT_CLST, DOMIN_SP_CLST)
+#' 4. Adds scientific names for species. (col: SCIENTIFIC_NAME)
+#' 5. Adds Korean and English names for plant families and genera. (col: FAMILY, FAMILY_KOREAN, GENUS, GENUS_KOREAN)
+#' 6. Adds whether a plant is native or cultivated, and identifies if it is a food, medicinal, fiber, or ornamental resource. (col: NATIVE_CULTIVATED, FOOD, MEDICINAL, FIBER, ORNAMENTAL)
+#' 7. Calculates basal area for individual tree (col: BASAL_AREA)
+#' 8. Calculates forest type, dominant species, and dominant species percentage for each subplot and cluster plot. (col: FORTYP_SUB, DOMIN_PERCNT_SUB, DOMIN_SP_SUB, FORTYP_CLST, DOMIN_PERCNT_CLST, DOMIN_SP_CLST)
 #' Species classification and taxonomy follow the standards set by the Korean Plant Names Index Committee of the Korea National Arboretum \url{http://www.nature.go.kr/kpni/index.do}. 
 #'  
 #' @param dir : A character vector; The directory containing NFI files.
@@ -78,10 +80,10 @@ read_nfi <- function(dir, district=NULL, tables=c("tree", "cwd")){
     }
     
     
-    if(any(!district %in% district_DB$district_name)) { # Check NFI_plot_DB  district_code  district_DB
+    if(any(!district %in% district_DB$DISTRICT_NAME)) { # Check NFI_plot_DB  district_code  district_DB
       
       prefix <- substr(district, 1, 2)
-      matches <- district_DB$district_name[grep(prefix, district_DB$district_name)]
+      matches <- district_DB$DISTRICT_NAME[grep(prefix, district_DB$DISTRICT_NAME)]
       
       if (length(matches) > 0) {
         matches <- paste(matches, collapse = ", ")
@@ -491,13 +493,13 @@ read_nfi <- function(dir, district=NULL, tables=c("tree", "cwd")){
     
     
     # FORTYP based on basal area (subplot)  --------------------------------------------------------------
-    NFI$tree$basal_area <- (pi*(NFI$tree$DBH/2)^2)/10000
+    NFI$tree$BASAL_AREA <- (pi*(NFI$tree$DBH/2)^2)/10000
     
     stand_sub <- NFI$tree %>% filter(LARGEP_TREE == "0") 
     stand_sub <- stand_sub %>%  
-      mutate(deciduous_ba = ifelse(CONDEC_CLASS_CD == "1",  basal_area, 0)) %>% # deciduous
+      mutate(deciduous_ba = ifelse(CONDEC_CLASS_CD == "1",  BASAL_AREA, 0)) %>% # deciduous
       group_by(SUB_PLOT, CYCLE) %>% 
-      summarise(all_ba = sum(basal_area), 
+      summarise(all_ba = sum(BASAL_AREA), 
                 deciduous_ba = sum(deciduous_ba),
                 .groups = 'drop')
     
@@ -509,7 +511,7 @@ read_nfi <- function(dir, district=NULL, tables=c("tree", "cwd")){
     domin <- NFI$tree %>% filter(LARGEP_TREE == "0") 
     domin <- domin %>%
       group_by(SUB_PLOT, CYCLE,  SP) %>%
-      summarise(domin_ba = sum(basal_area), .groups = 'drop') %>%
+      summarise(domin_ba = sum(BASAL_AREA), .groups = 'drop') %>%
       group_by(SUB_PLOT, CYCLE) %>%
       arrange(desc(domin_ba)) %>%
       slice(1) %>%
@@ -527,9 +529,9 @@ read_nfi <- function(dir, district=NULL, tables=c("tree", "cwd")){
     # FORTYP based on basal area (clusterplot)
     stand_clust <- NFI$tree %>% filter(LARGEP_TREE == "0") 
     stand_clust <- stand_clust %>%
-      mutate(deciduous_ba = ifelse(CONDEC_CLASS_CD == "1",  basal_area, 0)) %>%
+      mutate(deciduous_ba = ifelse(CONDEC_CLASS_CD == "1",  BASAL_AREA, 0)) %>%
       group_by(CLST_PLOT, CYCLE) %>% 
-      summarise(all_ba = sum(basal_area), 
+      summarise(all_ba = sum(BASAL_AREA), 
                 deciduous_ba = sum(deciduous_ba),
                 .groups = 'drop')
     
@@ -541,7 +543,7 @@ read_nfi <- function(dir, district=NULL, tables=c("tree", "cwd")){
     domin <- NFI$tree %>% filter(LARGEP_TREE == "0") 
     domin <- domin %>%
       group_by(CLST_PLOT, CYCLE,  SP) %>%
-      summarise(domin_ba = sum(basal_area), .groups = 'drop') %>%
+      summarise(domin_ba = sum(BASAL_AREA), .groups = 'drop') %>%
       group_by(CLST_PLOT, CYCLE) %>%
       arrange(desc(domin_ba)) %>%
       slice(1) %>%

@@ -115,6 +115,8 @@ cwd_biomass_nfi <- function(data, byplot= FALSE, plotgrp=NULL, treegrp=NULL, str
   if (!is.null(plotgrp)){
     if(any(plotgrp %in% strat)){
       warning("param 'plotgrp' is the same as param 'strat'")
+      strat <- "strat"
+      data$plot$strat <- "same"
     }
     if(!is.character(plotgrp)) {
       stop("param 'plotgrp' must be 'character'")
@@ -376,6 +378,8 @@ cwd_biomass_tsvis <- function(data, plotgrp=NULL, treegrp=NULL, strat="FORTYP_SU
   if (!is.null(plotgrp)){
     if(any(plotgrp %in% strat)){
       warning("param 'plotgrp' is the same as param 'strat'")
+      strat <- "strat"
+      data$plot$strat <- "same"
     }
     if(!is.character(plotgrp)) {
       stop("param 'plotgrp' must be 'character'")

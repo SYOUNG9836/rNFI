@@ -106,7 +106,7 @@ summary_nfi<- function(data, plotgrp=NULL, byplot=FALSE, clusterplot=FALSE, larg
   
   
   df <- left_join(data$tree[, c('CLST_PLOT', 'SUB_PLOT',"CYCLE",'INVYR', 'WDY_PLNTS_TYP_CD','CCL','CCLCD', 'SP',
-                                'DBH', 'basal_area', 'HT_EST', 'VOL_EST', 'LARGEP_TREE')], 
+                                'DBH', 'BASAL_AREA', 'HT_EST', 'VOL_EST', 'LARGEP_TREE')], 
                   data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR', 
                                "LAND_USE", "LAND_USECD", 'NONFR_INCL_AREA_LARGEP', 'NONFR_INCL_AREA_SUBP', plotgrp)], 
                   by = c("CLST_PLOT", "SUB_PLOT", "CYCLE", "INVYR"))
@@ -202,7 +202,7 @@ summary_nfi<- function(data, plotgrp=NULL, byplot=FALSE, clusterplot=FALSE, larg
     stat_ha <- df %>% 
       group_by(CYCLE, !!plot_id, INVYR, largetree, !!!plotgrp) %>% 
       summarise(tree_temp = n(), 
-                basal_temp= sum(basal_area, na.rm=TRUE),
+                basal_temp= sum(BASAL_AREA, na.rm=TRUE),
                 volume_temp= sum(VOL_EST, na.rm=TRUE),
                 .groups = 'drop')
     
@@ -253,7 +253,7 @@ summary_nfi<- function(data, plotgrp=NULL, byplot=FALSE, clusterplot=FALSE, larg
     stat_ha <- df %>% 
       group_by(CYCLE, !!plot_id, INVYR, largetree, largetree_area, tree_area, !!!plotgrp) %>% 
       summarise(tree_temp = n(), 
-                basal_temp= sum(basal_area, na.rm=TRUE),
+                basal_temp= sum(BASAL_AREA, na.rm=TRUE),
                 volume_temp= sum(VOL_EST, na.rm=TRUE),
                 .groups = 'drop')
     

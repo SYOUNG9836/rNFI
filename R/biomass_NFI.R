@@ -158,6 +158,8 @@ biomass_nfi <- function(data, byplot= FALSE, plotgrp=NULL, treegrp= NULL, strat=
   if (!is.null(plotgrp)){
     if(any(plotgrp %in% strat)){
       warning("param 'plotgrp' is the same as param 'strat'")
+      strat <- "strat"
+      data$plot$strat <- "same"
     }
     if(!is.character(plotgrp)) {
       stop("param 'plotgrp' must be 'character'")
@@ -199,8 +201,7 @@ biomass_nfi <- function(data, byplot= FALSE, plotgrp=NULL, treegrp= NULL, strat=
   if(talltree){
     data$tree <- data$tree %>% filter(WDY_PLNTS_TYP_CD == "1")
   }
-  
-   
+
   df <- left_join(data$tree[,c('CLST_PLOT', 'SUB_PLOT',"CYCLE", 'WDY_PLNTS_TYP_CD','SP', 'SPCD',
                                 'CONDEC_CLASS_CD', 'DECEVER_CD', 'DBH', 'VOL_EST',  'LARGEP_TREE', treegrp)], 
                   data$plot[,c('CLST_PLOT', 'SUB_PLOT', "CYCLE", 'INVYR', "LAND_USE", "LAND_USECD",
@@ -545,6 +546,8 @@ biomass_tsvis <- function(data, plotgrp=NULL, treegrp=NULL, strat="FORTYP_SUB", 
   if (!is.null(plotgrp)){
     if(any(plotgrp %in% strat)){
       warning("param 'plotgrp' is the same as param 'strat'")
+      strat <- "strat"
+      data$plot$strat <- "same"
     }
     if(!is.character(plotgrp)) {
       stop("param 'plotgrp' must be 'character'")
