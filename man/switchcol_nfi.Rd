@@ -22,8 +22,12 @@ The option to revert to original Korean names is provided solely for users who w
 }
 \examples{
 \dontrun{ 
+
+data("NFI_Sejong")
+
 # Switch column names
-NFI5 <- switchcol_nfi(NFI5)
+NFI_Sejong_kor <- switchcol_nfi(NFI_Sejong)
+NFI_Sejong_eng <- switchcol_nfi(NFI_Sejong_kor)
 }
 
 }
