@@ -52,8 +52,6 @@
 #' NFI5 <- filter_nfi(NFI5, c("plot$OWN_CD == '5'", "tree$FAMILY == 'Pinaceae' | tree$WDY_PLNTS_TYP_CD == '1'"))
 #' }
 #' 
-#' }
-#' 
 #' @export
 # 
 

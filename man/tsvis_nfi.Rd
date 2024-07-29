@@ -46,7 +46,7 @@ tsvis_nfi(
 
 \item{talltree}{: A logical flag (default TRUE); if TRUE, includes only tall trees. If FALSE, includes both trees and shrubs.}
 
-\item{sp}{: A character vector; the column name of species information (e.g., "SP" for species, "Genus" for genus-level analysis).}
+\item{sp}{: A character vector; the column name of species information (e.g., "SP" for species, "GENUS" for genus-level analysis).}
 
 \item{frequency}{: A logical flag (default TRUE); if TRUE, includes frequency in importance value calculations.}
 }

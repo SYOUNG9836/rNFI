@@ -37,10 +37,12 @@ For more details, refer to the National Forest Inventory guidelines.
 This function performs several data integrity validation.
 \enumerate{
 \item Corrects administrative region information for subplots. (col: SIDO, SIDO_CD, SGG, SGG_CD, EMD, EMD_CD)
-\item Adds ecoregion and catchment for subplots. (col: EcoRegion, Catchment)
+\item Adds ecoregion and catchment for subplots. (col: ECOREGION, CATCHMENT)
 \item Verifies and corrects coniferous/deciduous classification of tree species. (col: CONDEC_CLASS, CONDEC_CLASS_CD, WDY_PLNTS_TYP, WDY_PLNTS_TYP_CD)
-\item Adds scientific names for species. (col: Scientific_Name)
-\item Adds Korean and English names for plant families and genera. (col: Family, Family_korean, Genus, Genus_korean)
+\item Adds scientific names for species. (col: SCIENTIFIC_NAME)
+\item Adds Korean and English names for plant families and genera. (col: FAMILY, FAMILY_KOREAN, GENUS, GENUS_KOREAN)
+\item Adds whether a plant is native or cultivated, and identifies if it is a food, medicinal, fiber, or ornamental resource. (col: NATIVE_CULTIVATED, FOOD, MEDICINAL, FIBER, ORNAMENTAL)
+\item Calculates basal area for individual tree (col: BASAL_AREA)
 \item Calculates forest type, dominant species, and dominant species percentage for each subplot and cluster plot. (col: FORTYP_SUB, DOMIN_PERCNT_SUB, DOMIN_SP_SUB, FORTYP_CLST, DOMIN_PERCNT_CLST, DOMIN_SP_CLST)
 Species classification and taxonomy follow the standards set by the Korean Plant Names Index Committee of the Korea National Arboretum \url{http://www.nature.go.kr/kpni/index.do}.
 }

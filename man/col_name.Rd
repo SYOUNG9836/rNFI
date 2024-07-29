@@ -5,7 +5,7 @@
 \alias{col_name}
 \title{the Korean and English names of the column names}
 \format{
-An object of class \code{data.frame} with 151 rows and 3 columns.
+An object of class \code{data.frame} with 171 rows and 3 columns.
 }
 \usage{
 col_name
