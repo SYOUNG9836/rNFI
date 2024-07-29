@@ -36,15 +36,15 @@
 #' The 'herb', 'veg', and 'sapling' tables may contain a lot of errors, so use caution when interpreting results from these tables.
 #' 
 #' @examples
-#' \dontrun{
 #' 
-#' data("NFI_Sejong")
+#' data("nfi_sejong")
 #' 
 #' # Calculate tree diversity indices using basal area
-#' tree_ba_diversity <- diversity_nfi(NFI_Sejong, sp = "SP", table = "tree", basal = TRUE)
+#' tree_ba_diversity <- diversity_nfi(nfi_sejong, sp = "SP", table = "tree", basal = TRUE)
 #' 
+#' \dontrun{ 
 #' # Calculate tree diversity indices using number of individuals
-#' tree_indi_diversity <- diversity_nfi(NFI_Sejong, sp = "SP", table = "tree", basal = FALSE)
+#' tree_indi_diversity <- diversity_nfi(nfi_sejong, sp = "SP", table = "tree", basal = FALSE)
 #' }
 #' 
 #' @seealso

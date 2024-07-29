@@ -57,14 +57,14 @@ The importance value (ranging from 0 to 100) is calculated as the mean of:
 }
 }
 \examples{
-\dontrun{
 
-data("NFI_Sejong")
+data("nfi_sejong")
 # Calculate importance values without frequency
-importance <- iv_nfi(NFI_Sejong, sp = "SP", frequency = FALSE)
+importance <- iv_nfi(nfi_sejong, sp = "SP", frequency = FALSE)
 
+\dontrun{
 # Calculate importance values using genus
-genus_importance <- iv_nfi(NFI_Sejong, sp = "GENUS")
+genus_importance <- iv_nfi(nfi_sejong, sp = "GENUS")
 }
 
 }

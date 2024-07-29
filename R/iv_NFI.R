@@ -29,15 +29,15 @@
 #' - Since the frequencies of each species may be identical across the nation, it may be desirable to exclude frequency from the importance calculation. 
 #'  
 #' @examples
-#' \dontrun{
 #' 
-#' data("NFI_Sejong")
+#' data("nfi_sejong")
 #
 #' # Calculate importance values without frequency
-#' importance <- iv_nfi(NFI_Sejong, sp = "SP", frequency = FALSE)
+#' importance <- iv_nfi(nfi_sejong, sp = "SP", frequency = FALSE)
 #' 
+#' \dontrun{
 #' # Calculate importance values using genus
-#' genus_importance <- iv_nfi(NFI_Sejong, sp = "GENUS")
+#' genus_importance <- iv_nfi(nfi_sejong, sp = "GENUS")
 #' }
 #' 
 #' @seealso

@@ -74,18 +74,18 @@ The \code{largetreearea} parameter affects calculations differently:
 }
 }
 \examples{
-\dontrun{
 
-data("NFI_Sejong")
+data("nfi_sejong")
 
 # Basic usage
-summary_stats <- summary_nfi(NFI_Sejong)
+summary_stats <- summary_nfi(nfi_sejong)
 
+\dontrun{ 
 # Summarize by the group, including all land types
-grouped_stats <- summary_nfi(NFI_Sejong, plotgrp = "OWN_CD", stockedland = FALSE)
+grouped_stats <- summary_nfi(nfi_sejong, plotgrp = "OWN_CD", stockedland = FALSE)
 
 # Summarize by individual plots, including both trees and shrubs 
-plot_summaries <- summary_nfi(NFI_Sejong, byplot = TRUE, talltree = FALSE)
+plot_summaries <- summary_nfi(nfi_sejong, byplot = TRUE, talltree = FALSE)
 }
 
 }

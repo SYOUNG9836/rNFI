@@ -21,13 +21,14 @@ Important: Data with original Korean column names cannot be used with any \code{
 The option to revert to original Korean names is provided solely for users who wish to store or process the NFI data with original column names.
 }
 \examples{
-\dontrun{ 
 
-data("NFI_Sejong")
+data("nfi_sejong")
 
 # Switch column names
-NFI_Sejong_kor <- switchcol_nfi(NFI_Sejong)
-NFI_Sejong_eng <- switchcol_nfi(NFI_Sejong_kor)
+nfi_sejong_kor <- switchcol_nfi(nfi_sejong)
+
+\dontrun{ 
+nfi_sejong_eng <- switchcol_nfi(nfi_sejong_kor)
 }
 
 }

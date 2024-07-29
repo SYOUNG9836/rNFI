@@ -55,18 +55,18 @@ As a result, if the data for each group is not sufficiently large, the relative 
 It is important to check the RSE and other statistical measures in the biomass results.
 }
 \examples{
-\dontrun{
 
-data("NFI_Sejong")
+data("nfi_sejong")
 
 # Basic usage
-cwd <- cwd_biomass_nfi(NFI_Sejong)
+cwd <- cwd_biomass_nfi(nfi_sejong)
 
+\dontrun{
 # Calculate CWD biomass grouped by administrative district and decay class
-cwd_grp <- cwd_biomass_nfi(NFI_Sejong, plotgrp = "SGG", treegrp = "DECAY")
+cwd_grp <- cwd_biomass_nfi(nfi_sejong, plotgrp = "SGG", treegrp = "DECAY")
 
 # Calculate CWD biomass for each plot
-plot_biomass <- cwd_biomass_nfi(NFI_Sejong, byplot = TRUE)
+plot_biomass <- cwd_biomass_nfi(nfi_sejong, byplot = TRUE)
 }
 
 }

@@ -44,30 +44,30 @@ Non-hierarchical filtering (\code{hier = FALSE}):
 }
 }
 \examples{
-\dontrun{ 
 
-data("NFI_Sejong")
+data("nfi_sejong")
 
 # Applying hierarchical filtering to select only privately owned forest subplots.
 # Ensures all child tables' subplots match the filtered plot table's subplots.
 # Expected results after filtering:
-# all(NFI_Sejong$tree$SUB_PLOT \%in\% NFI_Sejong$plot$SUB_PLOT)  result: TRUE
-NFI_Sejong <- filter_nfi(NFI_Sejong, c("plot$OWN_CD == '5'"), hier = TRUE)
+# all(nfi_sejong$tree$SUB_PLOT \%in\% nfi_sejong$plot$SUB_PLOT)  result: TRUE
+nfi_sejong <- filter_nfi(nfi_sejong, c("plot$OWN_CD == '5'"), hier = TRUE)
 
+\dontrun{ 
 # Non-hierarchical filtering to select only privately owned forest subplots.
 # Child tables remain unfiltered and may not correspond to the plot table subplots.
 # Expected results after filtering:
-# all(NFI_Sejong$tree$SUB_PLOT \%in\% NFI_Sejong$plot$SUB_PLOT)  result: FALSE
-NFI_Sejong <- filter_nfi(NFI_Sejong, c("plot$OWN_CD == '5'"), hier = FALSE)
+# all(nfi_sejong$tree$SUB_PLOT \%in\% nfi_sejong$plot$SUB_PLOT)  result: FALSE
+nfi_sejong <- filter_nfi(nfi_sejong, c("plot$OWN_CD == '5'"), hier = FALSE)
 
 # Non-Hierarchical Filtering with only woody plants.
 # Other tables remain filtered and correspond to the tree table.
 # Expected results after filtering:
-# all(NFI_Sejong$plot$SUB_PLOT \%in\% NFI_Sejong$tree$SUB_PLOT)  result: TRUE
-NFI_Sejong <- filter_nfi(NFI_Sejong, c("tree$WDY_PLNTS_TYP_CD == '1'"), hier = FALSE)
+# all(nfi_sejong$plot$SUB_PLOT \%in\% nfi_sejong$tree$SUB_PLOT)  result: TRUE
+nfi_sejong <- filter_nfi(nfi_sejong, c("tree$WDY_PLNTS_TYP_CD == '1'"), hier = FALSE)
 
 # Combining multiple filters across different dataframes
-NFI_Sejong <- filter_nfi(NFI_Sejong, 
+nfi_sejong <- filter_nfi(nfi_sejong, 
                     c("plot$OWN_CD == '5'", 
                     "tree$FAMILY == 'Pinaceae' | tree$WDY_PLNTS_TYP_CD == '1'"))
 }
