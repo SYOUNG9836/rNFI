@@ -383,7 +383,7 @@ tsvis_nfi <- function(data, y = "biomass", bm_type = NULL, output ="line", plotg
       tsvis <- ggplot2::ggplot(tsvis_df, ggplot2::aes(x=year)) + 
         ggplot2::geom_line(ggplot2::aes(y=!!value, group = name, color = reorder(name, -!!value)), linewidth = 1.1)+ 
         ggplot2::geom_point(ggplot2::aes(y=!!value, group = name, color = reorder(name, -!!value)), size = 3)+ 
-        ggplot2::geom_errorbar(ggplot2::aes(ymin=!!value-!!se, ymax=!!value+!!se, color = reorder(name, -!!value)), width=0.2, size=0.8)+ 
+        ggplot2::geom_errorbar(ggplot2::aes(ymin=pmax(!!value - !!se, 0), ymax=!!value+!!se, color = reorder(name, -!!value)), width=0.2, size=0.8)+ 
         ggplot2::theme(axis.title.x = ggplot2::element_text(vjust=-1.5),
                        axis.title.y = ggplot2::element_text(vjust=4),
                        plot.margin = ggplot2::unit(c(0.3,0.1,0.5,0.6), "cm"), 
@@ -414,7 +414,7 @@ tsvis_nfi <- function(data, y = "biomass", bm_type = NULL, output ="line", plotg
         
         tsvis <- ggplot2::ggplot(tsvis_df, ggplot2::aes(x=year, group = name))+
           ggplot2::geom_bar(ggplot2::aes(y=!!value, fill = reorder(name, -!!value)), size = 1, stat='identity', position = 'dodge')+ 
-          ggplot2::geom_errorbar(ggplot2::aes(ymin=!!value-!!se, ymax=!!value+!!se), position=ggplot2::position_dodge(0.9),width=0.2, size=0.8)+
+          ggplot2::geom_errorbar(ggplot2::aes(ymin=pmax(!!value - !!se, 0), ymax=!!value+!!se), position=ggplot2::position_dodge(0.9),width=0.2, size=0.8)+
           ggplot2::theme(axis.title.x = ggplot2::element_text(vjust=-1.5),
                          axis.title.y = ggplot2::element_text(vjust=4),
                          plot.margin = ggplot2::unit(c(0.3,0.1,0.5,0.6), "cm"), 
@@ -429,7 +429,7 @@ tsvis_nfi <- function(data, y = "biomass", bm_type = NULL, output ="line", plotg
           group_data %>%
             ggplot2::ggplot(ggplot2::aes(x=year))+
             ggplot2::geom_bar(ggplot2::aes(y=!!value, fill = reorder(name, -!!value)), size = 1, stat='identity', position = 'dodge')+ 
-            ggplot2::geom_errorbar(ggplot2::aes(ymin=!!value-!!se, ymax=!!value+!!se), position=ggplot2::position_dodge(0.9),width=0.2, size=0.8)+
+            ggplot2::geom_errorbar(ggplot2::aes(ymin=pmax(!!value - !!se, 0), ymax=!!value+!!se), position=ggplot2::position_dodge(0.9),width=0.2, size=0.8)+
             ggplot2::theme(axis.title.x = ggplot2::element_text(vjust=-1.5),
                            axis.title.y = ggplot2::element_text(vjust=4),
                            plot.margin = ggplot2::unit(c(0.3,0.1,0.5,0.6), "cm"), 

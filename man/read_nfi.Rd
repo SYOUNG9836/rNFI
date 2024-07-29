@@ -54,6 +54,9 @@ Use \code{data("col_name")} to view the Korean and English names of the column n
 
 While the National Forest Inventory undergoes rigorous quality control, including internal reviews  and field inspections, errors may still exist due to the extensive nature of the survey (approximately 4,000 plots and over 70 items in the 7th phase).
 Please use the data cautiously and report any anomalies to help improve our algorithms.
+
+If you want to save the results to your computer, you can save them in Excel format.
+For example, you can use the following code:\code{writexl::write_xlsx(data, "data.xlsx")}
 }
 \examples{
 \dontrun{
