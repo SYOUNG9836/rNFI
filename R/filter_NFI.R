@@ -29,11 +29,24 @@
 #' 
 #' @examples
 #' \dontrun{ 
-#' # Applying hierarchical filtering to select only privately owned forest subplots
-#' NFI5 <- filter_nfi(NFI5, c("plot$OWN_CD == '5'"))
+#' # Applying hierarchical filtering to select only privately owned forest subplots.
+#' # This ensures that all child tables' subplots will correspond to the filtered plot table's subplots.
+#' # Expected results after filtering:
+#' # all(NFI5$tree$SUB_PLOT %in% NFI5$plot$SUB_PLOT)  result: TRUE
+#  # all(NFI5$plot$SUB_PLOT %in% NFI5$tree$SUB_PLOT)  result: FALSE
+#' NFI5 <- filter_nfi(NFI5, c("plot$OWN_CD == '5'"), hier = TRUE)
 #' 
-#' # Non-hierarchical filtering to select only privately owned forest subplots
+#' # Non-hierarchical filtering to select only privately owned forest subplots.
+#' # Child tables remain unfiltered and may not correspond to the plot table subplots.
+#' # Expected results after filtering:
+#' # all(NFI5$tree$SUB_PLOT %in% NFI5$plot$SUB_PLOT)  result: FALSE
 #' NFI5 <- filter_nfi(NFI5, c("plot$OWN_CD == '5'"), hier = FALSE)
+#' 
+#' # Non-Hierarchical Filtering with only woody plants.
+#' # Other tables remain filtered and correspond to the tree table.
+#' # Expected results after filtering:
+#' # all(NFI5$plot$SUB_PLOT %in% NFI5$tree$SUB_PLOT)  result: TRUE
+#' NFI5 <- filter_nfi(nfi5, c("tree$WDY_PLNTS_TYP_CD == '1'"), hier = FALSE)
 #' 
 #' # Combining multiple filters across different dataframes
 #' NFI5 <- filter_nfi(NFI5, c("plot$OWN_CD == '5'", "tree$Family == 'Pinaceae' | tree$WDY_PLNTS_TYP_CD == '1'"))
