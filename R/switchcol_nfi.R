@@ -23,7 +23,7 @@
 switchcol_nfi <- function(data){
   
   first_col_name <- colnames(data$plot)[1] 
-  is_english <- grepl("^[A-Za-z]+$", first_col_name)
+  is_english <- grepl("^[A-Za-z_]+$", first_col_name)
   
   if(is_english) {
     
