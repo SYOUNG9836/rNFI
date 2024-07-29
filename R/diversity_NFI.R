@@ -38,11 +38,13 @@
 #' @examples
 #' \dontrun{
 #' 
+#' data("NFI_Sejong")
+#' 
 #' # Calculate tree diversity indices using basal area
-#' tree_ba_diversity <- diversity_nfi(NFI5, sp = "SP", table = "tree", basal = TRUE)
+#' tree_ba_diversity <- diversity_nfi(NFI_Sejong, sp = "SP", table = "tree", basal = TRUE)
 #' 
 #' # Calculate tree diversity indices using number of individuals
-#' tree_indi_diversity <- diversity_nfi(NFI5, sp = "SP", table = "tree", basal = FALSE)
+#' tree_indi_diversity <- diversity_nfi(NFI_Sejong, sp = "SP", table = "tree", basal = FALSE)
 #' }
 #' 
 #' @seealso

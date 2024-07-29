@@ -116,14 +116,17 @@ bm_df <- function(data){
 #' 
 #' @examples
 #' \dontrun{
+#' 
+#' data("NFI_Sejong")
+#' 
 #' # Basic usage
-#' biomass <- biomass_nfi(NFI5)
+#' biomass <- biomass_nfi(NFI_Sejong)
 #' 
 #' # Calculate biomass by administrative district
-#' district_biomass <- biomass_nfi(NFI5, plotgrp = "SGG")
+#' district_biomass <- biomass_nfi(NFI_Sejong, plotgrp = "SGG")
 #' 
 #' # Calculate biomass for each plot
-#' plot_biomass <- biomass_nfi(NFI5, byplot = TRUE)
+#' plot_biomass <- biomass_nfi(NFI_Sejong, byplot = TRUE)
 #' }
 #' 
 #' @references 

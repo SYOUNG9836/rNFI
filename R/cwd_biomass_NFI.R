@@ -84,14 +84,17 @@ cwd_bm_df <- function(data){
 #' 
 #' @examples
 #' \dontrun{
+#' 
+#' data("NFI_Sejong")
+#' 
 #' # Basic usage
-#' cwd_biomass_nfi(NFI5)
+#' cwd <- cwd_biomass_nfi(NFI_Sejong)
 #' 
 #' # Calculate CWD biomass grouped by administrative district and decay class
-#' cwd_biomass_nfi(NFI5, plotgrp = "SGG", treegrp = "DECAY")
+#' cwd_grp <- cwd_biomass_nfi(NFI_Sejong, plotgrp = "SGG", treegrp = "DECAY")
 #' 
 #' # Calculate CWD biomass for each plot
-#' plot_biomass <- cwd_biomass_nfi(NFI5, byplot = TRUE)
+#' plot_biomass <- cwd_biomass_nfi(NFI_Sejong, byplot = TRUE)
 #' }
 #' 
 #' @references 

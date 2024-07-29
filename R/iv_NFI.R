@@ -30,12 +30,14 @@
 #'  
 #' @examples
 #' \dontrun{
-#
-#'  # Calculate importance values without frequency
-#'  importance <- iv_nfi(NFI5, sp = "SP", frequency = FALSE)
 #' 
-#'  # Calculate importance values using genus
-#'  genus_importance <- iv_nfi(NFI5, sp = "GENUS")
+#' data("NFI_Sejong")
+#
+#' # Calculate importance values without frequency
+#' importance <- iv_nfi(NFI_Sejong, sp = "SP", frequency = FALSE)
+#' 
+#' # Calculate importance values using genus
+#' genus_importance <- iv_nfi(NFI_Sejong, sp = "GENUS")
 #' }
 #' 
 #' @seealso

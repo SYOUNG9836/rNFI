@@ -8,7 +8,14 @@
 "col_name"
 
 
-
+#' National Forest Inventory data for Geumnam-myeon, Sejong-si, Republic of Korea for testing the function
+#'
+#' @description
+#' National Forest Inventory data for Geumnam-myeon, Sejong-si, Republic of Korea for testing the function
+#' 
+#' @name nfi_sejong
+#' 
+"nfi_sejong"
 
 
 utils::globalVariables(c('.', 
