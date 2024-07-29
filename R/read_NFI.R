@@ -469,7 +469,8 @@ read_nfi <- function(dir, district=NULL, tables=c("tree", "cwd")){
                 "FOR_MANAGE_STATUS_CD", "REG_STATUS_CD", "SOIL_TYP_CD", "SOIL_TX_A_CD", 
                 "SOIL_TX_B_CD", "ROCK_EXP_CD", "ERO_COND_CD", "SPCD", "TREECLCD", "CCLCD", 
                 "DECAYCD", "STANDING_DEAD_CD", "DOMINCD", "DRCCD", "CONDEC_CLASS_CD", "DECEVER_CD", "WDY_PLNTS_TYP_CD",
-                "SOILPLOT", "VEGPLOT")
+                "SOILPLOT", "VEGPLOT",
+                "FOOD_CD",	"MEDICINAL_CD",	"FIBER_CD",	"ORNAMENTAL_CD"  )
   
   for(i in 1: length(NFI)){
     
