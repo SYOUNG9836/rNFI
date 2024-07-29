@@ -57,6 +57,11 @@ Please use the data cautiously and report any anomalies to help improve our algo
 
 If you want to save the results to your computer, you can save them in Excel format.
 For example, you can use the following code:\code{writexl::write_xlsx(data, "data.xlsx")}
+
+If you want to read the saved data back, use the code below:
+\code{path <-"../NFI_Sejong.xlsx"}
+\code{sheet_names <- readxl::excel_sheets(path)}
+\code{for (sheet_name in sheet_names) {nfi[[sheet_name]] <- readxl::read_excel(path, sheet = sheet_name) }}
 }
 \examples{
 \dontrun{
