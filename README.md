@@ -8,7 +8,7 @@ Understanding the current status of forest resources is essential for monitoring
 
 Distribution of National Forest Inventory sample plots (left) and sampling design of the National Forest Inventory (right) (Korea Forest Research Institute, 2011)
 
-<img src="man/figures/plot_2.png" alt="Plot 1" width="400"/>
+<img src="man/figures/plot_2.png" alt="Plot 2" width="400"/>
 
 Plot design of National Forest Inventory (Korea Forest Research Institute, 2011)
 
