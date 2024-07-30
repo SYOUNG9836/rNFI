@@ -1,0 +1,9 @@
+pandoc: 3.1.11
+pkgdown: 2.1.0
+pkgdown_sha: ~
+articles:
+  my-vignette: my-vignette.html
+last_built: 2024-07-30T04:38Z
+urls:
+  reference: https://syoung9836.github.io/rNFI/reference
+  article: https://syoung9836.github.io/rNFI/articles
