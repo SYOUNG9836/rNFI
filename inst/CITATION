@@ -1,11 +1,8 @@
 bibentry(
-  bibtype  = "Article",
-  title    = "Welcome to the {tidyverse}",
+  bibtype  = "MastersThesis",
+  title    = "Development of an Algorithm for the Analysis of Korean National Forest Inventory Data : Focusing on Biodiversity and Biomass in Gangwon-do",
   author   = "Sinyoung Park",
-  journal  = "Journal of Open Source Software",
-  year     = 2019,
-  volume   = 4,
-  number   = 43,
-  pages    = 1686,
-  doi      = "10.21105/joss.01686"
+  school = "Kookmin University",
+  address = "77, Jeongneung-ro, Seongbuk-gu, Seoul, Republic of Korea",
+  year     = 2022
   )

@@ -1,4 +1,10 @@
 url: https://syoung9836.github.io/rNFI/
 template:
   bootstrap: 5
-
+authors:
+  display:
+    html: true
+    limit: false
+home:
+  authors:
+    show_all: true
