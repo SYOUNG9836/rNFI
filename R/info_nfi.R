@@ -1,5 +1,4 @@
 #' @import dplyr
-#' @import BiodiversityR
 #' @import sf
 #' @import plotrix
 #' @import readxl
