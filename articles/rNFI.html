@@ -60,7 +60,57 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/SYOUNG9836/rNFI" class="external-link">rNFI</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/SYOUNG9836/rNFI" class="external-link">rNFI</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Load tree and CWD data for all districts</span></span>
+<span><span class="va">nfi5_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_nfi.html">read_nfi</a></span><span class="op">(</span><span class="st">"D:/NFI/NFI5"</span>, district <span class="op">=</span> <span class="cn">NULL</span>, tables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tree"</span>, <span class="st">"cwd"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Applying hierarchical filtering to select only privately owned forest subplots.</span></span>
+<span><span class="co"># Ensures all child tables' subplots match the filtered plot table's subplots.</span></span>
+<span><span class="va">nfi5_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/filter_nfi.html">filter_nfi</a></span><span class="op">(</span><span class="va">nfi5_data</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"plot$OWN_CD == '5'"</span><span class="op">)</span>, hier <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Switch column names from English to original Korean names</span></span>
+<span><span class="va">nfi5_data_kor</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/switchcol_nfi.html">switchcol_nfi</a></span><span class="op">(</span><span class="va">nfi5_data</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/SYOUNG9836/rNFI" class="external-link">rNFI</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nfi_sejong"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># calculates comprehensive descriptive statistics for study area</span></span>
+<span><span class="va">summary_stats</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summary_nfi.html">summary_nfi</a></span><span class="op">(</span><span class="va">nfi_sejong</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calculate importance values using genus</span></span>
+<span><span class="va">importance_genus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/iv_nfi.html">iv_nfi</a></span><span class="op">(</span><span class="va">nfi_sejong</span>, sp <span class="op">=</span> <span class="st">"GENUS"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: no DISPLAY variable so Tk is not available</span></span>
+<span></span>
+<span><span class="co"># Calculate tree diversity indices using basal area</span></span>
+<span><span class="va">diversity_tree_ba</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/diversity_nfi.html">diversity_nfi</a></span><span class="op">(</span><span class="va">nfi_sejong</span>, sp <span class="op">=</span> <span class="st">"SP"</span>, table <span class="op">=</span> <span class="st">"tree"</span>, basal <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calculate biomass by administrative district</span></span>
+<span><span class="va">biomass_district</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/biomass_nfi.html">biomass_nfi</a></span><span class="op">(</span><span class="va">nfi_sejong</span>, plotgrp <span class="op">=</span> <span class="st">"SGG"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calculate CWD biomass grouped by administrative district and decay class</span></span>
+<span><span class="va">cwd_grpby</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cwd_biomass_nfi.html">cwd_biomass_nfi</a></span><span class="op">(</span><span class="va">nfi_sejong</span>, plotgrp <span class="op">=</span> <span class="st">"SGG"</span>, treegrp <span class="op">=</span> <span class="st">"DECAY"</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span></span>
+<span><span class="co"># Create a bar plot of importance values at 5-year intervals</span></span>
+<span><span class="va">tsvis_iv_bar</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tsvis_nfi.html">tsvis_nfi</a></span><span class="op">(</span><span class="va">nfi_sejong</span>, y <span class="op">=</span> <span class="st">"iv"</span>, output <span class="op">=</span> <span class="st">"bar"</span>, isannual <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in tsvis_nfi(nfi_sejong, y = "iv", output = "bar", isannual = FALSE):</span></span>
+<span><span class="co">#&gt; Missing years:2010Missing years:2011Missing years:2012Missing years:2015Missing</span></span>
+<span><span class="co">#&gt; years:2016Missing years:2017</span></span>
+<span></span>
+<span><span class="co"># Generate a line plot of carbon biomass over time</span></span>
+<span><span class="va">tsvis_bm_line</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tsvis_nfi.html">tsvis_nfi</a></span><span class="op">(</span><span class="va">nfi_sejong</span>, y <span class="op">=</span> <span class="st">"biomass"</span>, </span>
+<span>                            bm_type <span class="op">=</span> <span class="st">"carbon"</span>, output <span class="op">=</span> <span class="st">"line"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in tsvis_nfi(nfi_sejong, y = "biomass", bm_type = "carbon", output =</span></span>
+<span><span class="co">#&gt; "line"): Missing years:2010Missing years:2011Missing years:2012Missing</span></span>
+<span><span class="co">#&gt; years:2015Missing years:2016Missing years:2017</span></span>
+<span></span>
+<span><span class="co"># # Create a map of volume at the sido level</span></span>
+<span><span class="co"># tsvis_bm_map &lt;- tsvis_nfi(nfi_sejong, admin = "sido", </span></span>
+<span><span class="co">#                            y = "biomass", bm_type = "volume", output = "map")</span></span>
+<span>                           </span></code></pre></div>
   </main>
 </div>
 
