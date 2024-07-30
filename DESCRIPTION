@@ -41,8 +41,7 @@ Imports:
 Depends: 
     R (>= 3.6)
 Suggests: 
-    kadmin
-
-  
-    
-
+    kadmin,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
