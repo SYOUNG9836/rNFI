@@ -15,10 +15,11 @@
 #'
 #' data("nfi_sejong")
 #' 
-#' # Switch column names
+#' #Switch column names from English to original Korean names
 #' nfi_sejong_kor <- switchcol_nfi(nfi_sejong)
 #' 
 #' \dontrun{ 
+#' # Switch column names from original Korean to English names
 #' nfi_sejong_eng <- switchcol_nfi(nfi_sejong_kor)
 #' }
 #' 
