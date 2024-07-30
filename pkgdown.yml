@@ -3,7 +3,7 @@ pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
   rNFI: rNFI.html
-last_built: 2024-07-30T07:02Z
+last_built: 2024-07-30T08:11Z
 urls:
   reference: https://syoung9836.github.io/rNFI/reference
   article: https://syoung9836.github.io/rNFI/articles
