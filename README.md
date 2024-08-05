@@ -1,3 +1,10 @@
+[![R build status](https://github.com/ropensci/rNFI/workflows/R-CMD-check/badge.svg)](https://github.com/SYOUNG9836/rNFI/actions)
+[![Build status](https://ci.appveyor.com/api/projects/status/d2lv98726u6t9ut5/branch/main)](https://ci.appveyor.com/project/sckott/rNFI/branch/main/)
+[![Codecov test coverage](https://codecov.io/gh/ropensci/rNFI/branch/main/graph/badge.svg)](https://app.codecov.io/gh/SYOUNG9836/rNFI?branch=main)
+[![cran version](https://www.r-pkg.org/badges/version/rNFI)](https://cran.r-project.org/package=rNFI)
+[![rstudio mirror downloads](https://cranlogs.r-pkg.org/badges/rNFI?color=E664A4)](https://github.com/r-hub/cranlogs.app)
+
+
 # rNFI: Analysis of National Forest Inventory DB
 
 ## Overview
