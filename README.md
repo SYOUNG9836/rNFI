@@ -1,4 +1,4 @@
-[![R build status](https://github.com/ropensci/rNFI/workflows/R-CMD-check/badge.svg)](https://github.com/SYOUNG9836/rNFI/actions)
+[![R-CMD-check](https://github.com/tidyverse/ggplot2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/SYOUNG9836/rNFI/actions/workflows/R-CMD-check.yaml)
 [![Build status](https://ci.appveyor.com/api/projects/status/d2lv98726u6t9ut5/branch/main)](https://ci.appveyor.com/project/sckott/rNFI/branch/main/)
 [![Codecov test coverage](https://codecov.io/gh/ropensci/rNFI/branch/main/graph/badge.svg)](https://app.codecov.io/gh/SYOUNG9836/rNFI?branch=main)
 [![cran version](https://www.r-pkg.org/badges/version/rNFI)](https://cran.r-project.org/package=rNFI)
