@@ -13,7 +13,7 @@ License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Remotes: kadmin=github::SYOUNG9836/kadmin
 Additional_repositories: url::https://SYOUNG9836.github.io/drat
 URL: https://github.com/SYOUNG9836/rNFI, https://syoung9836.github.io/rNFI/
@@ -43,7 +43,6 @@ Depends:
 Suggests: 
     kadmin,
     knitr,
-    rmarkdown,
-    spelling
+    rmarkdown
 VignetteBuilder: knitr
 Language: en-US
